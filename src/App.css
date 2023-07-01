@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -35,4 +35,20 @@
   to {
     transform: rotate(360deg);
   }
+} */
+
+:root {
+  --main-color:#0d6efd;
+}
+
+.hidden {
+  display: none;
+}
+
+#root {
+  height: 100vh;
+}
+
+#left .highlighted {
+  color:var(--main-color);
 }
