@@ -6,11 +6,22 @@ import { Button, Container } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import Countdown from 'react-countdown';
 import { ListGroup } from 'react-bootstrap';
+import Layout from '../../Components/Layout/Layout';
 
+
+const QuestionNav = ({isDisplay, questions, currentQuestion}) => {
+    return isDisplay ? 
+      <ListGroup >
+      {questions.map((item, index) => (
+        <ListGroup.Item key={index} className={index === currentQuestion ? "active" : ""}>Question {index}</ListGroup.Item>
+      ))}
+    </ListGroup>
+    : null
+}
 function Exam() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState([]);
-  const [isStartExam, setIsStartExam] = useState(false);
+  const [isStartExam, setIsStartExam] = useState(true);
   const [isFinishExam, setIsFinishExam] = useState(false);
   const timerRef = useRef(null);
   const [duration, setDuration] = useState(0);
@@ -109,51 +120,56 @@ function Exam() {
    }
   
   return (
-      <Row className="bg-light w-100 m-0 h-100">
-        <Col id="left" className="bg-transparent pt-3">
-          {isStartExam? 
-                    <ListGroup >
-                    {questions.map((item, index) => (
-                      <ListGroup.Item key={index} className={index === currentQuestion ? "highlighted" : ""}>Question {index}</ListGroup.Item>
-                    ))}
-                  </ListGroup>
-            : null}
+    <Layout 
+    leftComponent =
+      {<QuestionNav isDisplay={isStartExam} questions={questions} currentQuestion={currentQuestion}/>}
+    />
+    //   <Row className="bg-light w-100 m-0 h-100">
+    //     <Col id="left" className="bg-transparent pt-3">
+          
+    //       {/* {isStartExam? 
+    //                 <ListGroup >
+    //                 {questions.map((item, index) => (
+    //                   <ListGroup.Item key={index} className={index === currentQuestion ? "highlighted" : ""}>Question {index}</ListGroup.Item>
+    //                 ))}
+    //               </ListGroup>
+    //         : null} */}
 
-        </Col>
-        <Col id="main" className="bg-white pt-3" lg="8" md="6" xs="6">
-          <Container className="d-inline-flex justify-content-center"><Button disabled={isStartExam} onClick={handleStart} >Start Exam</Button></Container>
-          {isStartExam? 
-                    <Form onSubmit={handleSubmit} className="form mt-3">
-                    {questions.map((item, index) => (
-                      <Question question={item} isDisplay={index === currentQuestion} postAnswer={postAnswer} isDisabled={false}/>
-                    ))}
-                    <Container className="d-flex justify-content-between">
-                    <Button onClick={handleNext} className="float-start">
-                      Next
-                    </Button>
-                    <Button type="submit" className="float-end">
-                      Submit
-                    </Button>
-                    </Container>
-                  </Form>
-          : null}
-          {
-            isFinishExam ? 
-            <Container className="text-center">
-              <h2>Summary</h2>
-                {answers.map((item) => (
-                  <p>Question {item.questionId} : <span>{item.answer}</span>
-                  </p>
-                ))}
-                <p>Duration {duration}</p>
-            </Container>
-            : null
-          }
-        </Col>
-        <Col className="bg-transparent pt-3 d-flex justify-content-center" id="right">
-          {isStartExam ? <Countdown date={startTime + 15000} autoStart={true} ref={timerRef} onComplete={handleTimeOut}/> : null}
-        </Col>
-      </Row>
+    //     </Col>
+    //     <Col id="main" className="bg-white pt-3" lg="8" md="6" xs="6">
+    //       <Container className="d-inline-flex justify-content-center"><Button disabled={isStartExam} onClick={handleStart} >Start Exam</Button></Container>
+    //       {isStartExam? 
+    //                 <Form onSubmit={handleSubmit} className="form mt-3">
+    //                 {questions.map((item, index) => (
+    //                   <Question question={item} isDisplay={index === currentQuestion} postAnswer={postAnswer} isDisabled={false}/>
+    //                 ))}
+    //                 <Container className="d-flex justify-content-between">
+    //                 <Button onClick={handleNext} className="float-start">
+    //                   Next
+    //                 </Button>
+    //                 <Button type="submit" className="float-end">
+    //                   Submit
+    //                 </Button>
+    //                 </Container>
+    //               </Form>
+    //       : null}
+    //       {
+    //         isFinishExam ? 
+    //         <Container className="text-center">
+    //           <h2>Summary</h2>
+    //             {answers.map((item) => (
+    //               <p>Question {item.questionId} : <span>{item.answer}</span>
+    //               </p>
+    //             ))}
+    //             <p>Duration {duration}</p>
+    //         </Container>
+    //         : null
+    //       }
+    //     </Col>
+    //     <Col className="bg-transparent pt-3 d-flex justify-content-center" id="right">
+    //       {isStartExam ? <Countdown date={startTime + 15000} autoStart={true} ref={timerRef} onComplete={handleTimeOut}/> : null}
+    //     </Col>
+    //   </Row>
   );
 }
 

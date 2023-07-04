@@ -3,13 +3,11 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Exam from './Pages/Exam/Exam';
 import Header from './Components/Header/Header';
+import Layout from './Components/Layout/Layout';
 
 function App() {
   return (
-    <div className="m-0 vw-100 vh-100">
-      <Header/>
-      <Exam/>
-    </div>
+    <Exam/>
   )}
 
 export default App;

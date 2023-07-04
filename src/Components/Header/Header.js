@@ -2,7 +2,7 @@ import {Container, Nav, Navbar} from 'react-bootstrap';
 
 function Header() {
     return (
-        <Navbar bg="light" data-bs-theme="light">
+        <Navbar bg="primary" data-bs-theme="dark" className="sticky-top">
         <Container>
           <Navbar.Brand href="#home">Exam System</Navbar.Brand>
           <Nav className="me-auto">
