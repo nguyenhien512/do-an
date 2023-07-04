@@ -1,6 +1,6 @@
 import { Row, Col } from 'react-bootstrap'
 
-function Footer() {
+const Footer = () => {
     const footerNav = [
         {
             title: 'Introduction',
@@ -44,14 +44,14 @@ function Footer() {
     ]
     return (
         <footer>
-            <Row className="bg-light">
+            <Row className="bg-secondary">
                 {footerNav.map(item => (
                     <Col className="p-5">
-                        <p className="text-dark">{item.title}</p>
+                        <p className="text-white">{item.title}</p>
                         <ul className="list-unstyled">
                             {item.subMenu.map(link => (
                                 <li>
-                                    <a href={link.href} className="link-dark link-underline-opacity-0">{link.linkText}</a>
+                                    <a href={link.href} className="link-light link-underline-opacity-0">{link.linkText}</a>
                                 </li>
                             ))}
                         </ul>

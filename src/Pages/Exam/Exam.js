@@ -1,7 +1,7 @@
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Question from '../../Components/Question/Question';
-import { useRef, useState, useEffect} from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Button, Container } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import Countdown from 'react-countdown';
@@ -9,16 +9,48 @@ import { ListGroup } from 'react-bootstrap';
 import Layout from '../../Components/Layout/Layout';
 
 
-const QuestionNav = ({isDisplay, questions, currentQuestion}) => {
-    return isDisplay ? 
-      <ListGroup >
+const QuestionNav = ({ isDisplay, questions, currentQuestion }) => {
+  return isDisplay ?
+    <ListGroup >
       {questions.map((item, index) => (
         <ListGroup.Item key={index} className={index === currentQuestion ? "active" : ""}>Question {index}</ListGroup.Item>
       ))}
     </ListGroup>
     : null
 }
-function Exam() {
+
+const StartButton = ({ isDisplay, handleStart }) => {
+  return isDisplay ?
+    <Button onClick={handleStart}>Start Exam</Button>
+    : null
+}
+
+const QuestionForm = ({ isDisplay, questions, currentQuestion, handleNext, handleInput, handleSubmit }) => {
+
+  return isDisplay ?
+    <Form onSubmit={handleSubmit} className="mt-3">
+      {questions.map((item, index) => (
+        <Question question={item} isDisplay={index === currentQuestion} handleInput={handleInput} isDisabled={false} />
+      ))}
+      <Container className="d-flex justify-content-between">
+        <Button onClick={handleNext} className="float-start">
+          Next
+        </Button>
+        <Button type="submit" className="float-end">
+          Submit
+        </Button>
+      </Container>
+    </Form>
+    : null
+}
+
+const Timer = ({isDisplay, startTime, handleRef, handleTimeOut}) => {
+  return isDisplay ? 
+  <Countdown date={startTime + 15000} autoStart={true} ref={handleRef} onComplete={handleTimeOut}/> 
+  : null
+}
+
+const Exam = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [isStartExam, setIsStartExam] = useState(true);
@@ -30,33 +62,27 @@ function Exam() {
   const questions = [
     {
       id: "6500",
-      text: "I wish he ________ so rude to people when we go out.",
-      answers: {
-        "A": "didn't be",
-        "B": "won't be",
-        "C": "hadn't been",
-        "D": "wouldn't be"
-      }
+      description: "I wish he ________ so rude to people when we go out.",
+      "answerA": "didn't be",
+      "answerB": "won't be",
+      "answerC": "hadn't been",
+      "answerD": "wouldn't be"
     },
     {
       id: "6501",
-      text: "Winters here ________ be really cold sometimes, so make sure you bring warm clothes!",
-      answers: {
-        "A": "may",
-        "B": "might",
-        "C": "can",
-        "D": "could"
-      }
+      description: "Winters here ________ be really cold sometimes, so make sure you bring warm clothes!",
+      "answerA": "may",
+      "answerB": "might",
+      "answerC": "can",
+      "answerD": "could"
     },
     {
       id: "6502",
-      text: "But they ________be away – I saw them this morning!",
-      answers: {
-        "A": "shouldn't",
-        "B": "mustn't",
-        "C": "can't",
-        "D": "don't have to"
-      }
+      description: "But they ________be away – I saw them this morning!",
+      "answerA": "shouldn't",
+      "answerB": "mustn't",
+      "answerC": "can't",
+      "answerD": "don't have to"
     }
   ]
 
@@ -115,61 +141,25 @@ function Exam() {
     setCurrentQuestion(0);
   }
 
-   function handleTimeOut(timerDeltaObject, isCompleted) {
-      finishExam();
-   }
-  
-  return (
-    <Layout 
-    leftComponent =
-      {<QuestionNav isDisplay={isStartExam} questions={questions} currentQuestion={currentQuestion}/>}
-    />
-    //   <Row className="bg-light w-100 m-0 h-100">
-    //     <Col id="left" className="bg-transparent pt-3">
-          
-    //       {/* {isStartExam? 
-    //                 <ListGroup >
-    //                 {questions.map((item, index) => (
-    //                   <ListGroup.Item key={index} className={index === currentQuestion ? "highlighted" : ""}>Question {index}</ListGroup.Item>
-    //                 ))}
-    //               </ListGroup>
-    //         : null} */}
+  function handleTimeOut(timerDeltaObject, isCompleted) {
+    finishExam();
+  }
 
-    //     </Col>
-    //     <Col id="main" className="bg-white pt-3" lg="8" md="6" xs="6">
-    //       <Container className="d-inline-flex justify-content-center"><Button disabled={isStartExam} onClick={handleStart} >Start Exam</Button></Container>
-    //       {isStartExam? 
-    //                 <Form onSubmit={handleSubmit} className="form mt-3">
-    //                 {questions.map((item, index) => (
-    //                   <Question question={item} isDisplay={index === currentQuestion} postAnswer={postAnswer} isDisabled={false}/>
-    //                 ))}
-    //                 <Container className="d-flex justify-content-between">
-    //                 <Button onClick={handleNext} className="float-start">
-    //                   Next
-    //                 </Button>
-    //                 <Button type="submit" className="float-end">
-    //                   Submit
-    //                 </Button>
-    //                 </Container>
-    //               </Form>
-    //       : null}
-    //       {
-    //         isFinishExam ? 
-    //         <Container className="text-center">
-    //           <h2>Summary</h2>
-    //             {answers.map((item) => (
-    //               <p>Question {item.questionId} : <span>{item.answer}</span>
-    //               </p>
-    //             ))}
-    //             <p>Duration {duration}</p>
-    //         </Container>
-    //         : null
-    //       }
-    //     </Col>
-    //     <Col className="bg-transparent pt-3 d-flex justify-content-center" id="right">
-    //       {isStartExam ? <Countdown date={startTime + 15000} autoStart={true} ref={timerRef} onComplete={handleTimeOut}/> : null}
-    //     </Col>
-    //   </Row>
+  return (
+    <Layout
+      leftComponent={
+      <QuestionNav isDisplay={true} questions={questions} currentQuestion={currentQuestion} />
+    }
+      mainComponent={
+        <Container>
+          <StartButton isDisplay={true} handleStart={handleStart}/>
+          <QuestionForm isDisplay={true} handleInput={postAnswer} handleSubmit={handleSubmit} questions={questions} currentQuestion={currentQuestion} handleNext={handleNext}/>
+        </Container>
+      }
+      rightComponent={
+        <Timer isDisplay={true} startTime={startTime} handleRef={timerRef} handleTimeOut={handleTimeOut}/>
+      }
+    />
   );
 }
 

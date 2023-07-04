@@ -41,14 +41,6 @@
   --main-color:#0d6efd;
 }
 
-.hidden {
-  display: none;
-}
-
 #root {
   height: 100vh;
-}
-
-#left .highlighted {
-  color:var(--main-color);
 }

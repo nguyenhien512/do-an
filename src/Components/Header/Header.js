@@ -1,6 +1,6 @@
 import {Container, Nav, Navbar} from 'react-bootstrap';
 
-function Header() {
+const Header = () => {
     return (
         <Navbar bg="primary" data-bs-theme="dark" className="sticky-top">
         <Container>

@@ -1,21 +1,27 @@
 import { Container } from "react-bootstrap";
 
 
-function Question({ question, isDisplay, postAnswer, isDisabled }) {
+const Question = ({ question, isDisplay, handleInput, isDisabled }) => {
     Question.defaultProps = {
         question: {},
         isDisplay: true,
         postAnswer: null,
         isDisabled: true
       }
+    const iterator = [
+        'answerA',
+        'answerB',
+        'answerC',
+        'answerD'
+    ]
 
     return (
-        <Container className={isDisplay ? "" : "hidden"}>
-            <p>{question.text}</p>
-            {Object.entries(question.answers).map((item) => (
-                <div key={`${question.id}-${item[0]}`} className="mb-3">
-                        <input type="radio" name={question.id} value={item[0]} id={`${question.id}-${item[0]}`} onChange={postAnswer} disabled={isDisabled}/>
-                        <label htmlFor={`${question.id}-${item[0]}`}>{item[1]}</label>
+        <Container className={isDisplay ? "" : "d-none"}>
+            <p>{question.description}</p>
+            {iterator.map((item) => (
+                <div key={`${question.id}-${item}`} className="mb-3">
+                        <input type="radio" name={question.id} value={item} id={`${question.id}-${item}`} onChange={handleInput} disabled={isDisabled}/>
+                        <label htmlFor={`${question.id}-${item}`}>{question[item]}</label>
                 </div>
             ))}
         </Container>
