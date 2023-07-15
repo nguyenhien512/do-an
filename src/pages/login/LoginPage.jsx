@@ -36,11 +36,14 @@ function LoginPage() {
     try {
         const response = await authenticate(user);
 
+        console.log("on finish resp ",response)
 
-        setToken(response.data.jwtToken)
-        localStorage.setItem('token',response.data.jwtToken)
 
-        navigate("/")
+        setToken(response.data.jwttoken)
+        localStorage.setItem('token',response.data.jwttoken)
+
+        let location = response.data.authority=='STUDENT' ? "/user" :"/teacher"
+        navigate(location)
         
     } catch (error) {
         if(error?.response?.data?.status===401){
