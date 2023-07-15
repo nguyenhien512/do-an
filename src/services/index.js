@@ -9,7 +9,7 @@ export const authenticate=(data)=>{
 
 export const registerUser=(data)=>{
     console.log("service register data : ",data)
-    return httpClient.login(`${END_POINT.login}`,data)
+    return httpClient.registerUser(`${END_POINT.register}`,data)
 
 
 }

@@ -37,14 +37,29 @@ function RegisterForm({handleRegisterSubmit}){
     >
       <Input.Password />
     </Form.Item>
-    <Form.Item name="role" label="role" rules={[{ required: true }]}>
+
+    <Form.Item
+      label="First name"
+      name="firstName"
+      rules={[{ required: true, message: 'Please input your first name!' }]}
+    >
+      <Input.TextArea />
+    </Form.Item>
+    <Form.Item
+      label="Last name"
+      name="lastName"
+      rules={[{ required: true, message: 'Please input your last name!' }]}
+    >
+      <Input.TextArea />
+    </Form.Item>
+    <Form.Item name="authority" label="role" rules={[{ required: true }]}>
         <Select
           placeholder="You are teacher or student ?"
         //   onChange={onGenderChange}
           allowClear
         >
-          <Option value="ADMIN">teacher</Option>
-          <Option value="USER">student</Option>
+          <Option value="TEACHER">teacher</Option>
+          <Option value="STUDENT">student</Option>
         </Select>
       </Form.Item>
 

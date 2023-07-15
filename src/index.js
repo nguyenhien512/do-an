@@ -11,6 +11,7 @@ import StudentDashboardPage from './Pages/dashboard/StudentDashboardPage'
 import StudentExamPage from './Pages/Exam/StudentExamPage'
 import TeacherDashboardPage from './Pages/dashboard/TeacherDashboardPage'
 import LayoutMain from './Components/Layout/LayoutMain'
+import { ToastContainer } from "react-toastify";
 
 import RequireAuth from './Pages/requireAuth/RequireAuth';
 import { AuthProvider } from './context/AuthProvider';
@@ -26,7 +27,7 @@ root.render(
 
         </Route>
         <Route path='user'>
-          <Route element={<RequireAuth allowedRoles={[ROLE.USER]} />}>
+          <Route element={<RequireAuth allowedRoles={[ROLE.STUDENT]} />}>
             <Route index  element={<LayoutMain content={<StudentExamPage/>}></LayoutMain>}>
 
             </Route>
@@ -35,7 +36,7 @@ root.render(
 
         </Route>
         <Route path='teacher'>
-          <Route element={<RequireAuth allowedRoles={[ROLE.ADMIN]} />}>
+          <Route element={<RequireAuth allowedRoles={[ROLE.TEACHER]} />}>
 
             <Route index element={<LayoutMain content={<TeacherDashboardPage/>}></LayoutMain>}>
 

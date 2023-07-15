@@ -6,7 +6,8 @@ export const CONFIG={
 }
 
 export const END_POINT={
-    login : '/authenticate'
+    login:'/authenticate',
+    register : '/api/users'
 
 
 }

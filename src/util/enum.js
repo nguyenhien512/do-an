@@ -1,6 +1,6 @@
 export const ROLE = {
-  ADMIN: "ADMIN",
-  USER: "USER",
+  TEACHER: "TEACHER",
+  STUDENT: "STUDENT",
 };
 
 export const USER_SIDEBAR = [{content : "exam",route:"/user"}];

@@ -2,11 +2,13 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import useAuth from "../../hooks/useAuth";
 import { authenticate, registerUser } from "../../services";
 import "./login.css";
 import ModalComponent from "../../Components/RegisterModal/ModalComponent";
+import 'react-toastify/dist/ReactToastify.css';
+import jwtDecode from "jwt-decode";
 
 function LoginPage() {
   const [login, setLogin] = useState({
@@ -80,10 +82,23 @@ const handleRegisterSubmit =async (value) => {
    console.log("register submit value ",value)
    try {
     const response = await registerUser(value);
-    setToken(response.data.jwtToken)
-    localStorage.setItem('token',response.data.jwtToken)
-
-    navigate("/")
+    console.log("after submit response ",response)
+    toast.success("Register successfully !", {
+      position: toast.POSITION.TOP_CENTER
+    });
+    // call api login
+    let authenticateUser = {
+      username : response.data.username,
+      password : response.data.password
+    }
+    console.log("authenticate user",authenticateUser);
+    let authenResponse = await authenticate(authenticateUser)
+    console.log("authen resp ",authenResponse)
+    console.log("authen token ")
+    setToken(authenResponse.data.jwttoken)
+    localStorage.setItem('token',authenResponse.data.jwttoken)
+    let location = response.data.authority=='STUDENT' ? "/user" :"/teacher"
+    navigate(location)
     
 } catch (error) {
     if(error?.response?.data?.status===401){
@@ -154,6 +169,7 @@ const handleRegisterSubmit =async (value) => {
         </Form.Item>
       </Form>
       <a href="#" onClick={()=>setIsModalOpen(true)}>Bạn chưa có tài khoản ? tạo một tài khoản mới</a>
+      <ToastContainer />
 
     </section>
   );

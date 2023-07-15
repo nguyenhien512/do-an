@@ -11,11 +11,7 @@ const login = (endPoint,data)=>{
 }
 
 const registerUser =(endPoint,data)=>{
-    return instance.post(endPoint,data,{
-        headers:{
-            "token":'1234'
-        }
-    })
+    return instance.post(endPoint,data)
 
 }
 
