@@ -7,7 +7,6 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ROLE } from "./util/enum";
 import StudentDashboardPage from './Pages/dashboard/StudentDashboardPage'
-import StudentExamPage from './Pages/Exam/StudentExamPage'
 import TeacherDashboardPage from './Pages/dashboard/TeacherDashboardPage'
 import LayoutMain from './Components/Layout/LayoutMain'
 import { ToastContainer } from "react-toastify";
@@ -16,8 +15,9 @@ import RequireAuth from './Pages/requireAuth/RequireAuth';
 import { AuthProvider } from './context/AuthProvider';
 import LoginPage from './Pages/login/LoginPage';
 import Layout from 'antd/es/layout/layout';
-import StudentTestPage from './Pages/Exam/StudentExamPage'
-import StudentTestResultPage from './Pages/Exam/StudentExamPage'
+import StudentExamPage from './Pages/Exam/StudentExamPage'
+import StudentTestResultPage from './Pages/Exam/StudentTestResultPage'
+import StudentTestPage from './Pages/Exam/StudentTestPage'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -32,7 +32,10 @@ root.render(
             <Route index  element={<LayoutMain content={<StudentExamPage/>}></LayoutMain>}>
 
             </Route>
-            <Route path="exam" element={<LayoutMain content={<StudentTestPage/>}></LayoutMain>}/>
+            <Route path="exam/?examId=:id&maxDuration=:duration" element={<LayoutMain content={<StudentTestPage/>}></LayoutMain>}/>
+
+            <Route path="exam" element={<LayoutMain content={<StudentExamPage/>}></LayoutMain>}/>
+
             <Route path="result" element={<LayoutMain content={<StudentTestResultPage/>}></LayoutMain>}/>
           </Route>
 

@@ -1,4 +1,6 @@
 import {callGetResult } from './ExamApi';
+import { useSearchParams } from "react-router-dom";
+import { useState, useEffect } from 'react';
 
 function StudentTestResultPage() {
     const [queryParameters] = useSearchParams();
