@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
@@ -17,6 +16,8 @@ import RequireAuth from './Pages/requireAuth/RequireAuth';
 import { AuthProvider } from './context/AuthProvider';
 import LoginPage from './Pages/login/LoginPage';
 import Layout from 'antd/es/layout/layout';
+import StudentTestPage from './Pages/Exam/StudentExamPage'
+import StudentTestResultPage from './Pages/Exam/StudentExamPage'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -31,7 +32,8 @@ root.render(
             <Route index  element={<LayoutMain content={<StudentExamPage/>}></LayoutMain>}>
 
             </Route>
-
+            <Route path="exam" element={<LayoutMain content={<StudentTestPage/>}></LayoutMain>}/>
+            <Route path="result" element={<LayoutMain content={<StudentTestResultPage/>}></LayoutMain>}/>
           </Route>
 
         </Route>

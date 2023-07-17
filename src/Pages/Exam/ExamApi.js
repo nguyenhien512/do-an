@@ -1,13 +1,14 @@
 import axios from "axios"
-import { API_URL } from "../../Constants"
+import {CONFIG} from "../../httpClient/config"
 
-const BASE_URL = API_URL + "/tests"
+const BASE_URL = CONFIG.baseUrl + "/tests"
 
-export const callCreateTest = async () => {
+export const callCreateTest = async (token) => {
     try {
         const response = await axios.post(`${BASE_URL}`,{}, {
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             }
         })
         return response.data
@@ -16,16 +17,16 @@ export const callCreateTest = async () => {
     }
 }
 
-export const callPostAnswers = async (testId, requestBody) => {
+export const callPostAnswers = async (testId, answers, token) => {
     try {
         const response = await axios.post(`${BASE_URL}/${testId}/answers`,
             {
-                duration: requestBody.duration,
-                answers: requestBody.answers,
+                answers
             },
             {
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 }
             }
         )
@@ -35,11 +36,27 @@ export const callPostAnswers = async (testId, requestBody) => {
     }
 }
 
-export const callGetResult = async (testId) => {
+export const callGetResult = async (testId, token) => {
     try {
         const response = await axios.get(`${BASE_URL}/${testId}/result`, {
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }
+        )
+        return response.data
+    } catch (error) {
+        return console.log(error)
+    }
+}
+
+export const callGetExam = async (token) => {
+    try {
+        const response = await axios.get(`${CONFIG.baseUrl}/api/students/exams`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             }
         }
         )
