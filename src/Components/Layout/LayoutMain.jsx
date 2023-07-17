@@ -5,21 +5,26 @@ import {
   UploadOutlined,
   UserOutlined,
   VideoCameraOutlined,
+  LogoutOutlined
 } from '@ant-design/icons';
 import { Layout, Menu, Button, theme } from 'antd';
 import { NavLink } from 'react-router-dom';
 import useAuth from "../../hooks/useAuth";
 import {ROLE} from '../../util/enum'
 import {USER_SIDEBAR,ADMIN_SIDEBAR} from '../../util/enum'
+import  './LayoutMain.css';
+import { useNavigate } from "react-router-dom";
 
 const { Header, Sider, Content } = Layout;
 function LayoutMain({content}){
-  console.log("content ",content)
+  // console.log("content ",content)
   const {user} = useAuth();
   //user.role[0].authority
-  let role ="ADMIN" ;
+  let role =user.authority ;
+  console.log("check user ",user)
+  const navigate = useNavigate();
 
-  let renderContent = role == ROLE.ADMIN ? ADMIN_SIDEBAR:USER_SIDEBAR
+  let renderContent = (role == ROLE.TEACHER) ? ADMIN_SIDEBAR : USER_SIDEBAR
   console.log("render content ",renderContent)
 
     const [collapsed, setCollapsed] = useState(false);
@@ -50,6 +55,7 @@ function LayoutMain({content}){
           </Sider>
           <Layout>
             <Header style={{ padding: 0, background: colorBgContainer }}>
+            <div className='flex flex-box'>
               <Button
                 type="text"
                 icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -58,8 +64,33 @@ function LayoutMain({content}){
                   fontSize: '16px',
                   width: 64,
                   height: 64,
+                
                 }}
               />
+                 <Button
+                type="text"
+                icon={<div className='iconDiv'><LogoutOutlined />
+                </div>
+                  }
+                onClick={() =>{
+                  localStorage.removeItem("token");
+                  navigate('/')
+                }}
+                style={{
+                  fontSize: '16px',
+                  textAlign:'center',
+                  verticalAlign:'center',
+                  width: 100,
+                  height: 64,
+                  display:'flex',
+                  justifyContent:'center',
+                  alignItems:'center',
+                  textAlign : 'center'
+                }}
+              >
+                Logout
+              </Button>
+              </div>
             </Header>
             <Content
               style={{

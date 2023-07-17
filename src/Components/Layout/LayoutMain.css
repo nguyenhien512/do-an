@@ -1,0 +1,11 @@
+.flex{
+    display: flex;
+    align-items: space-between;
+    justify-content: space-between;
+}
+.flex-box{
+    width: 100%;
+}
+.ant-btn-icon{
+    padding-top: -2px !important;
+}
