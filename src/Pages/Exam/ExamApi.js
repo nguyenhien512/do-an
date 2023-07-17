@@ -53,7 +53,7 @@ export const callGetResult = async (testId, token) => {
 
 export const callGetExam = async (token) => {
     try {
-        const response = await axios.get(`${CONFIG.baseUrl}/api/students/exams`, {
+        const response = await axios.get(`${CONFIG.baseUrl}/api/exams/forStudent`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
