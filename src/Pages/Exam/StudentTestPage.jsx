@@ -52,6 +52,8 @@ function StudentTestPage() {
         fetchData();
     }, [])
 
+    console.log("TEST PAGE")
+
     return <>
         <Row>
             <Col span={18}>

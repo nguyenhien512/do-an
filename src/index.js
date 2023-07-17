@@ -24,26 +24,27 @@ root.render(
   <BrowserRouter>
     <AuthProvider>
       <Routes>
-        <Route exact path='/' element={<LoginPage/>}>
+        <Route exact path='/' element={<LoginPage />}>
 
         </Route>
         <Route path='user'>
           <Route element={<RequireAuth allowedRoles={[ROLE.STUDENT]} />}>
-            <Route index  element={<LayoutMain content={<StudentExamPage/>}></LayoutMain>}>
+            {/* <Route index  element={<LayoutMain content={<StudentExamPage/>}></LayoutMain>}>
 
+            </Route> */}
+            {/* <Route path="exam?examId=:id&maxDuration=:duration" element={<LayoutMain content={<StudentTestPage/>}></LayoutMain>}/> */}
+
+            <Route path="exam" >
+              <Route exact index element={<LayoutMain content={<StudentExamPage />}></LayoutMain>} />
+              <Route path='create-exam' element={<LayoutMain content={<StudentTestPage />}></LayoutMain>}/>
+              <Route path="result" element={<LayoutMain content={<StudentTestResultPage />}></LayoutMain>} />
             </Route>
-            <Route path="exam/?examId=:id&maxDuration=:duration" element={<LayoutMain content={<StudentTestPage/>}></LayoutMain>}/>
-
-            <Route path="exam" element={<LayoutMain content={<StudentExamPage/>}></LayoutMain>}/>
-
-            <Route path="result" element={<LayoutMain content={<StudentTestResultPage/>}></LayoutMain>}/>
           </Route>
-
         </Route>
         <Route path='teacher'>
           <Route element={<RequireAuth allowedRoles={[ROLE.TEACHER]} />}>
 
-            <Route index element={<LayoutMain content={<TeacherDashboardPage/>}></LayoutMain>}>
+            <Route index element={<LayoutMain content={<TeacherDashboardPage />}></LayoutMain>}>
 
             </Route>
 

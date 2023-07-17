@@ -1,7 +1,7 @@
 import { callGetExam } from './ExamApi';
 import { Button, Card } from 'antd';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate,createSearchParams } from 'react-router-dom'
 
 function StudentExamPage () {
 
@@ -23,7 +23,15 @@ function StudentExamPage () {
     console.log("exams" ,exams);
 
     function doExam(exam) {
-        navigate(`?examId=${exam.id}&maxDuration=${exam.maxDuration}`)
+        // navigate(`?examId=${exam.id}&maxDuration=${exam.maxDuration}`)
+        const params = { examId: exam.id, maxDuration: exam.maxDuration };
+
+        // navigate(`/user/exam?examId=1&maxDuration=2400000`)
+        navigate({
+            pathname: '/user/exam/create-exam',
+            search: `?${createSearchParams(params)}`,
+          });
+
     }
 
     return <>
