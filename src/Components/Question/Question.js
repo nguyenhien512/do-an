@@ -1,30 +1,27 @@
-import { Container } from "react-bootstrap";
+import { Card, Button } from "antd";
+import { useState } from "react";
 
+const Question = ({isDisplay, question, index, saveAnswer}) => {
 
-const Question = ({ question, isDisplay, handleInput, isDisabled }) => {
-    Question.defaultProps = {
-        question: {},
-        isDisplay: true,
-        postAnswer: null,
-        isDisabled: true
+      const [selected, setSelected] = useState("");
+
+      const chooseAnswer = (key) => {
+        setSelected(key);
+        saveAnswer(question.id, key);
       }
-    const iterator = {
-            "answerA": "A",
-            "answerB": "B",
-            "answerC": "C",
-            "answerD": "D"
-        }
 
     return (
-        <Container className={isDisplay ? "" : "d-none"}>
-            <p>{question.description}</p>
-            {Object.entries(iterator).map((entry, index) => (
-                <div key={`${question.id}-${entry[1]}`} className="mb-3">
-                        <input type="radio" name={question.id} value={entry[1]} id={`${question.id}-${entry[1]}`} onChange={handleInput} disabled={isDisabled}/>
-                        <label htmlFor={`${question.id}-${entry[1]}`}>{question[entry[0]]}</label>
-                </div>
-            ))}
-        </Container>
+        <Card title={`Câu ${index + 1}`}>
+            <p>{question.content}</p>
+            {question.answers.map(item => <p key={item.key}>
+                <span>{item.key}</span>. <span>{item.content}</span>
+            </p>)}
+            <p>Chọn đáp án:
+            {question.answers.map(item => <Button key={item.key} shape="circle" className="m-2" onClick={() => chooseAnswer(item.key)} type={selected == item.key ? "primary" : "default"}>
+                {item.key}
+            </Button>)}
+            </p>
+        </Card>
 
     );
 }
