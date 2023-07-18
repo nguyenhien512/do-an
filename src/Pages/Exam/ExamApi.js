@@ -1,11 +1,9 @@
 import axios from "axios"
 import {CONFIG} from "../../httpClient/config"
 
-const BASE_URL = CONFIG.baseUrl + "/tests"
-
-export const callCreateTest = async (token) => {
+export const callCreateTest = async (examId, token) => {
     try {
-        const response = await axios.post(`${BASE_URL}`,{}, {
+        const response = await axios.post(`${CONFIG.baseUrl}/api/tests?examId=${examId}`,{}, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -19,7 +17,7 @@ export const callCreateTest = async (token) => {
 
 export const callPostAnswers = async (testId, answers, token) => {
     try {
-        const response = await axios.post(`${BASE_URL}/${testId}/answers`,
+        const response = await axios.post(`${CONFIG.baseUrl}/api/tests/${testId}/answers`,
             {
                 answers
             },
@@ -38,7 +36,7 @@ export const callPostAnswers = async (testId, answers, token) => {
 
 export const callGetResult = async (testId, token) => {
     try {
-        const response = await axios.get(`${BASE_URL}/${testId}/result`, {
+        const response = await axios.get(`${CONFIG.baseUrl}/api/tests/${testId}/result/forStudent`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`

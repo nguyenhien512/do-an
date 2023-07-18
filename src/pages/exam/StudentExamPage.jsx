@@ -1,9 +1,9 @@
 import { callGetExam } from './ExamApi';
-import { Button, Card } from 'antd';
+import { Button, Card, Col, Row, Space } from 'antd';
 import { useState, useEffect } from 'react';
-import { useNavigate,createSearchParams } from 'react-router-dom'
+import { useNavigate, createSearchParams } from 'react-router-dom'
 
-function StudentExamPage () {
+function StudentExamPage() {
 
     const [exams, setExams] = useState([]);
 
@@ -20,34 +20,35 @@ function StudentExamPage () {
         }
         fetchData();
     }, [])
-    console.log("exams" ,exams);
+    console.log("exams", exams);
 
     function doExam(exam) {
-        // navigate(`?examId=${exam.id}&maxDuration=${exam.maxDuration}`)
         const params = { examId: exam.id, maxDuration: exam.maxDuration };
 
-        // navigate(`/user/exam?examId=1&maxDuration=2400000`)
         navigate({
             pathname: '/user/exam/create-exam',
             search: `?${createSearchParams(params)}`,
-          });
+        });
 
     }
 
     return <>
-    Student Exam Page
-    {exams?.map(item => {
-        return<>
-        <Card title={item.name}>
-            <p>Dành cho lớp: {item.studentClassName}</p>
-            <p>Thời gian làm bài: {item.maxDuration/60000}</p>
-            <p>Mở lúc: {item.openTime}</p>
-            <p>Đóng lúc: {item.closeTime}</p>
-            <Button type="primary" onClick={() => doExam(item)}>Làm bài thi</Button>
-        </Card>
-        </>
-    })
-    }
+        <Row>
+            <Col span={6}>
+                {exams?.map(item => {
+                    return <>
+                        <Card title={item.name} style={{ width: '100%' }}>
+                            <p>Dành cho lớp: {item.studentClassName}</p>
+                            <p>Thời gian làm bài: {item.maxDuration / 60000}</p>
+                            <p>Mở lúc: {item.openTime}</p>
+                            <p>Đóng lúc: {item.closeTime}</p>
+                            <Button type="primary" onClick={() => doExam(item)}>Làm bài thi</Button>
+                        </Card>
+                    </>
+                })}
+            </Col>
+        </Row>
+
     </>
 }
 

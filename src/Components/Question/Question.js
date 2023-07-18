@@ -11,7 +11,7 @@ const Question = ({isDisplay, question, index, saveAnswer}) => {
       }
 
     return (
-        <Card className={isDisplay ? "" : "d-none"} title={`Câu ${index + 1}`}>
+        <Card title={`Câu ${index + 1}`}>
             <p>{question.content}</p>
             {question.answers.map(item => <p key={item.key}>
                 <span>{item.key}</span>. <span>{item.content}</span>

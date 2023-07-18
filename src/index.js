@@ -18,6 +18,9 @@ import Layout from 'antd/es/layout/layout';
 import StudentExamPage from './Pages/Exam/StudentExamPage'
 import StudentTestResultPage from './Pages/Exam/StudentTestResultPage'
 import StudentTestPage from './Pages/Exam/StudentTestPage'
+import TeacherExamPage from './Pages/Exam/TeacherExamPage';
+import TeacherTestPage from './Pages/Exam/TeacherTestPage';
+import TeacherTestResultPage from './Pages/Exam/TeacherTestResultPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -29,15 +32,15 @@ root.render(
         </Route>
         <Route path='user'>
           <Route element={<RequireAuth allowedRoles={[ROLE.STUDENT]} />}>
-            {/* <Route index  element={<LayoutMain content={<StudentExamPage/>}></LayoutMain>}>
+            <Route index  element={<LayoutMain content={<StudentDashboardPage/>}></LayoutMain>}>
 
-            </Route> */}
+            </Route>
             {/* <Route path="exam?examId=:id&maxDuration=:duration" element={<LayoutMain content={<StudentTestPage/>}></LayoutMain>}/> */}
 
             <Route path="exam" >
               <Route exact index element={<LayoutMain content={<StudentExamPage />}></LayoutMain>} />
               <Route path='create-exam' element={<LayoutMain content={<StudentTestPage />}></LayoutMain>}/>
-              <Route path="result" element={<LayoutMain content={<StudentTestResultPage />}></LayoutMain>} />
+              <Route path='result' element={<LayoutMain content={<StudentTestResultPage />}></LayoutMain>} />
             </Route>
           </Route>
         </Route>
@@ -46,6 +49,12 @@ root.render(
 
             <Route index element={<LayoutMain content={<TeacherDashboardPage />}></LayoutMain>}>
 
+            </Route>
+
+            <Route path="exam" >
+              <Route exact index element={<LayoutMain content={<TeacherExamPage />}></LayoutMain>} />
+              <Route path='tests' element={<LayoutMain content={<TeacherTestPage />}></LayoutMain>}/>
+              <Route path='test-result' element={<LayoutMain content={<TeacherTestResultPage />}></LayoutMain>} />
             </Route>
 
             <Route path='testbank' element={<>Test bank dashboard</>}>
