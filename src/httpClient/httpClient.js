@@ -15,10 +15,34 @@ const registerUser =(endPoint,data)=>{
 
 }
 
+const getAllQuestion=(endPoint)=>{
+    let token = localStorage.getItem('token');
+    return instance.get(endPoint,
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
+        )
+}
+const createQuestion=(endPoint,data)=>{
+    let token = localStorage.getItem('token');
+    return instance.post(endPoint,
+        data,
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`            }
+        }
+        )
+}
+
+
 const  httpClient = {
     postUser,
     login,
-    registerUser
+    registerUser,
+    getAllQuestion,
+    createQuestion
     
 }
 

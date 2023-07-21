@@ -7,7 +7,7 @@ export const CONFIG={
 
 export const END_POINT={
     login:'/authenticate',
-    register : '/api/users'
-
-
+    register : '/api/users',
+    getAllQuestion:'/api/questions',
+    createQuestion : '/api/questions/create'
 }

@@ -3,8 +3,7 @@ import { Button, Modal } from 'antd';
 import RegisterForm from './register-form/RegisterForm';
 
 function ModalComponent({isOpen,handlePopupOk,handlePopupCancel,handleRegisterSubmit}){
-    // const [open, setOpen] = useState(false);
-    // const [confirmLoading, setConfirmLoading] = useState(false);    
+   
     return (
         <>
           <Modal

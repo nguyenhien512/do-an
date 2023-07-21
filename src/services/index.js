@@ -10,7 +10,15 @@ export const authenticate=(data)=>{
 export const registerUser=(data)=>{
     console.log("service register data : ",data)
     return httpClient.registerUser(`${END_POINT.register}`,data)
+}
 
+export const getAllQuestion=()=>{
+    console.log("get all question service");
+    return httpClient.getAllQuestion(`${END_POINT.getAllQuestion}`)
+}
 
+export const createQuestion=(data)=>{
+    console.log("service register data : ",data)
+    return httpClient.createQuestion(`${END_POINT.createQuestion}`,data)
 }
 

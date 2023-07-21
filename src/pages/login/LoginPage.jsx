@@ -19,7 +19,7 @@ function LoginPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
 
-  const {setToken} = useAuth();
+  const { setToken } = useAuth();
   const navigate = useNavigate();
 
 
@@ -29,115 +29,94 @@ function LoginPage() {
       [event.target.name]: event.target.value,
     });
   };
-
-
   const onFinish = async (user) => {
-    
+
     try {
-        const response = await authenticate(user);
+      const response = await authenticate(user);
+      setToken(response.data.jwttoken)
+      localStorage.setItem('token', response.data.jwttoken)
 
-        console.log("on finish resp ",response)
+      let location = response.data.authority == 'STUDENT' ? "/user" : "/teacher"
+      navigate(location)
 
-
-        setToken(response.data.jwttoken)
-        localStorage.setItem('token',response.data.jwttoken)
-
-        let location = response.data.authority=='STUDENT' ? "/user" :"/teacher"
-        navigate(location)
-        
     } catch (error) {
-        if(error?.response?.data?.status===401){
-            toast.error(`${error?.response?.data?.message}`, {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                });
-        }
-        else{
-
-            toast.error(`Internal server error !!`, {
-              
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                });
-        }
+      if (error?.response?.data?.status === 401) {
+        toast.error(`${error?.response?.data?.message}`, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+      else {
+        toast.error(`Internal server error !!`, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
     }
-
-
-  
   };
-
-
-const handlePopupCancel = () => {
-    console.log('Clicked cancel button');
+  const handlePopupCancel = () => {
     setIsModalOpen(false);
   };
-const handleRegisterSubmit =async (value) => {
-   console.log("register submit value ",value)
-   try {
-    const response = await registerUser(value);
-    console.log("after submit response ",response)
-    toast.success("Register successfully !", {
-      position: toast.POSITION.TOP_CENTER
-    });
-    // call api login
-    let authenticateUser = {
-      username : response.data.username,
-      password : response.data.password
-    }
-    console.log("authenticate user",authenticateUser);
-    let authenResponse = await authenticate(authenticateUser)
-    console.log("authen resp ",authenResponse)
-    console.log("authen token ")
-    setToken(authenResponse.data.jwttoken)
-    localStorage.setItem('token',authenResponse.data.jwttoken)
-    let location = response.data.authority=='STUDENT' ? "/user" :"/teacher"
-    navigate(location)
-    
-} catch (error) {
-    if(error?.response?.data?.status===401){
-        toast.error(`${error?.response?.data?.message}`, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            });
-    }
-    else{
+  const handleRegisterSubmit = async (value) => {
+    try {
+      const response = await registerUser(value);
+      toast.success("Register successfully !", {
+        position: toast.POSITION.TOP_CENTER
+      });
+      // call api login
+      let authenticateUser = {
+        username: response.data.username,
+        password: response.data.password
+      }
+      let authenResponse = await authenticate(authenticateUser)
+      setToken(authenResponse.data.jwttoken)
+      localStorage.setItem('token', authenResponse.data.jwttoken)
+      let location = response.data.authority == 'STUDENT' ? "/user" : "/teacher"
+      navigate(location)
 
+    } catch (error) {
+      if (error?.response?.data?.status === 401) {
+        toast.error(`${error?.response?.data?.message}`, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+      else {
         toast.error(`Internal server error !!`, {
-          
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            });
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
     }
-}
   };
 
 
 
-  
+
 
   return (
     <section className="login-page">
-        <ModalComponent isOpen={isModalOpen} handlePopupCancel={handlePopupCancel} handleRegisterSubmit={handleRegisterSubmit}/>
+      <ModalComponent isOpen={isModalOpen} handlePopupCancel={handlePopupCancel} handleRegisterSubmit={handleRegisterSubmit} />
       <h1>Login</h1>
       <Form onFinish={onFinish} className="login-form">
         <Form.Item name="username">
@@ -171,7 +150,7 @@ const handleRegisterSubmit =async (value) => {
           </div>
         </Form.Item>
       </Form>
-      <a href="#" onClick={()=>setIsModalOpen(true)}>Bạn chưa có tài khoản ? tạo một tài khoản mới</a>
+      <a href="#" onClick={() => setIsModalOpen(true)}>Bạn chưa có tài khoản ? tạo một tài khoản mới</a>
       <ToastContainer />
 
     </section>
