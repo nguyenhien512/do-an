@@ -32,7 +32,7 @@ const ExamCard = ({ exam, doExam }) => {
                 {status == 'BEFORE OPEN' ? <Button type="primary" disabled>Chưa mở</Button> : null}
                 {status == 'CLOSE' ? <Button type="primary" disabled>Đã kết thúc</Button> : null}
             </div>
-        </Card>``
+        </Card>
     </>
 }
 

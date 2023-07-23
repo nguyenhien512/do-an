@@ -11,7 +11,7 @@ export const USER_SIDEBAR = [
 export const ADMIN_SIDEBAR = [
   { content: "Dashboard", route: "/teacher" },
   { content: "Exam", route: "/teacher/exam"},
-  // {content :"Manage Asset",route : "/asset" },
+  {content :"Class",route : "/teacher/class" }
   // {content : "Manage Assignment",route: "/assignment"},
   // {content : "Request for Returning",route: "/RequestForReturning"},
   // {content : "Report",route: "/report"}
