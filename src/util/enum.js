@@ -3,11 +3,14 @@ export const ROLE = {
   STUDENT: "STUDENT",
 };
 
-export const USER_SIDEBAR = [{content : "exam",route:"/user"}];
+export const USER_SIDEBAR = [
+  { content: "Dashboard", route: "/user" },
+  { content: "Exam", route: "/user/exam" }
+];
 
 export const ADMIN_SIDEBAR = [
-  { content: "dashboard", route: "/teacher" },
-  // { content: "Manage User", route: "/user"},
+  { content: "Dashboard", route: "/teacher" },
+  { content: "Exam", route: "/teacher/exam"},
   // {content :"Manage Asset",route : "/asset" },
   // {content : "Manage Assignment",route: "/assignment"},
   // {content : "Request for Returning",route: "/RequestForReturning"},

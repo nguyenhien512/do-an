@@ -1,7 +1,10 @@
 import { callGetResult } from './ExamApi';
 import { useSearchParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { Card, Space } from 'antd';
+import { Card, Space, Typography } from 'antd';
+import { formatDateTime } from '../../util/dateTimeUtil';
+
+const { Text } = Typography;
 
 function StudentTestResultPage() {
     const [queryParameters] = useSearchParams();
@@ -19,16 +22,22 @@ function StudentTestResultPage() {
         }
         fetchData();
     }, [])
+    console.log("test result", result);
 
     return <>
-        <Space size="large" direction="vertical">
-            <h3>Kết quả thi</h3>
-            <Card style={{ width: 300 }}>
-                <p>Kì thi: {result?.examName}</p>
-                <p>Thí sinh: {result?.studentFirstName} {result?.studentLastName} </p>
-                <p>Điểm: {result?.score}</p>
-            </Card>
-        </Space>
+        <div className='d-flex justify-content-center'>
+
+            {result ? <Space size="large" direction='vertical' wrap>
+                <h3 className='text-center' >Kết quả thi</h3>
+                <Card style={{ width: 500 }} >
+                    <div className='d-inline-flex justify-content-between' style={{width: '100%'}}><p>Thí sinh:</p><Text strong>{result.student.firstName} {result.student.lastName}</Text></div>
+                    <div className='d-inline-flex justify-content-between align-items-baseline' style={{width: '100%'}}><p>Điểm:</p><h4 style={{color: '#1677ff'}}>{result.score}</h4></div>
+                    <div className='d-inline-flex justify-content-between' style={{width: '100%'}}><p>Nộp bài lúc:</p><Text strong>{formatDateTime(result.submitTime)}</Text></div>
+                </Card>
+            </Space>
+                : null
+            }
+        </div>
 
     </>
 }
