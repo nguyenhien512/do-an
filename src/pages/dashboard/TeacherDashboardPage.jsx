@@ -2,30 +2,33 @@ import { Card, List } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Modal } from 'antd';
 import { Space, Table, Tag } from 'antd';
-import { createQuestion, getAllQuestion } from '../../services';
+import { createQuestion, deleteQuestion, getAllQuestion, updateQuestion } from '../../services';
 import { InputNumber } from 'antd';
-import { Button,  Input, Select } from 'antd';
-import { Field, Form, Formik, FormikProps } from 'formik';
+import { Button, Input, Select, Form } from 'antd';
+// import { Field, Form, Formik, FormikProps } from 'formik';
 
 const { Option } = Select;
 
 const MyInput = ({ field, form, ...props }) => {
     return <input {...field} {...props} />;
-  };
-  
+};
+
 function TeacherDashboardPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [questions, setQuestions] = useState([])
     const [questionModal, setQuestionModal] = useState({
         title: "",
+        subject: '',
+        questionType: '',
         id: null,
-        content: "",
-        grade: 0,
-        subject: "",
-        questionType: "",
-        answers: [],
-        correctAnswers: "",
-        examTime: null
+        grade: '',
+        correctAnswers: '',
+        content: '',
+        answerAContent: '',
+        answerBContent: '',
+        answerCContent: '',
+        answerDContent: '',
+        examTimes: null
     })
 
     const convertFormDataToDTO = (
@@ -47,12 +50,100 @@ function TeacherDashboardPage() {
             subject: data.subject
         }
         return result
+    }
 
+    const convertDataToDTOUpdate = (data) => {
+        let answers = []
+        answers.push({ key: 'A', content: data.answerAContent })
+        answers.push({ key: 'B', content: data.answerBContent })
+        answers.push({ key: 'C', content: data.answerCContent })
+        answers.push({ key: 'D', content: data.answerDContent })
+
+        let result = {
+            id: data.id,
+            answers: answers,
+            content: data.content,
+            correctAnswers: data.correctAnswers,
+            examTimes: data.examTimes,
+            grade: data.grade,
+            questionType: data.questionType,
+            subject: data.subject
+        }
+        return result
     }
 
     const onFinish = async (values) => {
         console.log("form values submit ", values);
-        await createQuestion(convertFormDataToDTO(values))
+        console.log("questionmodal title ", questionModal.title);
+
+        if (questionModal.title == 'Create Question') {
+            let resp = await createQuestion(convertFormDataToDTO(values))
+            console.log("resp ", resp)
+            let createdQuestionData = resp.data
+            if (resp.status == 201) {
+                let newQuestions = structuredClone(questions);
+                let newQuestion = {
+                    index: newQuestions.length + 1,
+                    key: createdQuestionData.id,
+                    subject: createdQuestionData.subject,
+                    questionType: createdQuestionData.questionType,
+                    id: createdQuestionData.id,
+                    grade: createdQuestionData.grade,
+                    examTimes: createdQuestionData.examTimes,
+                    correctAnswers: createdQuestionData.correctAnswers,
+                    content: createdQuestionData.content,
+                    answerAContent: createdQuestionData.answers[0].content,
+                    answerBContent: createdQuestionData.answers[1].content,
+                    answerCContent: createdQuestionData.answers[2].content,
+                    answerDContent: createdQuestionData.answers[3].content
+                }
+                newQuestions.push(newQuestion);
+                setQuestions(newQuestions);
+                setIsModalOpen(false);
+            }
+            return;
+        } else {
+            console.log("update values ", questionModal);
+            let updateResp = await updateQuestion(convertDataToDTOUpdate(questionModal));
+            let updateData = updateResp.data;
+            console.log("update resp ", updateResp);
+            if (updateResp.status == 200) {
+                let newQuestions = structuredClone(questions);
+                newQuestions = newQuestions.map((item => {
+                    if (item.id == updateData.id) {
+                        // item.subject = updateData.subject,
+                        item.questionType = updateData.questionType
+                        item.grade = updateData.grade
+                        item.examTimes = updateData.examTimes
+                        item.correctAnswers = updateData.correctAnswers
+                        item.content = updateData.content
+                        item.answerAContent = updateData.answers[0].content
+                        item.answerBContent = updateData.answers[1].content
+                        item.answerCContent = updateData.answers[2].content
+                        item.answerDContent = updateData.answers[3].content
+                    }
+                    return item
+                }
+                ))
+                setQuestions(newQuestions)
+                setIsModalOpen(false)
+                setQuestionModal({
+                    title: "",
+                    subject: '',
+                    questionType: '',
+                    id: null,
+                    grade: '',
+                    correctAnswers: '',
+                    content: '',
+                    answerAContent: '',
+                    answerBContent: '',
+                    answerCContent: '',
+                    answerDContent: '',
+                    examTimes: null
+                })
+            }
+
+        }
 
     };
     const onFinishFailed = (errorInfo) => {
@@ -71,11 +162,23 @@ function TeacherDashboardPage() {
         }
 
         function convertToQuestionWithKey(data) {
-            return data.map((data, index) => {
+            console.log("checkpoint 10 ", data)
+            return data.map((item, index) => {
                 return {
                     index: index + 1,
                     key: data.id,
-                    ...data
+                    subject: item.subject,
+                    questionType: item.questionType,
+                    id: item.id,
+                    grade: item.grade,
+                    examTimes: item.examTimes,
+                    correctAnswers: item.correctAnswers,
+                    content: item.content,
+                    answerAContent: item.answers[0].content,
+                    answerBContent: item.answers[1].content,
+                    answerCContent: item.answers[2].content,
+                    answerDContent: item.answers[3].content
+
                 }
             })
         }
@@ -113,15 +216,33 @@ function TeacherDashboardPage() {
         newQuestionModal.grade = record.grade
         newQuestionModal.subject = record.subject
         newQuestionModal.questionType = record.questionType
-        newQuestionModal.answers = record.answers
-        newQuestionModal.correctAnswers = record.correctAnswers
-        newQuestionModal.examTime = record.examTime
+        newQuestionModal.answerAContent = record.answerAContent
+        newQuestionModal.answerBContent = record.answerBContent
+        newQuestionModal.answerCContent = record.answerCContent
+        newQuestionModal.answerDContent = record.answerDContent
 
-        console.log("new question modal", newQuestionModal);
+        newQuestionModal.correctAnswers = record.correctAnswers
+        newQuestionModal.examTimes = record.examTimes
+
 
         setQuestionModal(newQuestionModal)
         setIsModalOpen(true);
 
+
+    }
+    const handleDeleteQuestion = async (id) => {
+        console.log("deleting")
+        try {
+            let deleteResp = await deleteQuestion(id);
+            console.log("delete resp ", deleteResp);
+            if(deleteResp.status == 400){
+                
+            }
+        }
+        catch (exception){
+            console.log(exception)
+
+         }
 
     }
 
@@ -178,7 +299,7 @@ function TeacherDashboardPage() {
                 <Space size="middle">
                     <Button type="primary" onClick={() => { handleClickUpdate(record) }}>Update</Button>
 
-                    <Button type="primary" danger>
+                    <Button type="primary" danger onClick={() => { handleDeleteQuestion(record.id) }}>
                         Delete
                     </Button>
                 </Space>
@@ -194,7 +315,13 @@ function TeacherDashboardPage() {
             </div>
         }
     ];
-    console.log("checkpoint ", questionModal)
+    // console.log("qm ", questionModal)
+    const handleFormFieldChange = (attribute, value) => {
+        console.log("checkpoint 2 ", attribute, value)
+        let newQuestionModal = structuredClone(questionModal);
+        newQuestionModal[`${attribute}`] = value
+        setQuestionModal(newQuestionModal);
+    }
 
     return (
         <>
@@ -232,29 +359,35 @@ function TeacherDashboardPage() {
                 footer={null}
 
             >
-                
+
                 <Form
                     name="basic"
                     style={{ maxWidth: 6000 }}
-                    initialValues={{ remember: true }}
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
-                    destroyOnClose={true}
+                // destroyOnClose={true}
                 >
                     <Form.Item
+
+                        initialValues={questionModal.title == 'Create Question' ? '' : questionModal.content}
                         label="Question content"
                         name="content"
-                        rules={[{ required: true }]}
+                        rules={[{ required: questionModal.title == 'Create Question' }]}
+
                     >
-                        <Input.TextArea value={questionModal.title} />
+                        <Input.TextArea onChange={(event) => { handleFormFieldChange('content', event.target.value) }} defaultValue={questionModal.content == 'Create Question' ? '' : questionModal.content} value={questionModal.title} />
                     </Form.Item>
 
-                    <Form.Item name="grade" label="Grade" rules={[{ required: true, }]}>
+                    <Form.Item initialValues={questionModal.title == 'Create Question' ? '' : questionModal.grade} name="grade" label="Grade"
+                        rules={[{ required: questionModal.title == 'Create Question' }]}
+                    >
                         <Select
                             placeholder="Grade "
                             //   onChange={onGenderChange}
                             allowClear
+                            defaultValue={questionModal.title == 'Create Question' ? '' : questionModal.grade}
+                            onChange={(value) => { handleFormFieldChange('grade', value) }}
                         >
                             <Option value="GRADE_1">GRADE_1</Option>
                             <Option value="GRADE_2">GRADE_2</Option>
@@ -272,11 +405,17 @@ function TeacherDashboardPage() {
                         </Select>
                     </Form.Item>
 
-                    <Form.Item name="subject" label="Subject" rules={[{ required: true }]}>
+                    <Form.Item
+                        initialValues={questionModal.title == 'Create Question' ? '' : questionModal.subject} name="subject" label="Subject"
+                        rules={[{ required: questionModal.title == 'Create Question' }]}
+                    >
                         <Select
                             placeholder="Select subject"
                             //   onChange={onGenderChange}
                             allowClear
+                            defaultValue={questionModal.title == 'Create Question' ? '' : questionModal.subject}
+                            onChange={(value) => { handleFormFieldChange('subject', value) }}
+
                         >
                             <Option value="ENG">English</Option>
                             <Option value="PHY">Physics</Option>
@@ -286,46 +425,85 @@ function TeacherDashboardPage() {
 
                         </Select>
                     </Form.Item>
-                    <Form.Item name="questionType" label="Question type" rules={[{ required: true, }]}>
+                    <Form.Item initialValues={questionModal.title == 'Create Question' ? '' : questionModal.questionType} name="questionType" label="Question type"
+                        rules={[{ required: questionModal.title == 'Create Question' }]}
+                    >
                         <Select
+                            defaultValue={questionModal.title == 'Create Question' ? '' : questionModal.questionType}
                             placeholder="Multiple or single choice question ?"
                             //   onChange={onGenderChange}
                             allowClear
+                            onChange={(value) => { handleFormFieldChange('questionType', value) }}
+
                         >
                             <Option value="MULTIPLE_CHOICE">MULTIPLE_CHOICE</Option>
                             <Option value="SINGLE_CHOICE">SINGLE_CHOICE</Option>
                         </Select>
                     </Form.Item>
                     <Form.Item
+                        initialValues={questionModal.title == 'Create Question' ? '' : questionModal.answerAContent}
                         label="Answer A"
                         name="answerA"
-                        rules={[{ required: true, }]}
+                        rules={[{ required: questionModal.title == 'Create Question' }]}
+                        onChange={(event) => { handleFormFieldChange('answerAContent', event.target.value) }}
+
                     >
-                        <Input.TextArea />
+                        <Input.TextArea
+                            defaultValue={questionModal.title == 'Create Question' ? '' : questionModal.answerAContent}
+
+                        />
                     </Form.Item>
                     <Form.Item
                         label="Answer B"
                         name="answerB"
-                        rules={[{ required: true, }]}
+                        rules={[{ required: questionModal.title == 'Create Question' }]}
                     >
-                        <Input.TextArea />
+                        <Input.TextArea
+                            defaultValue={questionModal.title == 'Create Question' ? '' : questionModal.answerBContent}
+                            onChange={(event) => { handleFormFieldChange('answerBContent', event.target.value) }}
+
+                        />
                     </Form.Item>
                     <Form.Item
                         label="Answer C"
                         name="answerC"
-                        rules={[{ required: true, }]}
+                        rules={[{ required: questionModal.title == 'Create Question' }]}
                     >
-                        <Input.TextArea />
+                        <Input.TextArea
+                            defaultValue={questionModal.title == 'Create Question' ? '' : questionModal.answerCContent}
+                            onChange={(event) => { handleFormFieldChange('answerCContent', event.target.value) }}
+                        />
                     </Form.Item>
                     <Form.Item
                         label="Answer D"
                         name="answerD"
-                        rules={[{ required: true }]}
+                        rules={[{ required: questionModal.title == 'Create Question' }]}
                     >
-                        <Input.TextArea />
+                        <Input.TextArea
+                            defaultValue={questionModal.title == 'Create Question' ? '' : questionModal.answerDContent}
+                            onChange={(event) => { handleFormFieldChange('answerDContent', event.target.value) }}
+                        />
                     </Form.Item>
-                    <Form.Item name="correctAnswers" label="Correct answer" rules={[{ required: true }]}>
-                        <Input.TextArea />
+                    <Form.Item name="correctAnswers" label="Correct answer"
+                        rules={[{ required: questionModal.title == 'Create Question' }]}
+
+                    >
+                        <Input.TextArea
+                            defaultValue={questionModal.title == 'Create Question' ? '' : questionModal.correctAnswers}
+                            onChange={(event) => { handleFormFieldChange('correctAnswers', event.target.value) }}
+
+                        />
+                    </Form.Item>
+
+                    <Form.Item name="examTimes" label="Exam time"
+                        rules={[{ required: questionModal.title == 'Create Question' }]}
+
+                    >
+                        <InputNumber
+                            defaultValue={questionModal.title == 'Create Question' ? '' : questionModal.examTimes}
+                            onChange={(value) => { handleFormFieldChange('examTimes', value) }}
+
+                        />
                     </Form.Item>
 
 
@@ -334,9 +512,9 @@ function TeacherDashboardPage() {
                             Submit
                         </Button>
                     </Form.Item>
-                </Form> 
-                
-     
+                </Form>
+
+
             </Modal>
 
         </>

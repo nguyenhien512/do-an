@@ -22,3 +22,13 @@ export const createQuestion=(data)=>{
     return httpClient.createQuestion(`${END_POINT.createQuestion}`,data)
 }
 
+export const updateQuestion=(data)=>{
+    console.log("service update data : ",data)
+    return httpClient.updateQuestion(`${END_POINT.updateQuestion}`,data)
+}
+
+export const deleteQuestion=(id)=>{
+    console.log("service delete data : ",id)
+    return httpClient.deleteQuestion(`${END_POINT.deleteQuestion}`,id)
+}
+
