@@ -23,6 +23,8 @@ import TeacherTestPage from './Pages/Exam/TeacherTestPage';
 import TeacherTestResultPage from './Pages/Exam/TeacherTestResultPage';
 import StatisticPage from "./Pages/statistics/StatisticPage";
 import TeacherExamSettingPage from './Pages/Exam/TeacherExamSettingPage';
+import ManageClassPage from './Pages/manage-class/ManageClass';
+import ClassDetailPage from './Pages/manage-class/ClassDetailPage';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -62,7 +64,9 @@ root.render(
 
             </Route>
 
-            <Route path='student' element={<>Manage class page</>}>
+            <Route path='class'>
+            <Route exact index element={<LayoutMain content={<ManageClassPage />}></LayoutMain>} />
+            <Route path='class-detail' element={<LayoutMain content={<ClassDetailPage />}></LayoutMain>}/>
             </Route>
 
 
