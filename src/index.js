@@ -22,6 +22,8 @@ import TeacherExamPage from './Pages/Exam/TeacherExamPage';
 import TeacherTestPage from './Pages/Exam/TeacherTestPage';
 import TeacherTestResultPage from './Pages/Exam/TeacherTestResultPage';
 import StatisticPage from "./Pages/statistics/StatisticPage";
+import TeacherExamSettingPage from './Pages/Exam/TeacherExamSettingPage';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -34,10 +36,7 @@ root.render(
         <Route path='user'>
           <Route element={<RequireAuth allowedRoles={[ROLE.STUDENT]} />}>
             <Route index  element={<LayoutMain content={<StudentDashboardPage/>}></LayoutMain>}>
-
             </Route>
-            {/* <Route path="exam?examId=:id&maxDuration=:duration" element={<LayoutMain content={<StudentTestPage/>}></LayoutMain>}/> */}
-
             <Route path="exam" >
               <Route exact index element={<LayoutMain content={<StudentExamPage />}></LayoutMain>} />
               <Route path='create-exam' element={<LayoutMain content={<StudentTestPage />}></LayoutMain>}/>
@@ -54,6 +53,7 @@ root.render(
 
             <Route path="exam" >
               <Route exact index element={<LayoutMain content={<TeacherExamPage />}></LayoutMain>} />
+              <Route path='settings' element={<LayoutMain content={<TeacherExamSettingPage />}></LayoutMain>}/>
               <Route path='tests' element={<LayoutMain content={<TeacherTestPage />}></LayoutMain>}/>
               <Route path='test-result' element={<LayoutMain content={<TeacherTestResultPage />}></LayoutMain>} />
             </Route>

@@ -1,75 +1,76 @@
 import Question from '../../Components/Question/Question';
-import { useRef, useState, useEffect } from 'react';
-import Countdown from 'react-countdown';
-import { callCreateTest, callGetResult, callPostAnswers } from './ExamApi';
-import { Space, Button, Row, Col } from 'antd';
+import { useState, useEffect } from 'react';
+import { callCreateTest, callPostAnswers } from './ExamApi';
+import { Space, Button, Row, Col, Statistic } from 'antd';
 import { useNavigate, useSearchParams, createSearchParams } from 'react-router-dom'
+
+const { Countdown } = Statistic;
 
 function StudentTestPage() {
     const [queryParameters] = useSearchParams();
     const examId = queryParameters.get("examId");
     const token = localStorage.getItem("token");
     const maxDuration = parseInt(queryParameters.get("maxDuration"));
-    const [currentQuestion, setCurrentQuestion] = useState(0);
-    const [testId, setTestId] = useState("");
+    const [testId, setTestId] = useState();
     const [questions, setQuestions] = useState([]);
     const [answers, setAnswers] = useState({});
 
-    const [startTime, setStartTime] = useState(0);
+    const [isFinish, setIsFinish] = useState(false);
+
+    const deadline = Date.now() + 1000 * 60 * maxDuration;
 
     const navigate = useNavigate();
-
-    const timerRef = useRef(null);
 
     function saveAnswer(questionId, key) {
         answers[questionId] = key;
     }
 
-    function handleSubmit() {
-        handleFinishExam();
-    }
+    useEffect(() => {
+        async function handleFinishExam() {
+            await callPostAnswers(testId, answers, token);
+            const params = { testId: testId };
 
-    function handleTimeOut(timerDeltaObject, isCompleted) {
-        handleFinishExam();
-    }
+            navigate({
+                pathname: '/user/exam/result',
+                search: `?${createSearchParams(params)}`,
+            });
+        }
+        if (isFinish) {
+            handleFinishExam();
+        }
 
-    async function handleFinishExam() {
-        await callPostAnswers(testId, answers, token);
-        const params = { testId: testId};
+    }, [isFinish])
 
-        navigate({
-            pathname: '/user/exam/result',
-            search: `?${createSearchParams(params)}`,
-          });
-    }
+
 
     useEffect(() => {
         async function fetchData() {
             try {
                 const test = await callCreateTest(examId, token);
                 console.log(test)
-                setQuestions(test.questions);
+                let questions = test.testQuestionRelations.map(r => r.question);
+                setQuestions(questions);
                 setTestId(test.id);
+
             } catch (ignored) { }
         }
         fetchData();
     }, [])
 
-    console.log("TEST PAGE")
 
     return <>
         <Row>
-            <Col span={18} className="ps-5 pe-5">
+            <Col span={18}>
                 <Space direction="vertical" size="large" style={{ display: 'flex' }}>
-                    <Space size={[8, 16]} wrap>
-                        {questions.map((item, index) =>
-                            <Button key={item.id} onClick={() => setCurrentQuestion(index)}>
+                    <Space >
+                        {questions?.map((question, index) =>
+                            <Button key={question.id}>
                                 Câu {index + 1}
                             </Button>)}
                     </Space>
-                    {questions.map((item, index) => <Question
+                    {questions?.map((item, index) => <Question
                         key={item.id}
-                        isDisplay={currentQuestion == index}
+                        isDisplay={true}
                         question={item}
                         index={index}
                         saveAnswer={saveAnswer}
@@ -77,11 +78,14 @@ function StudentTestPage() {
                 </Space>
             </Col>
             <Col span={6} align="center">
-                <Button type="primary" onClick={handleSubmit}>Nộp bài</Button>
-                {/* <Countdown date={startTime + maxDuration} autoStart={true} onComplete={handleTimeOut} /> */}
+                <Space direction="vertical" size="large">
+                    {isFinish ? null : <>
+                        <Button type="primary" onClick={() => setIsFinish(true)}>Nộp bài</Button>
+                        <Countdown title="Thời gian làm bài còn" value={deadline} format="HH:mm:ss" onFinish={() => setIsFinish(true)} />
+                    </>}
+                </Space>
             </Col>
         </Row>
-
     </>
 }
 export default StudentTestPage;

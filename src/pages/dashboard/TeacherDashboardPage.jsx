@@ -4,21 +4,27 @@ import { Modal } from 'antd';
 import { Space, Table, Tag } from 'antd';
 import { createQuestion, getAllQuestion } from '../../services';
 import { InputNumber } from 'antd';
-import { Button, Form, Input, Select } from 'antd';
+import { Button,  Input, Select } from 'antd';
+import { Field, Form, Formik, FormikProps } from 'formik';
+
 const { Option } = Select;
 
+const MyInput = ({ field, form, ...props }) => {
+    return <input {...field} {...props} />;
+  };
+  
 function TeacherDashboardPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [questions, setQuestions] = useState([])
     const [questionModal, setQuestionModal] = useState({
         title: "",
         id: null,
-        content: null,
-        grade: null,
-        subject: null,
-        questionType: null,
+        content: "",
+        grade: 0,
+        subject: "",
+        questionType: "",
         answers: [],
-        correctAnswer: null,
+        correctAnswers: "",
         examTime: null
     })
 
@@ -37,7 +43,8 @@ function TeacherDashboardPage() {
             correctAnswers: data.correctAnswers,
             examTimes: data.examTimes,
             grade: data.grade,
-            questionType: data.questionType
+            questionType: data.questionType,
+            subject: data.subject
         }
         return result
 
@@ -97,6 +104,27 @@ function TeacherDashboardPage() {
         setIsModalOpen(false);
     };
 
+    const handleClickUpdate = (record) => {
+        console.log("update record ", record)
+        let newQuestionModal = structuredClone(questionModal)
+        newQuestionModal.title = "Update question"
+        newQuestionModal.id = record.id
+        newQuestionModal.content = record.content
+        newQuestionModal.grade = record.grade
+        newQuestionModal.subject = record.subject
+        newQuestionModal.questionType = record.questionType
+        newQuestionModal.answers = record.answers
+        newQuestionModal.correctAnswers = record.correctAnswers
+        newQuestionModal.examTime = record.examTime
+
+        console.log("new question modal", newQuestionModal);
+
+        setQuestionModal(newQuestionModal)
+        setIsModalOpen(true);
+
+
+    }
+
 
     const columns = [
         {
@@ -148,7 +176,7 @@ function TeacherDashboardPage() {
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
-                    <Button type="primary" onClick={() => { }}>Update</Button>
+                    <Button type="primary" onClick={() => { handleClickUpdate(record) }}>Update</Button>
 
                     <Button type="primary" danger>
                         Delete
@@ -166,6 +194,7 @@ function TeacherDashboardPage() {
             </div>
         }
     ];
+    console.log("checkpoint ", questionModal)
 
     return (
         <>
@@ -200,7 +229,10 @@ function TeacherDashboardPage() {
                     width: '1000px'
                 }}
                 destroyOnClose={true}
+                footer={null}
+
             >
+                
                 <Form
                     name="basic"
                     style={{ maxWidth: 6000 }}
@@ -208,13 +240,14 @@ function TeacherDashboardPage() {
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
+                    destroyOnClose={true}
                 >
                     <Form.Item
                         label="Question content"
                         name="content"
                         rules={[{ required: true }]}
                     >
-                        <Input.TextArea />
+                        <Input.TextArea value={questionModal.title} />
                     </Form.Item>
 
                     <Form.Item name="grade" label="Grade" rules={[{ required: true, }]}>
@@ -239,7 +272,7 @@ function TeacherDashboardPage() {
                         </Select>
                     </Form.Item>
 
-                    <Form.Item name="Subject" label="Subject" rules={[{ required: true }]}>
+                    <Form.Item name="subject" label="Subject" rules={[{ required: true }]}>
                         <Select
                             placeholder="Select subject"
                             //   onChange={onGenderChange}
@@ -294,20 +327,16 @@ function TeacherDashboardPage() {
                     <Form.Item name="correctAnswers" label="Correct answer" rules={[{ required: true }]}>
                         <Input.TextArea />
                     </Form.Item>
-                    <Form.Item
-                        label="Exam time"
-                        name="examTimes"
-                        rules={[{ required: true }]}
-                    >
-                        <InputNumber />
-                    </Form.Item>
+
 
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                         <Button type="primary" htmlType="submit">
                             Submit
                         </Button>
                     </Form.Item>
-                </Form>
+                </Form> 
+                
+     
             </Modal>
 
         </>
