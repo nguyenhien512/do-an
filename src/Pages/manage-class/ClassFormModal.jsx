@@ -26,7 +26,7 @@ const ClassFormModal = ({ open, onCancel, handleFinish, initForm }) => {
         handleFinish(form.getFieldsValue(true));
     };
     return (
-        <Modal title="Basic Drawer" open={open} onOk={onOk} onCancel={onCancel}>
+        <Modal title={initForm ? "Sửa lớp học" : "Tạo lớp học"} open={open} onOk={onOk} onCancel={onCancel}>
             <Form form={form} layout="vertical" name="classForm">
                 <Form.Item
                     name="name"

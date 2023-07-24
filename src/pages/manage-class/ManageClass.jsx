@@ -15,7 +15,7 @@ function ManageClassPage() {
 
     const [open, setOpen] = useState(false);
     const [initForm, setInitForm] = useState();
-    const [currentClassId, setCurrentClassId] = useState(); 
+    const [currentClassId, setCurrentClassId] = useState();
 
     useEffect(() => {
         async function fetchData() {
@@ -62,9 +62,9 @@ function ManageClassPage() {
 
     async function editClass(id) {
         const targetObj = classes.filter(e => e.id == id)[0];
-        const {name, schoolYear} = targetObj;
+        const { name, schoolYear } = targetObj;
         setCurrentClassId(id);
-        setInitForm({name, schoolYear});
+        setInitForm({ name, schoolYear });
         setOpen(true);
     }
 
@@ -76,18 +76,20 @@ function ManageClassPage() {
         setOpen(false);
     };
 
-    const handleFinish = async ( values) => {
+    const handleFinish = async (values) => {
         let data;
         if (currentClassId == null) {
             data = await callCreateClass(values, token);
             setClasses([...classes, data]);
+            message.info("Tạo lớp học thành công");
         } else {
-            data = await callEditClass(currentClassId,values,token);
+            data = await callEditClass(currentClassId, values, token);
             let index = classes.findIndex(e => e.id == currentClassId);
-            setClasses(classes.toSpliced(index,1,data));
+            setClasses(classes.toSpliced(index, 1, data));
             setCurrentClassId(null);
             setInitForm(null);
-        }    
+            message.info("Sửa lớp học thành công");
+        }
         setOpen(false);
     }
 
@@ -103,10 +105,12 @@ function ManageClassPage() {
                 </Space>
             </Col>
             <Col span={4}>
-                <Button icon={<PlusOutlined />} type='primary' onClick={showFormModal}>Tạo lớp học</Button>
+                <div className="d-flex justify-content-center">
+                    <Button icon={<PlusOutlined />} type='primary' onClick={showFormModal}>Tạo lớp học</Button>
+                </div>
             </Col>
         </Row>
-        <ClassFormModal open={open} onCancel={hideFormModal} handleFinish={handleFinish} initForm={initForm}/>
+        <ClassFormModal open={open} onCancel={hideFormModal} handleFinish={handleFinish} initForm={initForm} />
     </>
 }
 export default ManageClassPage
