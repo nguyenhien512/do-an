@@ -21,6 +21,7 @@ import StudentTestPage from './Pages/Exam/StudentTestPage'
 import TeacherExamPage from './Pages/Exam/TeacherExamPage';
 import TeacherTestPage from './Pages/Exam/TeacherTestPage';
 import TeacherTestResultPage from './Pages/Exam/TeacherTestResultPage';
+import StatisticPage from "./Pages/statistics/StatisticPage";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -67,6 +68,7 @@ root.render(
 
             <Route path='student/create' element={<>Create student page</>}>
             </Route>
+            <Route path='statistics' element={<LayoutMain content={<StatisticPage/>}></LayoutMain> } />
           </Route>
 
         </Route>
