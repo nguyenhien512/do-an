@@ -9,10 +9,6 @@ import { Button, Input, Select, Form } from 'antd';
 
 const { Option } = Select;
 
-const MyInput = ({ field, form, ...props }) => {
-    return <input {...field} {...props} />;
-};
-
 function TeacherDashboardPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [questions, setQuestions] = useState([])
@@ -24,10 +20,18 @@ function TeacherDashboardPage() {
         grade: '',
         correctAnswers: '',
         content: '',
-        answerAContent: '',
-        answerBContent: '',
-        answerCContent: '',
-        answerDContent: '',
+        answerAId: null,
+        answerAKey: null,
+        answerAContent: null,
+        answerBId: null,
+        answerBKey: null,
+        answerBContent: null,
+        answerDId: null,
+        answerDKey: null,
+        answerDContent: null,
+        answerCId: null,
+        answerCKey: null,
+        answerCContent: null,
         examTimes: null
     })
 
@@ -54,10 +58,10 @@ function TeacherDashboardPage() {
 
     const convertDataToDTOUpdate = (data) => {
         let answers = []
-        answers.push({ key: 'A', content: data.answerAContent })
-        answers.push({ key: 'B', content: data.answerBContent })
-        answers.push({ key: 'C', content: data.answerCContent })
-        answers.push({ key: 'D', content: data.answerDContent })
+        answers.push({ id: data.answerAId, key: data.answerAKey, content: data.answerAContent })
+        answers.push({ id: data.answerBId, key: data.answerBKey, content: data.answerBContent })
+        answers.push({ id: data.answerCId, key: data.answerAKey, content: data.answerCContent })
+        answers.push({ id: data.answerDId, key: data.answerDKey, content: data.answerDContent })
 
         let result = {
             id: data.id,
@@ -74,7 +78,7 @@ function TeacherDashboardPage() {
 
     const onFinish = async (values) => {
         console.log("form values submit ", values);
-        console.log("questionmodal title ", questionModal.title);
+        console.log("questionmodal  ", questionModal);
 
         if (questionModal.title == 'Create Question') {
             let resp = await createQuestion(convertFormDataToDTO(values))
@@ -92,10 +96,26 @@ function TeacherDashboardPage() {
                     examTimes: createdQuestionData.examTimes,
                     correctAnswers: createdQuestionData.correctAnswers,
                     content: createdQuestionData.content,
-                    answerAContent: createdQuestionData.answers[0].content,
-                    answerBContent: createdQuestionData.answers[1].content,
-                    answerCContent: createdQuestionData.answers[2].content,
-                    answerDContent: createdQuestionData.answers[3].content
+                    answerA: {
+                        id: createdQuestionData.answers[0].id,
+                        key: createdQuestionData.answers[0].key,
+                        content: createdQuestionData.answers[0].content
+                    },
+                    answerB: {
+                        id: createdQuestionData.answers[1].id,
+                        key: createdQuestionData.answers[1].key,
+                        content: createdQuestionData.answers[1].content
+                    },
+                    answerC: {
+                        id: createdQuestionData.answers[2].id,
+                        key: createdQuestionData.answers[2].key,
+                        content: createdQuestionData.answers[2].content
+                    },
+                    answerD: {
+                        id: createdQuestionData.answers[3].id,
+                        key: createdQuestionData.answers[3].key,
+                        content: createdQuestionData.answers[3].content
+                    }
                 }
                 newQuestions.push(newQuestion);
                 setQuestions(newQuestions);
@@ -117,14 +137,30 @@ function TeacherDashboardPage() {
                         item.examTimes = updateData.examTimes
                         item.correctAnswers = updateData.correctAnswers
                         item.content = updateData.content
-                        item.answerAContent = updateData.answers[0].content
-                        item.answerBContent = updateData.answers[1].content
-                        item.answerCContent = updateData.answers[2].content
-                        item.answerDContent = updateData.answers[3].content
+                        item.answerA = {
+                            id: updateData.answers[0].id,
+                            key: updateData.answers[0].key,
+                            content: updateData.answers[0].content
+                        }
+                        item.answerB = {
+                            id: updateData.answers[1].id,
+                            key: updateData.answers[1].key,
+                            content: updateData.answers[1].content
+                        }
+                        item.answerC = {
+                            id: updateData.answers[2].id,
+                            key: updateData.answers[2].key,
+                            content: updateData.answers[2].content
+                        }
+                        item.answerD = {
+                            id: updateData.answers[3].id,
+                            key: updateData.answers[3].key,
+                            content: updateData.answers[3].content
+                        }
                     }
                     return item
-                }
-                ))
+                }))
+
                 setQuestions(newQuestions)
                 setIsModalOpen(false)
                 setQuestionModal({
@@ -135,10 +171,18 @@ function TeacherDashboardPage() {
                     grade: '',
                     correctAnswers: '',
                     content: '',
-                    answerAContent: '',
-                    answerBContent: '',
-                    answerCContent: '',
-                    answerDContent: '',
+                    answerAId: null,
+                    answerAKey: null,
+                    answerAContent: null,
+                    answerBId: null,
+                    answerBKey: null,
+                    answerBContent: null,
+                    answerDId: null,
+                    answerDKey: null,
+                    answerDContent: null,
+                    answerCId: null,
+                    answerCKey: null,
+                    answerCContent: null,
                     examTimes: null
                 })
             }
@@ -149,6 +193,8 @@ function TeacherDashboardPage() {
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
+
+    console.log("question modal ", questionModal)
 
 
     // END FORMS
@@ -174,11 +220,26 @@ function TeacherDashboardPage() {
                     examTimes: item.examTimes,
                     correctAnswers: item.correctAnswers,
                     content: item.content,
-                    answerAContent: item.answers[0].content,
-                    answerBContent: item.answers[1].content,
-                    answerCContent: item.answers[2].content,
-                    answerDContent: item.answers[3].content
-
+                    answerA: {
+                        id: item.answers[0].id,
+                        key: item.answers[0].key,
+                        content: item.answers[0].content
+                    },
+                    answerB: {
+                        id: item.answers[1].id,
+                        key: item.answers[1].key,
+                        content: item.answers[1].content
+                    },
+                    answerC: {
+                        id: item.answers[2].id,
+                        key: item.answers[2].key,
+                        content: item.answers[2].content
+                    },
+                    answerD: {
+                        id: item.answers[3].id,
+                        key: item.answers[3].key,
+                        content: item.answers[3].content
+                    }
                 }
             })
         }
@@ -216,11 +277,18 @@ function TeacherDashboardPage() {
         newQuestionModal.grade = record.grade
         newQuestionModal.subject = record.subject
         newQuestionModal.questionType = record.questionType
-        newQuestionModal.answerAContent = record.answerAContent
-        newQuestionModal.answerBContent = record.answerBContent
-        newQuestionModal.answerCContent = record.answerCContent
-        newQuestionModal.answerDContent = record.answerDContent
-
+        newQuestionModal.answerAId = record.answerA.id
+        newQuestionModal.answerAKey = record.answerA.key
+        newQuestionModal.answerAContent = record.answerA.content
+        newQuestionModal.answerBId = record.answerB.id
+        newQuestionModal.answerBKey = record.answerB.key
+        newQuestionModal.answerBContent = record.answerB.content
+        newQuestionModal.answerCId = record.answerC.id
+        newQuestionModal.answerCKey = record.answerC.key
+        newQuestionModal.answerCContent = record.answerC.content
+        newQuestionModal.answerDId = record.answerD.id
+        newQuestionModal.answerDKey = record.answerD.key
+        newQuestionModal.answerDContent = record.answerD.content
         newQuestionModal.correctAnswers = record.correctAnswers
         newQuestionModal.examTimes = record.examTimes
 
@@ -235,14 +303,14 @@ function TeacherDashboardPage() {
         try {
             let deleteResp = await deleteQuestion(id);
             console.log("delete resp ", deleteResp);
-            if(deleteResp.status == 400){
-                
+            if (deleteResp.status == 400) {
+
             }
         }
-        catch (exception){
+        catch (exception) {
             console.log(exception)
 
-         }
+        }
 
     }
 
