@@ -1,14 +1,21 @@
 import {useEffect, useState} from "react";
 import FilterExam from "./utils/filterExam";
-import {getExams, getStatisticByExamId, getStatisticByQuesId, getStatisticData} from "./statisticApi";
+import {
+    getExams,
+    getStatisticByExamId,
+    getStatisticByQuesId,
+    getStatisticByStudentId
+} from "./statisticApi";
 import ScoreBar from "./utils/ScoreBar";
 import QuesBar from "./utils/QuesBar";
+import StudentBoard from "./utils/StudentBoard";
 
 const StatisticPage = () => {
     const [loading, setLoading] = useState()
     const [exams, setExams] = useState([])
     const [byScoreBars, setByScoreBars] = useState()
     const [byQuesBars, setByQuesBars] = useState()
+    const [studentData, setStudentData] = useState()
     const fetchData = (examId) => {
         setLoading(true)
         getStatisticByExamId(examId)
@@ -20,6 +27,11 @@ const StatisticPage = () => {
         getStatisticByQuesId(examId)
             .then((res) => {
                 setByQuesBars(res)
+                setLoading(false)
+            })
+        getStatisticByStudentId(examId)
+            .then((res) => {
+                setStudentData(res)
                 setLoading(false)
             })
     }
@@ -56,6 +68,13 @@ const StatisticPage = () => {
                     <QuesBar
                         loading = {loading}
                         byQuesBars = {byQuesBars}
+                    />}
+            </div>
+            <div className='student-table'>
+                {studentData &&
+                    <StudentBoard
+                        loading={loading}
+                        data = {studentData}
                     />}
             </div>
         </div>
