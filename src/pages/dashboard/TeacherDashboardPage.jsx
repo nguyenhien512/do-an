@@ -32,7 +32,6 @@ function TeacherDashboardPage() {
         answerCId: null,
         answerCKey: null,
         answerCContent: null,
-        examTimes: null
     })
 
     const convertFormDataToDTO = (
@@ -48,7 +47,6 @@ function TeacherDashboardPage() {
             answers: answers,
             content: data.content,
             correctAnswers: data.correctAnswers,
-            examTimes: data.examTimes,
             grade: data.grade,
             questionType: data.questionType,
             subject: data.subject
@@ -68,7 +66,6 @@ function TeacherDashboardPage() {
             answers: answers,
             content: data.content,
             correctAnswers: data.correctAnswers,
-            examTimes: data.examTimes,
             grade: data.grade,
             questionType: data.questionType,
             subject: data.subject
@@ -93,7 +90,6 @@ function TeacherDashboardPage() {
                     questionType: createdQuestionData.questionType,
                     id: createdQuestionData.id,
                     grade: createdQuestionData.grade,
-                    examTimes: createdQuestionData.examTimes,
                     correctAnswers: createdQuestionData.correctAnswers,
                     content: createdQuestionData.content,
                     answerA: {
@@ -131,10 +127,9 @@ function TeacherDashboardPage() {
                 let newQuestions = structuredClone(questions);
                 newQuestions = newQuestions.map((item => {
                     if (item.id == updateData.id) {
-                        // item.subject = updateData.subject,
+                        item.subject = updateData.subject
                         item.questionType = updateData.questionType
                         item.grade = updateData.grade
-                        item.examTimes = updateData.examTimes
                         item.correctAnswers = updateData.correctAnswers
                         item.content = updateData.content
                         item.answerA = {
@@ -183,7 +178,6 @@ function TeacherDashboardPage() {
                     answerCId: null,
                     answerCKey: null,
                     answerCContent: null,
-                    examTimes: null
                 })
             }
 
@@ -217,7 +211,6 @@ function TeacherDashboardPage() {
                     questionType: item.questionType,
                     id: item.id,
                     grade: item.grade,
-                    examTimes: item.examTimes,
                     correctAnswers: item.correctAnswers,
                     content: item.content,
                     answerA: {
@@ -290,7 +283,6 @@ function TeacherDashboardPage() {
         newQuestionModal.answerDKey = record.answerD.key
         newQuestionModal.answerDContent = record.answerD.content
         newQuestionModal.correctAnswers = record.correctAnswers
-        newQuestionModal.examTimes = record.examTimes
 
 
         setQuestionModal(newQuestionModal)
@@ -563,16 +555,7 @@ function TeacherDashboardPage() {
                         />
                     </Form.Item>
 
-                    <Form.Item name="examTimes" label="Exam time"
-                        rules={[{ required: questionModal.title == 'Create Question' }]}
 
-                    >
-                        <InputNumber
-                            defaultValue={questionModal.title == 'Create Question' ? '' : questionModal.examTimes}
-                            onChange={(value) => { handleFormFieldChange('examTimes', value) }}
-
-                        />
-                    </Form.Item>
 
 
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
