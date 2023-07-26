@@ -6,6 +6,7 @@ import { createQuestion, deleteQuestion, getAllQuestion, updateQuestion } from '
 import { InputNumber } from 'antd';
 import { Button, Input, Select, Form } from 'antd';
 // import { Field, Form, Formik, FormikProps } from 'formik';
+import { toast, ToastContainer } from 'react-toastify';
 
 const { Option } = Select;
 
@@ -119,67 +120,84 @@ function TeacherDashboardPage() {
             }
             return;
         } else {
-            console.log("update values ", questionModal);
-            let updateResp = await updateQuestion(convertDataToDTOUpdate(questionModal));
-            let updateData = updateResp.data;
-            console.log("update resp ", updateResp);
-            if (updateResp.status == 200) {
-                let newQuestions = structuredClone(questions);
-                newQuestions = newQuestions.map((item => {
-                    if (item.id == updateData.id) {
-                        item.subject = updateData.subject
-                        item.questionType = updateData.questionType
-                        item.grade = updateData.grade
-                        item.correctAnswers = updateData.correctAnswers
-                        item.content = updateData.content
-                        item.answerA = {
-                            id: updateData.answers[0].id,
-                            key: updateData.answers[0].key,
-                            content: updateData.answers[0].content
-                        }
-                        item.answerB = {
-                            id: updateData.answers[1].id,
-                            key: updateData.answers[1].key,
-                            content: updateData.answers[1].content
-                        }
-                        item.answerC = {
-                            id: updateData.answers[2].id,
-                            key: updateData.answers[2].key,
-                            content: updateData.answers[2].content
-                        }
-                        item.answerD = {
-                            id: updateData.answers[3].id,
-                            key: updateData.answers[3].key,
-                            content: updateData.answers[3].content
-                        }
-                    }
-                    return item
-                }))
 
-                setQuestions(newQuestions)
+            // console.log("update values ", questionModal);
+            try {
+
+
+                let updateResp = await updateQuestion(convertDataToDTOUpdate(questionModal));
+                let updateData = updateResp.data;
+                console.log("update resp ", updateResp);
+                if (updateResp.status == 200) {
+                    let newQuestions = structuredClone(questions);
+                    newQuestions = newQuestions.map((item => {
+                        if (item.id == updateData.id) {
+                            item.subject = updateData.subject
+                            item.questionType = updateData.questionType
+                            item.grade = updateData.grade
+                            item.correctAnswers = updateData.correctAnswers
+                            item.content = updateData.content
+                            item.answerA = {
+                                id: updateData.answers[0].id,
+                                key: updateData.answers[0].key,
+                                content: updateData.answers[0].content
+                            }
+                            item.answerB = {
+                                id: updateData.answers[1].id,
+                                key: updateData.answers[1].key,
+                                content: updateData.answers[1].content
+                            }
+                            item.answerC = {
+                                id: updateData.answers[2].id,
+                                key: updateData.answers[2].key,
+                                content: updateData.answers[2].content
+                            }
+                            item.answerD = {
+                                id: updateData.answers[3].id,
+                                key: updateData.answers[3].key,
+                                content: updateData.answers[3].content
+                            }
+                        }
+                        return item
+                    }))
+
+                    setQuestions(newQuestions)
+                    setIsModalOpen(false)
+                    setQuestionModal({
+                        title: "",
+                        subject: '',
+                        questionType: '',
+                        id: null,
+                        grade: '',
+                        correctAnswers: '',
+                        content: '',
+                        answerAId: null,
+                        answerAKey: null,
+                        answerAContent: null,
+                        answerBId: null,
+                        answerBKey: null,
+                        answerBContent: null,
+                        answerDId: null,
+                        answerDKey: null,
+                        answerDContent: null,
+                        answerCId: null,
+                        answerCKey: null,
+                        answerCContent: null,
+                    })
+                } 
+                // else {
+                   
+               // }
+            }catch(exception){
+                console.log("error ")
                 setIsModalOpen(false)
-                setQuestionModal({
-                    title: "",
-                    subject: '',
-                    questionType: '',
-                    id: null,
-                    grade: '',
-                    correctAnswers: '',
-                    content: '',
-                    answerAId: null,
-                    answerAKey: null,
-                    answerAContent: null,
-                    answerBId: null,
-                    answerBKey: null,
-                    answerBContent: null,
-                    answerDId: null,
-                    answerDKey: null,
-                    answerDContent: null,
-                    answerCId: null,
-                    answerCKey: null,
-                    answerCContent: null,
-                })
+                toast.error("Cannot update question exists in one exam!", {
+                    position: toast.POSITION.TOP_CENTER
+                });
             }
+            
+
+
 
         }
 
@@ -295,13 +313,16 @@ function TeacherDashboardPage() {
         try {
             let deleteResp = await deleteQuestion(id);
             console.log("delete resp ", deleteResp);
-            if (deleteResp.status == 400) {
-
+            if (deleteResp.status == 200) {
+                let newQuestions = structuredClone(questions);
+                newQuestions = newQuestions.filter((item) => {
+                    return item.id !== id
+                })
+                setQuestions(newQuestions)
             }
         }
         catch (exception) {
-            console.log(exception)
-
+            console.log("delete exception ")
         }
 
     }
