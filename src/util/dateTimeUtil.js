@@ -1,27 +1,15 @@
+import dayjs from "dayjs";
+dayjs().format()
+
 export const formatDateTime = (str) => {
-    let timestamp = Date.parse(str);
-    let date = new Date(timestamp);
-    return date.toLocaleString();
+    let day = dayjs(str);
+    return day.format('DD/MM/YYYY HH:mm:ss');
 }
 
 export const parseDate = (str) => {
+    if (str == null) return null
     let timestamp = Date.parse(str);
     return new Date(timestamp);
-}
-
-export const convertMinutesToHours = (minutes) => {
-    let hourStr, minStr;
-    let hours = Math.floor(minutes / 60);
-    hourStr = hours.toString();
-    if (hours < 10) {
-        hourStr += "0"
-    }
-    let redundancy = minutes - hours * 60;
-    minStr = redundancy.toString();
-    if (redundancy < 10) {
-        minStr += "0"
-    }
-    return `${hourStr}:${minStr}:00`
 }
 
 export const calculateDuration = (startDateStr, endDateStr) => {
@@ -47,4 +35,14 @@ export const msToHMS = ( duration ) => {
      seconds = (seconds < 10) ? "0" + seconds : seconds;
 
      return hours + " giờ " + minutes + " phút " + seconds + " giây";
+}
+
+export const parseDayjs = (str) => {
+    if (str == null) return null
+    return dayjs(str);
+}
+
+export const dayjsToString = (day) => {
+    if (day == null) return null
+    return day.format('YYYY-MM-DDTHH:mm:ss');
 }
