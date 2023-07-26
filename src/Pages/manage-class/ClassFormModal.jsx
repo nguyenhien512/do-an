@@ -1,23 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { Modal, Input, Form, InputNumber } from 'antd';
+import {useResetFormOnCloseModal} from '../../hooks/resetForm'
 
-// reset form fields when modal is form, closed
-const useResetFormOnCloseModal = ({ form, open }) => {
-    const prevOpenRef = useRef();
-    useEffect(() => {
-        prevOpenRef.current = open;
-    }, [open]);
-    const prevOpen = prevOpenRef.current;
-    useEffect(() => {
-        if (!open && prevOpen) {
-            form.resetFields();
-        }
-    }, [form, prevOpen, open]);
-};
+
 
 const ClassFormModal = ({ open, onCancel, handleFinish, initForm }) => {
     const [form] = Form.useForm();
-    form.setFieldsValue(initForm);
+    
     useResetFormOnCloseModal({
         form,
         open,
@@ -27,7 +16,7 @@ const ClassFormModal = ({ open, onCancel, handleFinish, initForm }) => {
     };
     return (
         <Modal title={initForm ? "Sửa lớp học" : "Tạo lớp học"} open={open} onOk={onOk} onCancel={onCancel}>
-            <Form form={form} layout="vertical" name="classForm">
+            <Form form={form} layout="vertical" name="classForm" initialValues={initForm}>
                 <Form.Item
                     name="name"
                     label="Tên lớp"

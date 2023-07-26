@@ -1,8 +1,10 @@
 import { callGetTests } from './TeacherExamApi';
 import { useSearchParams, createSearchParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { Card, Space, Button, Row, Col, Statistic } from 'antd';
+import { Card, Space, Button, Row, Col, Statistic, Typography} from 'antd';
 import { formatDateTime } from '../../util/dateTimeUtil';
+
+const {Text} = Typography;
 
 function TeacherTestPage() {
     const [queryParameters] = useSearchParams();
@@ -22,7 +24,6 @@ function TeacherTestPage() {
             try {
                 const response = await callGetTests(examId, token);
                 setTests(response);
-                localStorage.setItem("tests", JSON.stringify(response));
             } catch (ignored) { }
         }
         fetchData();
@@ -54,12 +55,12 @@ function TeacherTestPage() {
                     </Space>
                 </Col>
                 <Col span={6}>
-                    <Card title={exam.name} headStyle={{background:'#E2E8F0'}} bordered={false}>
+                    <Space direction='vertical' si={[8, 8]} style={{backgroundColor: '#e6f7ff', padding: 20, width: '100%'}}>
+                        <h6><Text strong>{exam.name}</Text></h6>
                         <Statistic title="Tổng số bài đã nộp" value={tests.length} valueStyle={{fontSize: '1em'}}/>
                         <Statistic title="Số lượt thi" value={exam.examTimes} valueStyle={{fontSize: '1em'}}/>
                         <Statistic title="Giao cho" value={exam.studentClassName} valueStyle={{fontSize: '1em'}} />
-                        
-                    </Card>
+                    </Space>
                 </Col>
             </Row>
             : null}

@@ -1,9 +1,9 @@
-import { callGetExam } from './TeacherExamApi';
-import { Table, Tag, Button } from 'antd';
+import { callGetExamsOfTeacher } from './TeacherExamApi';
+import { Table, Tag, Button, Space } from 'antd';
 import { useState, useEffect } from 'react';
 import { useNavigate, createSearchParams } from 'react-router-dom';
 import { formatDateTime } from '../../util/dateTimeUtil';
-import { SettingOutlined, PaperClipOutlined } from "@ant-design/icons";
+import { SettingOutlined, PaperClipOutlined, DeleteOutlined } from "@ant-design/icons";
 
 function TeacherExamPage() {
 
@@ -12,17 +12,19 @@ function TeacherExamPage() {
     const navigate = useNavigate();
 
     const token = localStorage.getItem("token");
+    
 
     useEffect(() => {
         async function fetchData() {
             try {
-                const data = await callGetExam(token);
+                const data = await callGetExamsOfTeacher(token);
                 setExams([...data]);
-                localStorage.setItem("exams",JSON.stringify(data));
+                localStorage.setItem("exams", JSON.stringify(data));
             } catch (ignored) { }
         }
         fetchData();
     }, [])
+    
     console.log("exams", exams);
 
     function viewTests(id) {
@@ -89,22 +91,12 @@ function TeacherExamPage() {
             title: '',
             dataIndex: 'id',
             key: 'action-1',
-            render: (id) => (
-                <a title='Cài đặt' onClick={() => examSettings(id)}>
-                    <SettingOutlined />
-                </a>
-
-            )
-        },
-        {
-            title: '',
-            dataIndex: 'id',
-            key: 'action-2',
-            render: (id) => (
-                <a title='Xem bài đã nộp' onClick={() => viewTests(id)}>
-                    <PaperClipOutlined />
-                </a>
-
+            render: (id) => (<>
+                <Space size={[16, 4]} wrap>
+                    <Button title="Cài đặt" icon={<SettingOutlined />} onClick={() => examSettings(id)}></Button>
+                    <Button title="Xem bài làm đã nộp" icon={<PaperClipOutlined />} onClick={() => viewTests(id)}></Button>
+                </Space>
+            </>
             )
         }
     ]

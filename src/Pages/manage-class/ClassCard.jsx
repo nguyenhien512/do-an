@@ -35,7 +35,7 @@ const ClassCard = ({ classObj, handleMenuClick }) => {
                     <CaretDownOutlined />
                 </Dropdown>
             </div>
-            <div className='d-inline-flex justify-content-between mt-2' style={{ width: '100%' }}><p>Sĩ số: {classObj.students.length}</p><p>Năm học: {classObj.schoolYear} - {classObj.schoolYear + 1}</p></div>
+            <div className='d-inline-flex justify-content-between mt-2' style={{ width: '100%' }}><p>Sĩ số: {classObj.students? classObj.students.length : 0}</p><p>Năm học: {classObj.schoolYear} - {classObj.schoolYear + 1}</p></div>
         </Card>
     </>
 

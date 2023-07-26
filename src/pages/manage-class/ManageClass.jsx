@@ -74,11 +74,15 @@ function ManageClassPage() {
     };
     const hideFormModal = () => {
         setOpen(false);
+        setInitForm(null);
+        
     };
 
     const handleFinish = async (values) => {
         let data;
-        if (currentClassId == null) {
+        console.log("currentClassId",currentClassId);
+        if (!currentClassId) {
+            console.log("Callling create class")
             data = await callCreateClass(values, token);
             setClasses([...classes, data]);
             message.info("Tạo lớp học thành công");

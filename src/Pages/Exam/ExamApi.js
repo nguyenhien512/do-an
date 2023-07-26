@@ -63,3 +63,32 @@ export const callGetExam = async (token) => {
         return console.log(error)
     }
 }
+
+export const callDeleteExam = async (classId, token) => {
+    try {
+        const response = await axios.delete(`${CONFIG.baseUrl}/api/classes/${classId}/delete`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }
+        )
+        return response.status
+    } catch (error) {
+        return console.log(error)
+    }
+}
+
+export const callGetQuestions = async (examId, token) => {
+    try {
+        const response = await axios.get(`${CONFIG.baseUrl}/api/questions/getByExam?examId=${examId}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        return response.data
+    } catch (error) {
+        return console.log(error)
+    }
+}

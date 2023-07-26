@@ -37,11 +37,11 @@ root.render(
         </Route>
         <Route path='user'>
           <Route element={<RequireAuth allowedRoles={[ROLE.STUDENT]} />}>
-            <Route index  element={<LayoutMain content={<StudentDashboardPage/>}></LayoutMain>}>
+            <Route index element={<LayoutMain content={<StudentDashboardPage />}></LayoutMain>}>
             </Route>
             <Route path="exam" >
               <Route exact index element={<LayoutMain content={<StudentExamPage />}></LayoutMain>} />
-              <Route path='create-exam' element={<LayoutMain content={<StudentTestPage />}></LayoutMain>}/>
+              <Route path='create-exam' element={<LayoutMain content={<StudentTestPage />}></LayoutMain>} />
               <Route path='result' element={<LayoutMain content={<StudentTestResultPage />}></LayoutMain>} />
             </Route>
           </Route>
@@ -55,8 +55,8 @@ root.render(
 
             <Route path="exam" >
               <Route exact index element={<LayoutMain content={<TeacherExamPage />}></LayoutMain>} />
-              <Route path='settings' element={<LayoutMain content={<TeacherExamSettingPage />}></LayoutMain>}/>
-              <Route path='tests' element={<LayoutMain content={<TeacherTestPage />}></LayoutMain>}/>
+              <Route path='settings' element={<LayoutMain content={<TeacherExamSettingPage />}></LayoutMain>} />
+              <Route path='tests' element={<LayoutMain content={<TeacherTestPage />}></LayoutMain>} />
               <Route path='test-result' element={<LayoutMain content={<TeacherTestResultPage />}></LayoutMain>} />
             </Route>
 
@@ -65,14 +65,14 @@ root.render(
             </Route>
 
             <Route path='class'>
-            <Route exact index element={<LayoutMain content={<ManageClassPage />}></LayoutMain>} />
-            <Route path='class-detail' element={<LayoutMain content={<ClassDetailPage />}></LayoutMain>}/>
+              <Route exact index element={<LayoutMain content={<ManageClassPage />}></LayoutMain>} />
+              <Route path='class-detail' element={<LayoutMain content={<ClassDetailPage />}></LayoutMain>} />
             </Route>
 
 
             <Route path='student/create' element={<>Create student page</>}>
             </Route>
-            <Route path='statistics' element={<LayoutMain content={<StatisticPage/>}></LayoutMain> } />
+            <Route path='statistics' element={<LayoutMain content={<StatisticPage />}></LayoutMain>} />
           </Route>
 
         </Route>

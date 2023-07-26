@@ -46,7 +46,7 @@ const StudentSearchModal = ({ open, onCancel, onOk}) => {
     const addKey = (data) => data.map((item, index) => ({...item, key: index}));
     return (
         <Modal title="Thêm học sinh" open={open} onOk={() => onOk(selectedStudent)} onCancel={onCancel} width={'50%'}>
-            <Search placeholder="Tìm học sinh theo tên hoặc username" onSearch={onSearch} allowClear />
+            <Search placeholder="Tìm học sinh theo tên hoặc username. Để trống nếu tìm tất cả." onSearch={onSearch} allowClear />
             <Table className="mt-3" dataSource={addKey(students)} columns={columns} rowSelection={rowSelection}/>
         </Modal>
     );

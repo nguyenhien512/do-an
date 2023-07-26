@@ -32,7 +32,7 @@ function ClassDetailPage() {
         async function fetchExamCount() {
             try {
                 const data = await callGetExamCounts(classId, token);
-                setExamCounts([...data]);    
+                setExamCounts([...data]);
             } catch (ignored) { }
         }
         fetchExamCount();
@@ -104,17 +104,14 @@ function ClassDetailPage() {
     }
 
     return <>
-        <Row>
-            <Col span={20} >
-                <Table dataSource={students} columns={columns}>
-                </Table>
-            </Col>
-            <Col span={4}>
-               <div className="d-flex justify-content-center"><Button icon={<PlusOutlined />} type='primary' onClick={showModal}>Thêm học sinh</Button></div>
-                
-            </Col>
+        <Row className="d-flex-inline justify-content-end"> 
+            <Button icon={<PlusOutlined />} type='primary' onClick={showModal}>Thêm học sinh</Button>
         </Row>
-        <StudentSearchModal open={open} onCancel={hideModal} onOk={onOk}/>
+        <Row className="mt-5 d-flex justify-content-center">
+            <Table dataSource={students} columns={columns} style={{width: '100%'}}>
+            </Table>
+        </Row>
+        <StudentSearchModal open={open} onCancel={hideModal} onOk={onOk} />
 
     </>
 }
