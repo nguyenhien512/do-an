@@ -1,21 +1,22 @@
 import instance from "./axiosInstance";
 //example 
-const postUser = (endPoint,data)=>{
-   return instance.post(endPoint,data,{
-    //    header : {...JWT} 
-   })}
-
-
-const login = (endPoint,data)=>{
-    return instance.post(endPoint,data)
+const postUser = (endPoint, data) => {
+    return instance.post(endPoint, data, {
+        //    header : {...JWT} 
+    })
 }
 
-const registerUser =(endPoint,data)=>{
-    return instance.post(endPoint,data)
+
+const login = (endPoint, data) => {
+    return instance.post(endPoint, data)
+}
+
+const registerUser = (endPoint, data) => {
+    return instance.post(endPoint, data)
 
 }
 
-const getAllQuestion=(endPoint)=>{
+const getAllQuestion = (endPoint) => {
     let token = localStorage.getItem('token');
     return instance.get(endPoint,
         {
@@ -23,27 +24,54 @@ const getAllQuestion=(endPoint)=>{
                 'Authorization': `Bearer ${token}`
             }
         }
-        )
+    )
 }
-const createQuestion=(endPoint,data)=>{
+const createQuestion = (endPoint, data) => {
     let token = localStorage.getItem('token');
     return instance.post(endPoint,
         data,
         {
             headers: {
-                'Authorization': `Bearer ${token}`            }
+                'Authorization': `Bearer ${token}`
+            }
         }
-        )
+    )
+}
+
+const updateQuestion = (endPoint, data) => {
+    let token = localStorage.getItem('token');
+    return instance.put(endPoint,
+        data,
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
+    )
+}
+
+const deleteQuestion = (endPoint, id) => {
+    let token = localStorage.getItem('token');
+    return instance.delete(endPoint + `/${id}`,
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
+    )
 }
 
 
-const  httpClient = {
+
+const httpClient = {
     postUser,
     login,
     registerUser,
     getAllQuestion,
-    createQuestion
-    
+    createQuestion,
+    updateQuestion,
+    deleteQuestion
+
 }
 
 
