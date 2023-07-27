@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import FilterExam from "./utils/filterExam";
 import {
     getExams,
@@ -9,6 +9,7 @@ import {
 import ScoreBar from "./utils/ScoreBar";
 import QuesBar from "./utils/QuesBar";
 import StudentBoard from "./utils/StudentBoard";
+import { Row } from 'antd';
 
 const StatisticPage = () => {
     const [loading, setLoading] = useState()
@@ -50,34 +51,47 @@ const StatisticPage = () => {
         fetchExam()
     }, []);
 
-    return (
-        <div className="page-container">
+    return (<>
+        <Row>
+            <h4>Chọn kì thi</h4>
+        </Row>
+        <Row className="mt-3">
             <FilterExam
-                exams = {exams}
-                fetchData = {fetchData}
+                exams={exams}
+                fetchData={fetchData}
             />
-            <div className='chart-wrapper'>
-                {byScoreBars &&
-                    <ScoreBar
-                        loading = {loading}
-                        byScoreBars = {byScoreBars}
-                    />}
-            </div>
-            <div className='chart-wrapper'>
-                {byQuesBars&&
-                    <QuesBar
-                        loading = {loading}
-                        byQuesBars = {byQuesBars}
-                    />}
-            </div>
-            <div className='student-table'>
-                {studentData &&
-                    <StudentBoard
-                        loading={loading}
-                        data = {studentData}
-                    />}
-            </div>
-        </div>
+        </Row>
+        <Row className="mt-3">
+            <h4>Phổ điểm</h4>
+        </Row>
+        <Row className='mt-3'>
+            {byScoreBars &&
+                <ScoreBar
+                    loading={loading}
+                    byScoreBars={byScoreBars}
+                />}
+        </Row>
+        <Row className="mt-3">
+            <h4>Thống kê tỉ lệ đúng sai</h4>
+        </Row>
+        <Row className="mt-3">
+            {byQuesBars &&
+                <QuesBar
+                    loading={loading}
+                    byQuesBars={byQuesBars}
+                />}
+        </Row>
+        <Row className="mt-3">
+            <h4>Bảng điểm</h4>
+        </Row>
+        <Row className="mt-3">
+            {studentData &&
+                <StudentBoard
+                    loading={loading}
+                    data={studentData}
+                />}
+        </Row>
+    </>
     )
 }
 

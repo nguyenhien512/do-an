@@ -1,10 +1,10 @@
 import { callGetTests } from './TeacherExamApi';
 import { useSearchParams, createSearchParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { Card, Space, Button, Row, Col, Statistic, Typography} from 'antd';
+import { Card, Space, Button, Row, Col, Statistic, Typography, Table } from 'antd';
 import { formatDateTime } from '../../util/dateTimeUtil';
 
-const {Text} = Typography;
+const { Text } = Typography;
 
 function TeacherTestPage() {
     const [queryParameters] = useSearchParams();
@@ -29,8 +29,8 @@ function TeacherTestPage() {
         fetchData();
     }, [])
 
-    function viewTest(test) {
-        const params = { testId: test.id };
+    function viewTest(id) {
+        const params = { testId: id };
         navigate({
             pathname: '/teacher/exam/test-result',
             search: `?${createSearchParams(params)}`,
@@ -38,33 +38,80 @@ function TeacherTestPage() {
 
     }
 
-    return <>
-        {tests ?
-            <Row>
-                <Col span={18}>
-                    <Space size={[16, 16]} wrap>
-                        {tests?.map(test => {
-                            return <>
-                                <Card title={`${test.student.firstName} ${test.student.lastName}`} style={{ width: 300 }}>
-                                    <p>Điểm: {test.score}</p>
-                                    <p>Nộp bài lúc: {formatDateTime(test.submitTime)}</p>
-                                    <Button type="primary" onClick={() => viewTest(test)}>Xem chi tiết</Button>
-                                </Card>
-                            </>
-                        })}
-                    </Space>
-                </Col>
-                <Col span={6}>
-                    <Space direction='vertical' si={[8, 8]} style={{backgroundColor: '#e6f7ff', padding: 20, width: '100%'}}>
-                        <h6><Text strong>{exam.name}</Text></h6>
-                        <Statistic title="Tổng số bài đã nộp" value={tests.length} valueStyle={{fontSize: '1em'}}/>
-                        <Statistic title="Số lượt thi" value={exam.examTimes} valueStyle={{fontSize: '1em'}}/>
-                        <Statistic title="Giao cho" value={exam.studentClassName} valueStyle={{fontSize: '1em'}} />
-                    </Space>
-                </Col>
-            </Row>
-            : null}
+    const columns = [
+        {
+            title: 'STT',
+            dataIndex: 'id',
+            key: 'id',
+            render: (text, record, index) => (
+                <span>{index + 1}</span>
+            )
+        },
+        {
+            title: 'Họ',
+            dataIndex: 'student',
+            key: 'firstName',
+            render: (student) => (
+                <span>{student.firstName}</span>
+            )
+        },
+        {
+            title: 'Tên',
+            dataIndex: 'student',
+            key: 'lastName',
+            render: (student) => (
+                <span>{student.lastName}</span>
+            )
+        },
+        {
+            title: 'Username',
+            dataIndex: 'student',
+            key: 'username',
+            render: (student) => (
+                <span>{student.username}</span>
+            )
+        },
+        {
+            title: 'Thời điểm nộp bài',
+            dataIndex: 'submitTime',
+            key: 'submitTime',
+            render: (submitTime) => (
+                <span>{formatDateTime(submitTime)}</span>
+            )
+        },
+        {
+            title: 'Điểm',
+            dataIndex: 'score',
+            key: 'score'
+        },
+        {
+            title: '',
+            dataIndex: 'id',
+            key: 'action',
+            render: (id) => (
+                <Button type="primary" onClick={() => viewTest(id)}>Xem chi tiết</Button>
+            )
+        }
+    ]
 
+    return <>
+        <Row justify='space-between'>
+            <h3>{exam?.name}</h3>
+        </Row>
+        <Row className='mt-3' justify='space-evenly'>
+            <Col>
+                <Statistic title="Tổng số bài đã nộp" value={tests?.length}  />
+            </Col>
+            <Col>
+                <Statistic title="Số lượt thi" value={exam?.examTimes}  />
+            </Col>
+            <Col>
+                <Statistic title="Giao cho lớp" value={exam?.studentClassName} />
+            </Col>
+        </Row>
+        <Row className='mt-3' wrap={false}>
+            <Table dataSource={tests} columns={columns} style={{ width: '100%' }} />
+        </Row>
     </>
 }
 export default TeacherTestPage;

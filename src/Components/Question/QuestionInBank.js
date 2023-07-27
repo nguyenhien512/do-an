@@ -4,7 +4,7 @@ import { getGradeLabel, getSubjectLabel } from "../../util/enum";
 const QuestionInBank = ({ question }) => {
 
     return (
-        <Card title={<span>Câu hỏi <a href='/question-bank'>{question.id}</a></span>} extra={<>
+        <Card title={<span>Câu hỏi <a href='/teacher/testbank'>{question.id}</a></span>} extra={<>
             <Tag color="#87d068">{getGradeLabel(question.grade)}</Tag>
             <Tag color="#108ee9">{getSubjectLabel(question.subject)}</Tag>
         </>
