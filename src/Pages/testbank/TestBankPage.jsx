@@ -184,18 +184,18 @@ function TestBankPage() {
                         answerCKey: null,
                         answerCContent: null,
                     })
-                } 
+                }
                 // else {
-                   
-               // }
-            }catch(exception){
+
+                // }
+            } catch (exception) {
                 console.log("error ")
                 setIsModalOpen(false)
                 toast.error("Cannot update question exists in one exam!", {
                     position: toast.POSITION.TOP_CENTER
                 });
             }
-            
+
 
 
 
@@ -338,21 +338,35 @@ function TestBankPage() {
             dataIndex: 'content',
             key: 'content',
             render: (text) => <a>{text}</a>,
+            filters: questions.map(question => {
+                return {
+                    text: question.content,
+                    value: question.content
+                }
+            }),
+            filterSearch: true,
+            onFilter: (value, record) => { return record.content.includes(value) }
         },
         {
             title: 'grade',
             dataIndex: 'grade',
-            key: 'age',
+            key: 'grage',
+            sorter: (a, b) => a.grade.split("_")[1]-b.grade.split("_")[1],
+
         },
         {
             title: 'subject',
             dataIndex: 'subject',
             key: 'address',
+            sorter: (a, b) => a.subject.localeCompare(b.subject),
+
         },
         {
             title: 'questionType',
             dataIndex: 'questionType',
             key: 'questionType',
+            sorter: (a, b) => a.questionType.localeCompare(b.questionType),
+
         },
         {
             title: 'Action',
