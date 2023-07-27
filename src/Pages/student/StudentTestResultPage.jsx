@@ -1,4 +1,4 @@
-import { callGetResult } from './ExamApi';
+import { callGetResult } from "./ExamApi";
 import { useSearchParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { Card, Space, Typography } from 'antd';

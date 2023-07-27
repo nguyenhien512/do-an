@@ -4,20 +4,17 @@ export const ROLE = {
 };
 
 export const USER_SIDEBAR = [
-  { content: "Dashboard", route: "/user" },
-  { content: "Exam", route: "/user/exam" }
+  { content: "Màn hình chính", route: "/user" },
+  { content: "Thi online", route: "/user/exam" },
+  { content: "Kết quả thi", route: "/user/exam" }
 ];
 
 export const ADMIN_SIDEBAR = [
-  { content: "Dashboard", route: "/teacher" },
-  { content: "Exam", route: "/teacher/exam"},
-  {content :"Class",route : "/teacher/class" },
+  { content: "Màn hình chính", route: "/teacher" },
+  {content : "Ngân hàng câu hỏi",route : "/teacher/testbank" },
+  { content: "Quản lý đề thi", route: "/teacher/exam"},
+  {content : "Quản lý lớp học", route : "/teacher/class"},
   { content: "Thống kê", route: "/teacher/statistics"}
-  // {content :"Manage Asset",route : "/asset" },
-  // {content : "Manage Assignment",route: "/assignment"},
-  // {content : "Request for Returning",route: "/RequestForReturning"},
-  // {content : "Report",route: "/report"}
-
 ];
 
 export const GRADE = [
