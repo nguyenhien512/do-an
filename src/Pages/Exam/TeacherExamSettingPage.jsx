@@ -6,7 +6,7 @@ import { formatDateTime, parseDayjs, parseDate, dayjsToString } from '../../util
 import QuestionInBank from '../../Components/Question/QuestionInBank';
 import { EditOutlined } from "@ant-design/icons";
 import ExamSettingForm from './TeacherExamSettingForm';
-import { callGetQuestions } from './ExamApi';
+import { callGetQuestions } from '../student/ExamApi';
 
 function TeacherExamSettingPage() {
     const [queryParameters] = useSearchParams();

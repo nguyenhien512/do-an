@@ -23,10 +23,10 @@ const ExamCard = ({ exam, doExam }) => {
     }, [Date.now()])
     return <>
         <Card title={exam.name} style={{ width: 300 }} headStyle={{ textAlign: 'center' }}>
-            <div className='d-inline-flex justify-content-between' style={{ width: '100%' }}><p>Dành cho lớp:</p><Text strong>{exam.studentClassName}</Text></div>
-            <div className='d-inline-flex justify-content-between' style={{ width: '100%' }}><p>Thời gian làm bài:</p><Text strong>{exam.maxDuration} phút</Text></div>
-            <div className='d-inline-flex justify-content-between' style={{ width: '100%' }}><p>Mở lúc:</p><Text strong>{formatDateTime(exam.openTime)}</Text></div>
-            <div className='d-inline-flex justify-content-between' style={{ width: '100%' }}><p>Đóng lúc:</p><Text strong>{formatDateTime(exam.closeTime)}</Text></div>
+            <div className='d-inline-flex justify-content-between' style={{ width: '100%' }}><p>Dành cho lớp:</p><Text>{exam.studentClassName}</Text></div>
+            <div className='d-inline-flex justify-content-between' style={{ width: '100%' }}><p>Thời gian làm bài:</p><Text>{exam.maxDuration} phút</Text></div>
+            <div className='d-inline-flex justify-content-between' style={{ width: '100%' }}><p>Mở lúc:</p><Text>{formatDateTime(exam.openTime)}</Text></div>
+            <div className='d-inline-flex justify-content-between' style={{ width: '100%' }}><p>Đóng lúc:</p><Text>{formatDateTime(exam.closeTime)}</Text></div>
             <div align="center">
                 {status == 'OPEN' ? <Button type="primary" onClick={() => doExam(exam)}>Làm bài thi</Button> : null}
                 {status == 'BEFORE OPEN' ? <Button type="primary" disabled>Chưa mở</Button> : null}
@@ -66,7 +66,7 @@ function StudentExamPage() {
     }
 
     return <>
-        <Space size={[16, 16]} wrap>
+        <Space size={[24, 24]} wrap>
             {exams?.map(exam => {
                 return <>
                     <ExamCard key={exam.id} exam={exam} doExam={doExam} />

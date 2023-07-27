@@ -10,52 +10,58 @@ import {
 import { Layout, Menu, Button, theme } from 'antd';
 import { NavLink } from 'react-router-dom';
 import useAuth from "../../hooks/useAuth";
-import {ROLE} from '../../util/enum'
-import {USER_SIDEBAR,ADMIN_SIDEBAR} from '../../util/enum'
-import  './LayoutMain.css';
+import { ROLE } from '../../util/enum'
+import { USER_SIDEBAR, ADMIN_SIDEBAR } from '../../util/enum'
+import './LayoutMain.css';
 import { useNavigate } from "react-router-dom";
+import hien from '../../Hien-01.svg'
+import logo from '../../logo.svg'
 
 const { Header, Sider, Content } = Layout;
-function LayoutMain({content}){
+function LayoutMain({ title, content }) {
   // console.log("content ",content)
-  const {user} = useAuth();
+  const { user } = useAuth();
   //user.role[0].authority
-  let role =user.authority ;
-  console.log("check user ",user)
+  let role = user.authority;
+  console.log("check user ", user)
   const navigate = useNavigate();
 
   let renderContent = (role == ROLE.TEACHER) ? ADMIN_SIDEBAR : USER_SIDEBAR
-  console.log("render content ",renderContent)
+  console.log("render content ", renderContent)
 
-    const [collapsed, setCollapsed] = useState(false);
-    const {
-      token: { colorBgContainer },
-    } = theme.useToken();
+  const [collapsed, setCollapsed] = useState(false);
+  const {
+    token: { colorBgContainer },
+  } = theme.useToken();
 
-    return (
-        <Layout>
-          <Sider trigger={null} collapsible collapsed={collapsed}>
-            <div className="demo-logo-vertical" />
-            <Menu
-              theme="dark"
-              mode="inline"
-              defaultSelectedKeys={['1']}
-              items={
-                renderContent.map((item,index)=>{
-                  return {
-                    key: index,
-                    icon: <UserOutlined />,
-                    label: <NavLink to={item.route}  className='nav-item  nav-item-custom'>{item.content}</NavLink>,
-  
-                  }
-                })
-              
-            }
-            />
-          </Sider>
-          <Layout>
-            <Header style={{ padding: 0, background: colorBgContainer }}>
-            <div className='flex flex-box'>
+  return (
+    <Layout style={{
+      minHeight: '100vh',
+    }}>
+      <Sider trigger={null} collapsible collapsed={collapsed}>
+        <div className="demo-logo-vertical" >
+          <img src={hien} alt='logo'></img>
+          {collapsed ? null : <div className='text-center' style={{color: '#ffffff', fontSize: '1.5em'}}>Exam System</div>}
+        </div>
+        <Menu
+          theme="dark"
+          mode="inline"
+          defaultSelectedKeys={['0']}
+          items={
+            renderContent.map((item, index) => {
+              return {
+                key: index,
+                icon: <UserOutlined />,
+                label: <NavLink to={item.route}  className='nav-item  nav-item-custom'>{item.content}</NavLink>
+              }
+            })
+          }
+        />
+      </Sider>
+      <Layout>
+        <Header style={{ padding: 0, background: colorBgContainer }}>
+          <div className='flex flex-box'>
+            <div className='d-inline-flex align-items-center'>
               <Button
                 type="text"
                 icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -64,47 +70,50 @@ function LayoutMain({content}){
                   fontSize: '16px',
                   width: 64,
                   height: 64,
-                
+
                 }}
               />
-                 <Button
-                type="text"
-                icon={<div className='iconDiv'><LogoutOutlined />
-                </div>
-                  }
-                onClick={() =>{
-                  localStorage.removeItem("token");
-                  navigate('/')
-                }}
-                style={{
-                  fontSize: '16px',
-                  textAlign:'center',
-                  verticalAlign:'center',
-                  width: 100,
-                  height: 64,
-                  display:'flex',
-                  justifyContent:'center',
-                  alignItems:'center',
-                  textAlign : 'center'
-                }}
-              >
-                Logout
-              </Button>
+              <span style={{fontSize: '1.5em'}}>{title}</span>
+            </div>
+
+            <Button
+              type="text"
+              icon={<div className='iconDiv'><LogoutOutlined />
               </div>
-            </Header>
-            <Content
+              }
+              onClick={() => {
+                localStorage.removeItem("token");
+                navigate('/')
+              }}
               style={{
-                margin: '24px 16px',
-                padding: 24,
-                minHeight: 550,
-                background: colorBgContainer,
+                fontSize: '16px',
+                textAlign: 'center',
+                verticalAlign: 'center',
+                width: 100,
+                height: 64,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                textAlign: 'center'
               }}
             >
-              {content}
-            </Content>
-          </Layout>
-        </Layout>
-      );
+              Logout
+            </Button>
+          </div>
+        </Header>
+        <Content
+          style={{
+            margin: '24px 16px',
+            padding: 24,
+            minHeight: 550,
+            background: colorBgContainer,
+          }}
+        >
+          {content}
+        </Content>
+      </Layout>
+    </Layout>
+  );
 }
 
 export default LayoutMain
