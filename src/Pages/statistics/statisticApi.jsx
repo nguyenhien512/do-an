@@ -3,7 +3,7 @@ import {CONFIG} from "../../httpClient/config";
 export const getExams = () => {
     console.log("url is: ",CONFIG.baseUrl)
     return axios
-        .get(`${CONFIG.baseUrl}/api/exams/all`,
+        .get(`${CONFIG.baseUrl}/api/exams/forTeacher`,
             {
                 headers:{
                     Authorization : `Bearer ${localStorage.getItem("token")}`

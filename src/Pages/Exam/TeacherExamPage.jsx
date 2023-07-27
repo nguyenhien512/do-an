@@ -1,9 +1,9 @@
 import { callGetExamsOfTeacher } from './TeacherExamApi';
-import { Table, Tag, Button, Space } from 'antd';
+import { Table, Tag, Button, Space, Row } from 'antd';
 import { useState, useEffect } from 'react';
 import { useNavigate, createSearchParams } from 'react-router-dom';
 import { formatDateTime } from '../../util/dateTimeUtil';
-import { SettingOutlined, PaperClipOutlined, DeleteOutlined } from "@ant-design/icons";
+import { SettingOutlined, PaperClipOutlined, PlusOutlined } from "@ant-design/icons";
 
 function TeacherExamPage() {
 
@@ -12,7 +12,7 @@ function TeacherExamPage() {
     const navigate = useNavigate();
 
     const token = localStorage.getItem("token");
-    
+
 
     useEffect(() => {
         async function fetchData() {
@@ -24,7 +24,7 @@ function TeacherExamPage() {
         }
         fetchData();
     }, [])
-    
+
     console.log("exams", exams);
 
     function viewTests(id) {
@@ -102,9 +102,12 @@ function TeacherExamPage() {
     ]
 
     return <>
-        <Table dataSource={exams} columns={columns}>
-        </Table>
-
+        <Row className="d-flex-inline justify-content-end">
+            <Button icon={<PlusOutlined />} type='primary'>Tạo đề thi</Button>
+        </Row>
+        <Row className="mt-3 d-flex justify-content-center">
+            <Table dataSource={exams} columns={columns} />
+        </Row>
     </>
 }
 

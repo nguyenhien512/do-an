@@ -107,7 +107,7 @@ function ClassDetailPage() {
         <Row className="d-flex-inline justify-content-end"> 
             <Button icon={<PlusOutlined />} type='primary' onClick={showModal}>Thêm học sinh</Button>
         </Row>
-        <Row className="mt-5 d-flex justify-content-center">
+        <Row className="mt-3 d-flex justify-content-center">
             <Table dataSource={students} columns={columns} style={{width: '100%'}}>
             </Table>
         </Row>

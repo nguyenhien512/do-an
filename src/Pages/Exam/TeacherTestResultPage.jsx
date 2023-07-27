@@ -4,6 +4,7 @@ import { callGetTestResult } from './TeacherExamApi';
 import { Space, Row, Col, Card, Statistic } from 'antd';
 import { useNavigate, useSearchParams, createSearchParams } from 'react-router-dom'
 import { calculateDurationByHMS } from '../../util/dateTimeUtil';
+import { formatDateTime } from '../../util/dateTimeUtil';
 
 function TeacherTestResultPage() {
 
@@ -28,11 +29,27 @@ function TeacherTestResultPage() {
 
 
     return <>
-        {testResult ?
-            <Row>
-                <Col span={18} className="pe-4" >
+        <Row justify='space-between'>
+            <h3>Bài làm của {testResult?.student.firstName} {testResult?.student.lastName}</h3>
+        </Row>
+        <Row className='mt-3' justify='space-evenly'>
+            <Col>
+                <Statistic title="Điểm" value={testResult?.score}  />
+            </Col>
+            <Col>
+                <Statistic title="Thời điểm nộp bài" value={formatDateTime(testResult?.submitTime)}  />
+            </Col>
+            <Col>
+                <Statistic title="Thời gian làm bài" value={calculateDurationByHMS(testResult?.createTime, testResult?.submitTime)}  />
+            </Col>
+        </Row>
+        <Row className='mt-3'>
+            <h4>Nội dung bài làm</h4>
+            </Row>
+            <Row className='mt-3'>
+                <Col span={18} >
                     <Space direction="vertical" size="large" style={{ display: 'flex' }}>
-                        {testResult.testQuestionRelations.map((item, index) => <QuestionResult
+                        {testResult?.testQuestionRelations.map((item, index) => <QuestionResult
                             key={item.question.id}
                             isDisplay={true}
                             question={item.question}
@@ -41,14 +58,7 @@ function TeacherTestResultPage() {
                         />)}
                     </Space>
                 </Col>
-                <Col span={6}>
-                    <Card title={`${testResult.student.firstName} ${testResult.student.lastName}`} headStyle={{background:'#E2E8F0'}} bordered={false} >
-                        <Statistic title="Điểm" value={testResult.score} valueStyle={{fontSize: '1em'}}/>
-                        <Statistic title="Thời gian làm bài" value={calculateDurationByHMS(testResult.createTime, testResult.submitTime)} valueStyle={{fontSize: '1em'}}/>
-                    </Card>
-                </Col>
             </Row>
-            : null}
     </>
 }
 export default TeacherTestResultPage;

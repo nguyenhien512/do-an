@@ -40,8 +40,10 @@ function LayoutMain({ title, content }) {
     }}>
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="demo-logo-vertical" >
-          <img src={hien} alt='logo'></img>
-          {collapsed ? null : <div className='text-center' style={{color: '#ffffff', fontSize: '1.5em'}}>Exam System</div>}
+          <div className='d-flex flex-column justify-content-center align-items-center'>
+            <img src={hien} alt='logo' width='60%'></img>
+            {collapsed ? null : <p className='text-center' style={{ color: '#ffffff', fontSize: '1.5em' }}>Exam System</p>}
+          </div>
         </div>
         <Menu
           theme="dark"
@@ -52,7 +54,7 @@ function LayoutMain({ title, content }) {
               return {
                 key: index,
                 icon: <UserOutlined />,
-                label: <NavLink to={item.route}  className='nav-item  nav-item-custom'>{item.content}</NavLink>
+                label: <NavLink to={item.route} className='nav-item  nav-item-custom'>{item.content}</NavLink>
               }
             })
           }
@@ -73,8 +75,9 @@ function LayoutMain({ title, content }) {
 
                 }}
               />
-              <span style={{fontSize: '1.5em'}}>{title}</span>
+              <Button onClick={() => navigate(-1)}>Quay lại</Button>
             </div>
+            <span style={{ fontSize: '1.5em' }}>{title}</span>
 
             <Button
               type="text"
