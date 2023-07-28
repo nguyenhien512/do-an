@@ -6,8 +6,6 @@ import { callGetClasses } from '../manage-class/ClassApi';
 
 function ExamSettingForm({ disabled, handleCancel, handleSubmit, initForm }) {
 
-    console.log("initFormCheck", initForm)
-
     const formRef = useRef(null);
 
     const [classes, setClasses] = useState([]);
@@ -47,13 +45,13 @@ function ExamSettingForm({ disabled, handleCancel, handleSubmit, initForm }) {
             name="settingForm"
             layout="horizontal"
             autoComplete="off"
-            style={{ width: '100%' }}
+            style={{ width: '100%'}}
             onFinish={onFinish}
             ref={formRef}
             disabled={disabled}
         >
-            <Row justify="space-between">
-                <Col span={8}>
+            <Row>
+                <Col span={10} offset={1}>
                     <Form.Item
                         label="Tên"
                         name="name"
@@ -68,7 +66,7 @@ function ExamSettingForm({ disabled, handleCancel, handleSubmit, initForm }) {
                         <Input style={{ width: '100%' }} />
                     </Form.Item>
                 </Col>
-                <Col span={8}>
+                <Col span={10} offset={3}>
                     <Form.Item
                         label="Giao cho lớp"
                         name="studentClassId"
@@ -79,12 +77,12 @@ function ExamSettingForm({ disabled, handleCancel, handleSubmit, initForm }) {
                             },
                         ]}
                     >
-                        <Select options={options} placeholder="Chọn lớp bạn đã tạo" />
+                        <Select options={options} placeholder="Chọn lớp bạn đã tạo" style={{ width: '100%' }} />
                     </Form.Item>
                 </Col>
             </Row>
             <Row justify="space-between">
-                <Col span={8}>
+                <Col span={10} offset={1}>
                     <Form.Item
                         label="Thời gian làm bài (phút)"
                         name="maxDuration"
@@ -94,12 +92,12 @@ function ExamSettingForm({ disabled, handleCancel, handleSubmit, initForm }) {
                                 message: 'Yêu cầu nhập thời gian làm bài!',
                             },
                         ]}                    >
-                        <InputNumber />
+                        <InputNumber style={{ width: '100%' }}/>
                     </Form.Item>
                 </Col>
-                <Col span={8}>
+                <Col span={10} offset={3}>
                     <Form.Item
-                        label="Số lần thi tối đa đối với mỗi học sinh"
+                        label="Số lần thi tối đa cho mỗi học sinh"
                         name="maxRetry"
                         rules={[
                             {
@@ -108,12 +106,12 @@ function ExamSettingForm({ disabled, handleCancel, handleSubmit, initForm }) {
                             },
                         ]}
                     >
-                        <InputNumber />
+                        <InputNumber style={{ width: '100%' }}/>
                     </Form.Item>
                 </Col>
             </Row>
             <Row justify='space-between' wrap={false}>
-                <Col span={8}>
+                <Col span={10} offset={1}>
                     <Form.Item
                         label="Thời điểm mở đề thi"
                         name="openTime"
@@ -124,10 +122,10 @@ function ExamSettingForm({ disabled, handleCancel, handleSubmit, initForm }) {
                             },
                         ]}
                     >
-                        <DatePicker showTime style={{ width: '100%' }} placement="bottomRight"/>
+                        <DatePicker showTime style={{ width: '100%' }} placement="bottomRight" />
                     </Form.Item>
                 </Col>
-                <Col span={8}>
+                <Col span={10} offset={3}>
                     <Form.Item
                         label="Thời điểm đóng đề thi"
                         name="closeTime"
@@ -148,11 +146,13 @@ function ExamSettingForm({ disabled, handleCancel, handleSubmit, initForm }) {
                         Hủy
                     </Button>
                 </Col>
-                <Form.Item>
-                    <Button type="primary" htmlType="submit">
-                        Lưu
-                    </Button>
-                </Form.Item>
+                <Col >
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit">
+                            Lưu
+                        </Button>
+                    </Form.Item>
+                </Col>
             </Row>
         </Form>
     )

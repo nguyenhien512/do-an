@@ -1,12 +1,29 @@
-import { Card, Button, Tag } from "antd";
+import { Card, Button, Tag, Popconfirm } from "antd";
 import { getGradeLabel, getSubjectLabel } from "../../util/enum";
+import { DeleteOutlined } from "@ant-design/icons";
 
-const QuestionInBank = ({ question }) => {
+const QuestionInBank = ({ question, handleDelete }) => {
+
+    const onDelete = () => {
+        handleDelete(question.id);
+    }
 
     return (
         <Card title={<span>Câu hỏi <a href='/teacher/testbank'>{question.id}</a></span>} extra={<>
             <Tag color="#87d068">{getGradeLabel(question.grade)}</Tag>
             <Tag color="#108ee9">{getSubjectLabel(question.subject)}</Tag>
+            <Popconfirm
+                title="Xóa câu hỏi"
+                description={<span>Bạn có muốn xóa câu hỏi này ra khỏi đề thi?
+                    <br/> Thay đổi đối với đề thi đã xuất bản có thể ảnh hưởng đến học sinh.
+                </span>}
+                onConfirm={onDelete}
+                onCancel={null}
+                okText="Có"
+                cancelText="Không"
+            >
+                <Button danger icon={<DeleteOutlined />}></Button>
+            </Popconfirm>
         </>
 
         }>

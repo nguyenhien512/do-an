@@ -1,12 +1,13 @@
-import { callGetExam, callDeleteExam, callUpdateExamConfig, callPublishExam } from './TeacherExamApi';
+import { callGetExam, callDeleteExam, callUpdateExamConfig, callPublishExam, callRemoveQuestion, callAddQuestion, callAddQuestions } from './TeacherExamApi';
 import { useSearchParams, createSearchParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { Tooltip, Space, Button, Row, Col, Statistic, Alert, message, Tag } from 'antd';
 import { formatDateTime, parseDayjs, parseDate, dayjsToString } from '../../util/dateTimeUtil';
 import QuestionInBank from '../../Components/Question/QuestionInBank';
-import { EditOutlined } from "@ant-design/icons";
+import { EditOutlined, FileAddOutlined, PlusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import ExamSettingForm from './TeacherExamSettingForm';
 import { callGetQuestions } from '../student/ExamApi';
+import QuestionSearchModal from './QuestionSearchModal';
 
 function TeacherExamSettingPage() {
     const [queryParameters] = useSearchParams();
@@ -20,6 +21,8 @@ function TeacherExamSettingPage() {
     const [editForm, setEditForm] = useState(false);
     const [initForm, setInitForm] = useState();
 
+    const [openPopup, setOpenPopup] = useState(false);
+
     const [active, setActive] = useState("");
 
     useEffect(() => {
@@ -27,16 +30,7 @@ function TeacherExamSettingPage() {
             try {
                 const response = await callGetExam(examId, token);
                 setExam(response);
-            } catch (ignored) { }
-        }
-        fetchData();
-    }, [])
-
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const response = await callGetQuestions(examId, token);
-                setQuestions([...response]);
+                setQuestions(response.questionDtoList);
             } catch (ignored) { }
         }
         fetchData();
@@ -54,7 +48,6 @@ function TeacherExamSettingPage() {
                 studentClassName: exam.studentClassName
             })
         }
-        console.log("Setting page initForm", initForm);
     }, [exam])
 
     useEffect(() => {
@@ -64,22 +57,14 @@ function TeacherExamSettingPage() {
             setActive("chưa mở");
         } else if (exam && exam.closetime && Date.now() > closetime) {
             setActive("đã đóng");
-        } else {
+        } else if (exam && exam.openTime && exam.closeTime) {
             setActive("đã mở");
-        }
+        } else (
+            setActive("chưa cài đặt thời điểm mở/đóng")
+        )
     }, [Date.now()]);
 
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const response = await callGetExam(examId, token);
-                setExam(response);
-            } catch (ignored) { }
-        }
-        fetchData();
-    }, [])
-
-    const handleSubmit = async (values) => {
+    const handleSubmitForm = async (values) => {
         console.log("Form values", values);
         let updatedExam = {
             ...values,
@@ -93,7 +78,7 @@ function TeacherExamSettingPage() {
         setEditForm(false);
     }
 
-    const handleCancel = () => {
+    const handleCancelForm = () => {
         setEditForm(false);
     }
 
@@ -111,6 +96,26 @@ function TeacherExamSettingPage() {
             setExam(data);
             message.info("Xuất bản đề thi thành công");
         }
+    }
+
+    const deleteQuestion = async (questionId) => {
+        const status = await callRemoveQuestion(examId, [questionId],token);
+        if (status == 200) {
+            setQuestions(questions.filter(item => item.id !== questionId));
+        }
+    }
+
+    const handleCancelPopup = () => {
+        setOpenPopup(false);
+    }
+
+    const addQuestions = async (questionIds) => {
+        const data = await callAddQuestions(examId, questionIds, token);
+        console.log("Add Question",data);
+        if (data) {
+            setQuestions(data.questionDtoList);
+        }
+        setOpenPopup(false);
     }
 
     return <>
@@ -131,15 +136,15 @@ function TeacherExamSettingPage() {
             </Col>
             <Col >
                 <Tooltip title="Sửa cài đặt đối với đề thi đã xuất bản có thể ảnh hưởng đến học sinh" color='white' overlayInnerStyle={{ color: 'black' }} >
-                    <Button icon={<EditOutlined />} title="Sửa cài đặt" onClick={() => setEditForm(true)}></Button>
+                    <Button icon={<EditOutlined />} title="Sửa cài đặt" onClick={() => setEditForm(true)} type="primary"></Button>
                 </Tooltip>
             </Col>
         </Row>
         <Row wrap={false} className='mt-3'>
-            <ExamSettingForm disabled={!editForm} handleCancel={handleCancel} handleSubmit={handleSubmit} initForm={initForm} />
+            <ExamSettingForm disabled={!editForm} handleCancel={handleCancelForm} handleSubmit={handleSubmitForm} initForm={initForm} />
         </Row>
         <Row gutter={[16, 24]} align="middle">
-            <Col>
+            <Col offset={1}>
                 <h6>Trạng thái</h6>
             </Col>
             <Col>
@@ -151,20 +156,24 @@ function TeacherExamSettingPage() {
                 <Alert message={`Hiện tại đề thi ${active}`} type="warning" showIcon />
             </Col>
         </Row>
-        <Row className='mt-3'>
+        <Row className='mt-3' justify='space-between'>
             <h4>Nội dung đề thi</h4>
+            <Tooltip title="Thay đổi nội dung với đề thi đã xuất bản có thể ảnh hưởng đến học sinh" color='white' overlayInnerStyle={{ color: 'black' }} >
+                    <Button icon={<PlusCircleOutlined />} title="Thêm câu hỏi" onClick={() => setOpenPopup(true)} type="primary"></Button>
+            </Tooltip>
         </Row>
         <Row className='mt-3'>
-            <Col span={18}>
+            <Col span={18} offset={1}>
                 <Space className="pe-5" direction="vertical" size="large" style={{ display: 'flex' }}>
                     {questions?.map((item, index) => <QuestionInBank
                         key={item.id}
-                        question={item} />
+                        question={item}
+                        handleDelete={deleteQuestion} />
                     )}
                 </Space>
             </Col>
         </Row>
-
+                        <QuestionSearchModal open={openPopup} handleCancel={handleCancelPopup} handleOk={addQuestions}/>
     </>
 }
 export default TeacherExamSettingPage;

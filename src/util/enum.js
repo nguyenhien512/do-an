@@ -34,7 +34,7 @@ export const GRADE = [
 
 export const getGradeLabel = (value) => {
   let grade = GRADE.filter(e => e.value === value)[0];
-  return grade.label;
+  return grade?.label;
 }
 
 export const SUBJECT = [
@@ -47,5 +47,15 @@ export const SUBJECT = [
 
 export const getSubjectLabel = (value) => {
   let subject = SUBJECT.filter(e => e.value === value)[0];
-  return subject.label;
+  return subject?.label;
+}
+
+export const QUESTION_TYPE = [
+  {value: "SINGLE_CHOICE", label: "Một lựa chọn"},
+  {value: "MULTIPLE_CHOICE", label: "Nhiều lựa chọn"},
+]
+
+export const getQuestionTypeLabel = (value) => {
+  let type = QUESTION_TYPE.filter(e => e.value === value)[0];
+  return type?.label;
 }

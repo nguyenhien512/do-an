@@ -1,9 +1,10 @@
-import { callGetExamsOfTeacher } from './TeacherExamApi';
+import { callCreateExam, callGetExamsOfTeacher } from './TeacherExamApi';
 import { Table, Tag, Button, Space, Row } from 'antd';
 import { useState, useEffect } from 'react';
 import { useNavigate, createSearchParams } from 'react-router-dom';
 import { formatDateTime } from '../../util/dateTimeUtil';
-import { SettingOutlined, PaperClipOutlined, PlusOutlined } from "@ant-design/icons";
+import { SettingOutlined, FileDoneOutlined, PlusOutlined } from "@ant-design/icons";
+import CreateExamModal from './CreateExamModal';
 
 function TeacherExamPage() {
 
@@ -12,6 +13,8 @@ function TeacherExamPage() {
     const navigate = useNavigate();
 
     const token = localStorage.getItem("token");
+
+    const [openPopup, setOpenPop] = useState(false);
 
 
     useEffect(() => {
@@ -27,7 +30,7 @@ function TeacherExamPage() {
 
     console.log("exams", exams);
 
-    function viewTests(id) {
+    const viewTests = (id) => {
         const params = { examId: id };
         navigate({
             pathname: '/teacher/exam/tests',
@@ -36,13 +39,20 @@ function TeacherExamPage() {
 
     }
 
-    function examSettings(id) {
+    const viewExamSettings = (id) => {
         const params = { examId: id };
         navigate({
             pathname: '/teacher/exam/settings',
             search: `?${createSearchParams(params)}`,
         });
 
+    }
+
+    const createExam = async (exam) => {
+        const data = await callCreateExam(exam, token);
+        if (data) {
+            viewExamSettings (data.id);
+        }
     }
 
     const columns = [
@@ -93,21 +103,24 @@ function TeacherExamPage() {
             key: 'action-1',
             render: (id) => (<>
                 <Space size={[16, 4]} wrap>
-                    <Button title="Cài đặt" icon={<SettingOutlined />} onClick={() => examSettings(id)}></Button>
-                    <Button title="Xem bài làm đã nộp" icon={<PaperClipOutlined />} onClick={() => viewTests(id)}></Button>
+                    <Button title="Cài đặt" icon={<SettingOutlined />} onClick={() => viewExamSettings(id)}></Button>
+                    <Button title="Xem bài làm đã nộp" icon={<FileDoneOutlined />} onClick={() => viewTests(id)}></Button>
                 </Space>
             </>
             )
         }
     ]
 
+    const addKey = (data) => data.map((item, index) => ({ ...item, key: index }));
+
     return <>
         <Row className="d-flex-inline justify-content-end">
-            <Button icon={<PlusOutlined />} type='primary'>Tạo đề thi</Button>
+            <Button icon={<PlusOutlined />} type='primary' onClick={() => setOpenPop(true)}>Tạo đề thủ công</Button>
         </Row>
         <Row className="mt-3 d-flex justify-content-center">
-            <Table dataSource={exams} columns={columns} />
+            <Table dataSource={addKey(exams)} columns={columns} style={{ width: '100%' }} />
         </Row>
+        <CreateExamModal open={openPopup} handleFinish={createExam} handleCancel={() => setOpenPop(false)}/>
     </>
 }
 
