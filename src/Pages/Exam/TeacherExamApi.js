@@ -32,7 +32,7 @@ export const callGetTests = async (examId, token) => {
 
 export const callGetTestResult = async (testId, token) => {
     try {
-        const response = await axios.get(`${CONFIG.baseUrl}/api/tests/${testId}/result/forTeacher`, {
+        const response = await axios.get(`${CONFIG.baseUrl}/api/tests/${testId}/result-detail`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`

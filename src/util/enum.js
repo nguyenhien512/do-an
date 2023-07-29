@@ -6,7 +6,7 @@ export const ROLE = {
 export const USER_SIDEBAR = [
   { content: "Màn hình chính", route: "/user" },
   { content: "Thi online", route: "/user/exam" },
-  { content: "Kết quả thi", route: "/user/exam" }
+  { content: "Kết quả thi", route: "/user/review" }
 ];
 
 export const ADMIN_SIDEBAR = [

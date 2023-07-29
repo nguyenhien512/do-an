@@ -1,7 +1,6 @@
 import { Space } from "antd";
 import { DatabaseOutlined, FileSyncOutlined, UsergroupAddOutlined, BarChartOutlined } from "@ant-design/icons";
 import { IconCard } from "../../Components/Card/IconCard";
-import { ADMIN_SIDEBAR } from "../../util/enum";
 
 function TeacherDashboardPage() {
 

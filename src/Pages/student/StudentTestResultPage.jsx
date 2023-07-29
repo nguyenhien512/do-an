@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { Card, Space, Typography } from 'antd';
 import { formatDateTime } from '../../util/dateTimeUtil';
+import TestResultCard from "./TestResultCard";
 
 const { Text } = Typography;
 
@@ -27,15 +28,11 @@ function StudentTestResultPage() {
     return <>
         <div className='d-flex justify-content-center'>
 
-            {result ? <Space size="large" direction='vertical' wrap>
+            {result && 
+            <Space size="large" direction='vertical' wrap>
                 <h3 className='text-center' >Kết quả thi</h3>
-                <Card style={{ width: 500 }} >
-                    <div className='d-inline-flex justify-content-between' style={{width: '100%'}}><p>Thí sinh:</p><Text strong>{result.student.firstName} {result.student.lastName}</Text></div>
-                    <div className='d-inline-flex justify-content-between align-items-baseline' style={{width: '100%'}}><p>Điểm:</p><h4 style={{color: '#1677ff'}}>{result.score}</h4></div>
-                    <div className='d-inline-flex justify-content-between' style={{width: '100%'}}><p>Nộp bài lúc:</p><Text strong>{formatDateTime(result.submitTime)}</Text></div>
-                </Card>
+                <TestResultCard result={result} btnDisplay={false} nameDisplay={true} width={500}/>
             </Space>
-                : null
             }
         </div>
 

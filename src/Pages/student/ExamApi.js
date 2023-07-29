@@ -92,3 +92,18 @@ export const callGetQuestions = async (examId, token) => {
         return console.log(error)
     }
 }
+
+export const callSubmitTests = async (token) => {
+    try {
+        const response = await axios.get(`${CONFIG.baseUrl}/api/tests/results/forStudent`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }
+        )
+        return response.data
+    } catch (error) {
+        return console.log(error)
+    }
+}

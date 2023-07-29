@@ -62,7 +62,7 @@ function TeacherExamSettingPage() {
         } else (
             setActive("chưa cài đặt thời điểm mở/đóng")
         )
-    }, [Date.now()]);
+    }, [Date.now(), exam]);
 
     const handleSubmitForm = async (values) => {
         console.log("Form values", values);

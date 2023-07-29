@@ -7,7 +7,7 @@ const Question = ({isDisplay, question, index, saveAnswer}) => {
 
       const chooseAnswer = (key) => {
         setSelected(key);
-        saveAnswer(question.id, key);
+        saveAnswer(index, question.id, key);
       }
 
     return (
