@@ -1,12 +1,12 @@
 import QuestionResult from '../../Components/Question/QuestionResult';
 import { useState, useEffect } from 'react';
 import { callGetTestResult } from './TeacherExamApi';
-import { Space, Row, Col, Card, Statistic } from 'antd';
+import { Space, Row, Col, Button, Statistic, ConfigProvider } from 'antd';
 import { useNavigate, useSearchParams, createSearchParams } from 'react-router-dom'
 import { calculateDurationByHMS } from '../../util/dateTimeUtil';
 import { formatDateTime } from '../../util/dateTimeUtil';
 
-function TeacherTestResultPage() {
+function CommonTestResultPage({showQuestionId}) {
 
     const [queryParameters] = useSearchParams();
     const token = localStorage.getItem("token");
@@ -55,10 +55,11 @@ function TeacherTestResultPage() {
                             question={item.question}
                             index={index}
                             selectedAnswer={item.answers}
+                            showQuestionId={showQuestionId}
                         />)}
                     </Space>
                 </Col>
             </Row>
     </>
 }
-export default TeacherTestResultPage;
+export default CommonTestResultPage;

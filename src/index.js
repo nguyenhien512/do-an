@@ -16,11 +16,12 @@ import { AuthProvider } from './context/AuthProvider';
 import LoginPage from './Pages/login/LoginPage';
 import Layout from 'antd/es/layout/layout';
 import StudentExamPage from './Pages/student/StudentExamPage'
-import StudentTestResultPage from './Pages/student/StudentTestPage'
+import StudentTestResultPage from './Pages/student/StudentTestResultPage'
 import StudentTestPage from './Pages/student/StudentTestPage'
+import StudentExamReviewPage from './Pages/student/StudentExamReviewPage';
 import TeacherExamPage from './Pages/Exam/TeacherExamPage';
 import TeacherTestPage from './Pages/Exam/TeacherTestPage';
-import TeacherTestResultPage from './Pages/Exam/TeacherTestResultPage';
+import CommonTestResultPage from './Pages/Exam/CommonTestResultPage';
 import StatisticPage from "./Pages/statistics/StatisticPage";
 import TeacherExamSettingPage from './Pages/Exam/TeacherExamSettingPage';
 import ManageClassPage from './Pages/manage-class/ManageClass';
@@ -46,6 +47,10 @@ root.render(
               <Route path='create-exam' element={<LayoutMain content={<StudentTestPage />} title="Thi online"></LayoutMain>} />
               <Route path='result' element={<LayoutMain content={<StudentTestResultPage />} title="Thi online"></LayoutMain>} />
             </Route>
+            <Route path='review' >
+            <Route exact index element={<LayoutMain content={<StudentExamReviewPage />} title="Kết quả thi"></LayoutMain>} />
+              <Route path='test-result' element={<LayoutMain content={<CommonTestResultPage showQuestionId={false}/>} title="Kết quả thi"></LayoutMain>} />
+            </Route>
           </Route>
         </Route>
         <Route path='teacher'>
@@ -59,11 +64,11 @@ root.render(
               <Route exact index element={<LayoutMain content={<TeacherExamPage />} title="Quản lý đề thi"></LayoutMain>} />
               <Route path='settings' element={<LayoutMain content={<TeacherExamSettingPage />} title="Quản lý đề thi"></LayoutMain>} />
               <Route path='tests' element={<LayoutMain content={<TeacherTestPage />} title="Quản lý đề thi"></LayoutMain>} />
-              <Route path='test-result' element={<LayoutMain content={<TeacherTestResultPage />} title="Quản lý đề thi"></LayoutMain>} />
+              <Route path='test-result' element={<LayoutMain content={<CommonTestResultPage showQuestionId={true}/>} title="Quản lý đề thi"></LayoutMain>} />
             </Route>
 
             <Route path='testbank' >
-            <Route exact index element={<LayoutMain content={<TestBankPage />} title="Ngân hàng câu hỏi"></LayoutMain>} />
+              <Route exact index element={<LayoutMain content={<TestBankPage />} title="Ngân hàng câu hỏi"></LayoutMain>} />
             </Route>
 
             <Route path='class'>

@@ -117,7 +117,7 @@ export const callRemoveStudent = async (classId, student, token) => {
     }
 }
 
-export const callSeachStudents = async (queryString, token) => {
+export const callSearchStudents = async (queryString, token) => {
     try {
         const response = await axios.get(`${CONFIG.baseUrl}/api/students?queryString=${queryString}`,{
             headers: {
