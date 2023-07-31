@@ -17,6 +17,11 @@ export const ADMIN_SIDEBAR = [
   { content: "Thống kê", route: "/teacher/statistics"}
 ];
 
+export const getLabel = (enumObj, value) => {
+  let found = enumObj.filter(e => e.value === value)[0];
+  return found? found.label : "";
+}
+
 export const GRADE = [
   { value: "GRADE_1", label: "Khối 1" },
   { value: "GRADE_2", label: "Khối 2" },
@@ -32,30 +37,27 @@ export const GRADE = [
   { value: "GRADE_12", label: "Khối 12" }
 ];
 
-export const getGradeLabel = (value) => {
-  let grade = GRADE.filter(e => e.value === value)[0];
-  return grade?.label;
-}
-
 export const SUBJECT = [
-  { value: "MATH", label: "Môn Toán" },
-  { value: "PHY", label: "Môn Lý" },
-  { value: "CHEM", label: "Môn Hóa" },
-  { value: "BIO", label: "Môn Sinh" },
-  { value: "ENG", label: "Môn Anh"}
+  { value: "MATH", label: "Toán" },
+  { value: "PHY", label: "Lý" },
+  { value: "CHEM", label: "Hóa" },
+  { value: "BIO", label: "Sinh" },
+  { value: "ENG", label: "Anh"}
 ];
-
-export const getSubjectLabel = (value) => {
-  let subject = SUBJECT.filter(e => e.value === value)[0];
-  return subject?.label;
-}
 
 export const QUESTION_TYPE = [
   {value: "SINGLE_CHOICE", label: "Một lựa chọn"},
   {value: "MULTIPLE_CHOICE", label: "Nhiều lựa chọn"},
 ]
 
-export const getQuestionTypeLabel = (value) => {
-  let type = QUESTION_TYPE.filter(e => e.value === value)[0];
-  return type?.label;
-}
+export const EXAM_STATUS = [
+  {value: "PUBLISHED", label: "Đã xuất bản"},
+  {value: "UNPUBLISHED", label: "Chưa xuất bản"},
+]
+
+export const QUESTION_LEVEL = [
+  {value: "LEVEL_1", label: "Nhận biết"},
+  {value: "LEVEL_2", label: "Thông hiểu"},
+  {value: "LEVEL_3", label: "Vận dụng"},
+  {value: "LEVEL_4", label: "Vận dụng cao"},
+]

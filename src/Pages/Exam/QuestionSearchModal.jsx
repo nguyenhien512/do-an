@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Modal, Table, Input } from 'antd';
 import { callSearchQuestions } from './TeacherExamApi';
-import { getGradeLabel, getSubjectLabel, getQuestionTypeLabel } from '../../util/enum';
+import { SUBJECT, GRADE, QUESTION_LEVEL, getLabel } from '../../util/enum';
 const { Search } = Input;
 
 // reset form fields when modal is form, closed
@@ -39,7 +39,7 @@ const QuestionSearchModal = ({ open, handleCancel, handleOk }) => {
             dataIndex: 'grade',
             key: 'grade',
             render: (grade) => <span>
-                {getGradeLabel(grade)}
+                {getLabel(GRADE, grade)}
             </span>
         },
         {
@@ -47,21 +47,24 @@ const QuestionSearchModal = ({ open, handleCancel, handleOk }) => {
             dataIndex: 'subject',
             key: 'subject',
             render: (subject) => <span>
-                {getSubjectLabel(subject)}
+                {getLabel(SUBJECT, subject)}
             </span>
         },
         {
-            title: 'Phân loại',
-            dataIndex: 'questionType',
-            key: 'questionType',
-            render: (type) => <span>
-                {getQuestionTypeLabel(type)}
+            title: 'Mức độ nhận biết',
+            dataIndex: 'level',
+            key: 'level',
+            render: (level) => <span>
+                {getLabel(QUESTION_LEVEL, level)}
             </span>
         },
         {
-            title: 'Số lượt sử dụng',
-            dataIndex: 'examTimes',
-            key: 'examTimes'
+            title: 'Nội dung kiến thức',
+            dataIndex: 'topic',
+            key: 'topic',
+            render: (topic) => <span>
+                {topic.name}
+            </span>
         }
     ]
 

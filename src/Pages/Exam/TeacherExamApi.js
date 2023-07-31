@@ -166,3 +166,48 @@ export const callSearchQuestions = async (searchKey, token) => {
         return console.log(error)
     }
 }
+
+export const callGetExamMatrix = async (examId, token) => {
+    try {
+        const response = await axios.get(`${CONFIG.baseUrl}/api/exams/${examId}/matrix`,{
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }
+        )
+        return response.data
+    } catch (error) {
+        return console.log(error)
+    }
+}
+
+export const callGetTopics = async (token) => {
+    try {
+        const response = await axios.get(`${CONFIG.baseUrl}/api/topics`,{
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }
+        )
+        return response.data
+    } catch (error) {
+        return console.log(error)
+    }
+}
+
+export const callSetQuestionsByMatrix = async (examId, data, token) => {
+    try {
+        const response = await axios.post(`${CONFIG.baseUrl}/api/exams/setQuestionsByMatrix/${examId}`,data, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }
+        )
+        return response.data
+    } catch (error) {
+        return console.log(error)
+    }
+}

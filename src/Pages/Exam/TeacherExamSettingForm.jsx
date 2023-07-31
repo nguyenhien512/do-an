@@ -3,6 +3,7 @@ import { Select, DatePicker, Form, Input, InputNumber, Modal, Row, Col, Button }
 import { useRef } from 'react';
 import { useState, useEffect } from 'react';
 import { callGetClasses } from '../manage-class/ClassApi';
+import { SUBJECT } from '../../util/enum';
 
 function ExamSettingForm({ disabled, handleCancel, handleSubmit, initForm }) {
 
@@ -138,6 +139,24 @@ function ExamSettingForm({ disabled, handleCancel, handleSubmit, initForm }) {
                     >
                         <DatePicker showTime style={{ width: '100%' }} placement="bottomRight" />
                     </Form.Item>
+                </Col>
+            </Row>
+            <Row justify='space-between' wrap={false}>
+                <Col span={10} offset={1}>
+                    <Form.Item
+                        label="Môn"
+                        name="subject"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Yêu cầu nhập môn',
+                            },
+                        ]}
+                    >
+                        <Select options={SUBJECT} placeholder="Chọn môn" style={{ width: '100%' }} />
+                    </Form.Item>
+                </Col>
+                <Col span={10} offset={3}>
                 </Col>
             </Row>
             <Row justify='end'>

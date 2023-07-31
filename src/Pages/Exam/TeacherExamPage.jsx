@@ -1,5 +1,5 @@
 import { callCreateExam, callGetExamsOfTeacher } from './TeacherExamApi';
-import { Table, Tag, Button, Space, Row } from 'antd';
+import { Table, Tag, Button, Space, Row, Col } from 'antd';
 import { useState, useEffect } from 'react';
 import { useNavigate, createSearchParams } from 'react-router-dom';
 import { formatDateTime } from '../../util/dateTimeUtil';
@@ -16,13 +16,14 @@ function TeacherExamPage() {
 
     const [openPopup, setOpenPop] = useState(false);
 
+    const [allowMatrix, setAllowMatrix] = useState(false);
+
 
     useEffect(() => {
         async function fetchData() {
             try {
                 const data = await callGetExamsOfTeacher(token);
                 setExams([...data]);
-                localStorage.setItem("exams", JSON.stringify(data));
             } catch (ignored) { }
         }
         fetchData();
@@ -40,7 +41,7 @@ function TeacherExamPage() {
     }
 
     const viewExamSettings = (id) => {
-        const params = { examId: id };
+        const params = { examId: id, allowMatrix: allowMatrix.toString() };
         navigate({
             pathname: '/teacher/exam/settings',
             search: `?${createSearchParams(params)}`,
@@ -51,7 +52,7 @@ function TeacherExamPage() {
     const createExam = async (exam) => {
         const data = await callCreateExam(exam, token);
         if (data) {
-            viewExamSettings (data.id);
+            viewExamSettings(data.id);
         }
     }
 
@@ -115,12 +116,20 @@ function TeacherExamPage() {
 
     return <>
         <Row className="d-flex-inline justify-content-end">
-            <Button icon={<PlusOutlined />} type='primary' onClick={() => setOpenPop(true)}>Tạo đề thủ công</Button>
+            <Col span={4}>
+                <Button icon={<PlusOutlined />} type='primary' onClick={() => {
+                    setAllowMatrix(true);
+                    setOpenPop(true)
+                    }}>Tạo đề từ ma trận đề</Button>
+            </Col>
+            <Col>
+                <Button icon={<PlusOutlined />} type='primary' onClick={() => setOpenPop(true)}>Tạo đề thủ công</Button>
+            </Col>
         </Row>
         <Row className="mt-3 d-flex justify-content-center">
             <Table dataSource={addKey(exams)} columns={columns} style={{ width: '100%' }} />
         </Row>
-        <CreateExamModal open={openPopup} handleFinish={createExam} handleCancel={() => setOpenPop(false)}/>
+        <CreateExamModal open={openPopup} handleFinish={createExam} handleCancel={() => setOpenPop(false)} />
     </>
 }
 
