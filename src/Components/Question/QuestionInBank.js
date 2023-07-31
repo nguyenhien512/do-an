@@ -7,7 +7,6 @@ const QuestionInBank = ({ question, handleDelete }) => {
     const {
         token: { colorWarning, colorInfo },
       } = theme.useToken();
-
     const onDelete = () => {
         handleDelete(question.id);
     }

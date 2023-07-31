@@ -3,7 +3,8 @@ import { Table, Tag, Button, Space, Row, Col, theme } from 'antd';
 import { useState, useEffect } from 'react';
 import { useNavigate, createSearchParams } from 'react-router-dom';
 import { formatDateTime } from '../../util/dateTimeUtil';
-import { SettingOutlined, PaperClipOutlined, DeleteOutlined } from "@ant-design/icons";
+import { SettingOutlined, FileDoneOutlined, PlusOutlined } from "@ant-design/icons";
+import CreateExamModal from './CreateExamModal';
 
 function TeacherExamPage() {
 
@@ -27,15 +28,14 @@ function TeacherExamPage() {
             try {
                 const data = await callGetExamsOfTeacher(token);
                 setExams([...data]);
-                localStorage.setItem("exams", JSON.stringify(data));
             } catch (ignored) { }
         }
         fetchData();
     }, [])
-    
+
     console.log("exams", exams);
 
-    function viewTests(id) {
+    const viewTests = (id) => {
         const params = { examId: id };
         navigate({
             pathname: '/teacher/exam/tests',
@@ -44,13 +44,20 @@ function TeacherExamPage() {
 
     }
 
-    function examSettings(id) {
-        const params = { examId: id };
+    const viewExamSettings = (id) => {
+        const params = { examId: id, allowMatrix: allowMatrix.toString() };
         navigate({
             pathname: '/teacher/exam/settings',
             search: `?${createSearchParams(params)}`,
         });
 
+    }
+
+    const createExam = async (exam) => {
+        const data = await callCreateExam(exam, token);
+        if (data) {
+            viewExamSettings(data.id);
+        }
     }
 
     const columns = [
@@ -101,18 +108,20 @@ function TeacherExamPage() {
             key: 'action-1',
             render: (id) => (<>
                 <Space size={[16, 4]} wrap>
-                    <Button title="Cài đặt" icon={<SettingOutlined />} onClick={() => examSettings(id)}></Button>
-                    <Button title="Xem bài làm đã nộp" icon={<PaperClipOutlined />} onClick={() => viewTests(id)}></Button>
+                    <Button title="Cài đặt" icon={<SettingOutlined />} onClick={() => viewExamSettings(id)}></Button>
+                    <Button title="Xem bài làm đã nộp" icon={<FileDoneOutlined />} onClick={() => viewTests(id)}></Button>
                 </Space>
             </>
             )
         }
     ]
 
+    const addKey = (data) => data.map((item, index) => ({ ...item, key: index }));
+
     return <>
         <Row className="d-flex-inline justify-content-end">
             <Col span={4}>
-                <Button icon={<PlusOutlined />} id='alternative-btn' style={{backgroundColor: colorWarning, color: colorBgBase}} onClick={() => {
+                <Button icon={<PlusOutlined />} type='primary' id='alternative-btn' style={{backgroundColor: colorWarning, color: colorBgBase}} onClick={() => {
                     setAllowMatrix(true);
                     setOpenPop(true)
                     }}>Tạo đề từ ma trận đề</Button>

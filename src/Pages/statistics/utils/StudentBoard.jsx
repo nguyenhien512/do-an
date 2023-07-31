@@ -40,7 +40,6 @@ const StudentBoard = (props) => {
     ]
 
     return (
-        <div className="table-container">
             <Table
                 loading={loading}
                 columns={column}
@@ -48,9 +47,10 @@ const StudentBoard = (props) => {
                 pagination={{
                     showQuickJumper: true,
                 }}
+                style={{
+                    width: '100%'
+                }}
             />
-        </div>
-
     )
 }
 export default StudentBoard

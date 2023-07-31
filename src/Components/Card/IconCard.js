@@ -12,7 +12,7 @@ export const IconCard = ({ count, icon, text, route }) => {
     return (
         <Badge count={count}>
             <Card style={{ width: 200, height: 200, cursor: "pointer" }} onClick={navigateMenu}>
-                <div className='d-flex flex-column justify-content-between text-center'>
+                <div className='d-flex flex-column justify-content-between text-center align-items-center'>
                     <Icon component={icon} style={{ fontSize: 100 }} />
                     <span className="mt-3">{text}</span>
                 </div>
