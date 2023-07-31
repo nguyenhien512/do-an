@@ -1,17 +1,20 @@
-import { Card, Button, Tag, Popconfirm } from "antd";
+import { Card, Button, Tag, Popconfirm, theme } from "antd";
 import { getLabel, SUBJECT, GRADE, QUESTION_LEVEL } from "../../util/enum";
 import { DeleteOutlined, TagOutlined } from "@ant-design/icons";
 
 const QuestionInBank = ({ question, handleDelete }) => {
 
+    const {
+        token: { colorWarning, colorInfo },
+      } = theme.useToken();
     const onDelete = () => {
         handleDelete(question.id);
     }
 
     return (
         <Card title={<span>Câu hỏi <a href='/teacher/testbank'>{question.id}</a></span>} extra={<>
-            <Tag color="#87d068">{getLabel(GRADE, question.grade)}</Tag>
-            <Tag color="#108ee9">{getLabel(SUBJECT,question.subject)}</Tag>
+            <Tag color={colorWarning}>{getLabel(GRADE, question.grade)}</Tag>
+            <Tag color={colorInfo}>{getLabel(SUBJECT,question.subject)}</Tag>
             <Tag>{getLabel(QUESTION_LEVEL, question.level)}</Tag>
             <span className="me-1" title="Nội dung kiến thức">
                 <TagOutlined/>

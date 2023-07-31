@@ -1,5 +1,5 @@
 import { callCreateExam, callGetExamsOfTeacher } from './TeacherExamApi';
-import { Table, Tag, Button, Space, Row, Col } from 'antd';
+import { Table, Tag, Button, Space, Row, Col, theme } from 'antd';
 import { useState, useEffect } from 'react';
 import { useNavigate, createSearchParams } from 'react-router-dom';
 import { formatDateTime } from '../../util/dateTimeUtil';
@@ -17,6 +17,10 @@ function TeacherExamPage() {
     const [openPopup, setOpenPop] = useState(false);
 
     const [allowMatrix, setAllowMatrix] = useState(false);
+
+    const {
+        token: { colorWarning, colorInfo, colorBgBase, colorErrorActive},
+      } = theme.useToken();
 
 
     useEffect(() => {
@@ -94,7 +98,7 @@ function TeacherExamPage() {
             key: 'status',
             render: (status) => (
                 status == 'PUBLISHED' ?
-                    <Tag key={status} color="#1677ff">Đã xuất bản</Tag>
+                    <Tag key={status} color={colorInfo}>Đã xuất bản</Tag>
                     : <Tag key={status} >Chưa xuất bản</Tag>
             )
         },
@@ -117,7 +121,7 @@ function TeacherExamPage() {
     return <>
         <Row className="d-flex-inline justify-content-end">
             <Col span={4}>
-                <Button icon={<PlusOutlined />} type='primary' onClick={() => {
+                <Button icon={<PlusOutlined />} type='primary' id='alternative-btn' style={{backgroundColor: colorWarning, color: colorBgBase}} onClick={() => {
                     setAllowMatrix(true);
                     setOpenPop(true)
                     }}>Tạo đề từ ma trận đề</Button>

@@ -84,7 +84,7 @@ const QuestionSearchModal = ({ open, handleCancel, handleOk }) => {
 
     return (
         <Modal title="Thêm câu hỏi" open={open} onOk={onOk} onCancel={handleCancel} width='80%' >
-            <Search placeholder="Tìm câu hỏi theo nội dung. Để trống nếu muốn tìm tất cả." onSearch={onSearch} allowClear />
+            <Search placeholder="Tìm câu hỏi theo nội dung" onSearch={onSearch} allowClear />
             {hasSelected ? <span>Đã chọn {selectedRowKeys.length} câu hỏi</span> : null}
             <Table className="mt-3" dataSource={addKey(questions)} columns={columns} rowSelection={rowSelection} />
         </Modal>
