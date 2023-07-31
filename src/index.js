@@ -27,11 +27,13 @@ import ManageClassPage from './Pages/manage-class/ManageClass';
 import ClassDetailPage from './Pages/manage-class/ClassDetailPage';
 import TeacherDashboardPage from './Pages/dashboard/TeacherDashboardPage';
 import TestBankPage from './Pages/testbank/TestBankPage';
+import  ThemeProvider from './context/ThemeProvider';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
+  <ThemeProvider>
     <AuthProvider>
       <Routes>
         <Route exact path='/' element={<LoginPage />}>
@@ -78,7 +80,7 @@ root.render(
 
       </Routes>
     </AuthProvider>
-
+    </ThemeProvider>
   </BrowserRouter>
 );
 

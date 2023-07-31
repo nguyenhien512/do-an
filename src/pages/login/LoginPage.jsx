@@ -117,8 +117,8 @@ function LoginPage() {
   return (
     <section className="login-page">
       <ModalComponent isOpen={isModalOpen} handlePopupCancel={handlePopupCancel} handleRegisterSubmit={handleRegisterSubmit} />
-      <h1>Login</h1>
-      <Form onFinish={onFinish} className="login-form">
+      <h1>Đăng nhập</h1>
+      <Form onFinish={onFinish} className="login-form pt-3">
         <Form.Item name="username">
           <Input
             name="username"
@@ -145,7 +145,7 @@ function LoginPage() {
               htmlType="submit"
               disabled={!login.username || !login.password}
             >
-              Log in
+              Đăng nhập
             </Button>
           </div>
         </Form.Item>

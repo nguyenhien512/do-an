@@ -1,5 +1,5 @@
-import { callGetExamsOfTeacher } from './TeacherExamApi';
-import { Table, Tag, Button, Space } from 'antd';
+import { callCreateExam, callGetExamsOfTeacher } from './TeacherExamApi';
+import { Table, Tag, Button, Space, Row, Col, theme } from 'antd';
 import { useState, useEffect } from 'react';
 import { useNavigate, createSearchParams } from 'react-router-dom';
 import { formatDateTime } from '../../util/dateTimeUtil';
@@ -12,7 +12,15 @@ function TeacherExamPage() {
     const navigate = useNavigate();
 
     const token = localStorage.getItem("token");
-    
+
+    const [openPopup, setOpenPop] = useState(false);
+
+    const [allowMatrix, setAllowMatrix] = useState(false);
+
+    const {
+        token: { colorWarning, colorInfo, colorBgBase, colorErrorActive},
+      } = theme.useToken();
+
 
     useEffect(() => {
         async function fetchData() {
@@ -83,7 +91,7 @@ function TeacherExamPage() {
             key: 'status',
             render: (status) => (
                 status == 'PUBLISHED' ?
-                    <Tag key={status} color="#1677ff">Đã xuất bản</Tag>
+                    <Tag key={status} color={colorInfo}>Đã xuất bản</Tag>
                     : <Tag key={status} >Chưa xuất bản</Tag>
             )
         },
@@ -102,9 +110,21 @@ function TeacherExamPage() {
     ]
 
     return <>
-        <Table dataSource={exams} columns={columns}>
-        </Table>
-
+        <Row className="d-flex-inline justify-content-end">
+            <Col span={4}>
+                <Button icon={<PlusOutlined />} id='alternative-btn' style={{backgroundColor: colorWarning, color: colorBgBase}} onClick={() => {
+                    setAllowMatrix(true);
+                    setOpenPop(true)
+                    }}>Tạo đề từ ma trận đề</Button>
+            </Col>
+            <Col>
+                <Button icon={<PlusOutlined />} type='primary' onClick={() => setOpenPop(true)}>Tạo đề thủ công</Button>
+            </Col>
+        </Row>
+        <Row className="mt-3 d-flex justify-content-center">
+            <Table dataSource={addKey(exams)} columns={columns} style={{ width: '100%' }} />
+        </Row>
+        <CreateExamModal open={openPopup} handleFinish={createExam} handleCancel={() => setOpenPop(false)} />
     </>
 }
 

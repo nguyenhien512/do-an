@@ -15,7 +15,6 @@ import { USER_SIDEBAR, ADMIN_SIDEBAR } from '../../util/enum'
 import './LayoutMain.css';
 import { useNavigate } from "react-router-dom";
 import hien from '../../Hien-01.svg'
-import logo from '../../logo.svg'
 
 const { Header, Sider, Content } = Layout;
 function LayoutMain({ title, content }) {
