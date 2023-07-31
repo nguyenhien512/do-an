@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import FilterExam from "./utils/filterExam";
 import {
+    getAverage,
     getExams,
     getStatisticByExamId,
     getStatisticByQuesId,
@@ -17,6 +18,7 @@ const StatisticPage = () => {
     const [byScoreBars, setByScoreBars] = useState()
     const [byQuesBars, setByQuesBars] = useState()
     const [studentData, setStudentData] = useState()
+    const [averageScore, setAverageScore] = useState()
     const fetchData = (examId) => {
         setLoading(true)
         getStatisticByExamId(examId)
@@ -33,6 +35,11 @@ const StatisticPage = () => {
         getStatisticByStudentId(examId)
             .then((res) => {
                 setStudentData(res)
+                setLoading(false)
+            })
+        getAverage(examId)
+            .then((res) => {
+                setAverageScore(res)
                 setLoading(false)
             })
     }
@@ -61,6 +68,7 @@ const StatisticPage = () => {
                 fetchData={fetchData}
             />
         </Row>
+            <div>Điểm trung bình của kỳ thi đã chọn là: {averageScore !== '' ? averageScore : 0}</div>
         <Row className="mt-3">
             <h4>Phổ điểm</h4>
         </Row>
