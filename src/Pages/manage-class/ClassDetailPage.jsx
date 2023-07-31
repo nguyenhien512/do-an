@@ -44,6 +44,19 @@ function ClassDetailPage() {
         setStudents([...data]);
     }
 
+    const merge = (source, target) => {
+        const clone = [...source];
+        clone.forEach(e => {
+            let found = target.find(item => item.studentUsername === e.username);
+            if (found) {
+                e.totalSubmitExam = found.totalSubmitExam
+            } else {
+                e.totalSubmitExam = 0
+            }
+        })
+        return clone;
+    }
+
     const columns = [
         {
             title: 'STT',
@@ -56,7 +69,8 @@ function ClassDetailPage() {
         {
             title: 'Tên',
             dataIndex: 'firstName',
-            key: 'firstName'
+            key: 'firstName',
+            sorter: (a,b) => a.firstName.charCodeAt(0) - b.firstName.charCodeAt(0)
         },
         {
             title: 'Họ',
@@ -70,12 +84,9 @@ function ClassDetailPage() {
         },
         {
             title: 'Đề thi đã làm',
-            dataIndex: 'username',
-            key: 'numberOfSubmittedExams',
-            render: (username) => {
-                let found = examCounts.filter(item => item.studentUsername == username);
-                return <span>{found.length > 0 ? found[0].totalSubmitExam : 0}</span>
-            }
+            dataIndex: 'totalSubmitExam',
+            key: 'totalSubmitExam',
+            sorter: (a,b) => a.totalSubmitExam - b.totalSubmitExam
         },
         {
             title: '',
@@ -108,7 +119,7 @@ function ClassDetailPage() {
             <Button icon={<PlusOutlined />} type='primary' onClick={showModal}>Thêm học sinh</Button>
         </Row>
         <Row className="mt-3 d-flex justify-content-center">
-            <Table dataSource={students} columns={columns} style={{width: '100%'}}>
+            <Table dataSource={merge(students,examCounts)} columns={columns} style={{width: '100%'}}>
             </Table>
         </Row>
         <StudentSearchModal open={open} onCancel={hideModal} onOk={onOk} />

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Modal, Table, Input } from 'antd';
 import { callSearchQuestions } from './TeacherExamApi';
-import { SUBJECT, GRADE, QUESTION_LEVEL, getLabel } from '../../util/enum';
+import { SUBJECT, GRADE, QUESTION_LEVEL, getLabel, compareEnum } from '../../util/enum';
+import { createFilterForNestedProp } from '../../util/arrayUtil';
 const { Search } = Input;
 
 // reset form fields when modal is form, closed
@@ -40,7 +41,8 @@ const QuestionSearchModal = ({ open, handleCancel, handleOk }) => {
             key: 'grade',
             render: (grade) => <span>
                 {getLabel(GRADE, grade)}
-            </span>
+            </span>,
+            sorter: (a, b) => compareEnum(GRADE,a.grade,b.grade)
         },
         {
             title: 'Môn',
@@ -48,7 +50,8 @@ const QuestionSearchModal = ({ open, handleCancel, handleOk }) => {
             key: 'subject',
             render: (subject) => <span>
                 {getLabel(SUBJECT, subject)}
-            </span>
+            </span>,
+            sorter: (a, b) => compareEnum(SUBJECT,a.subject,b.subject)
         },
         {
             title: 'Mức độ nhận biết',
@@ -56,7 +59,8 @@ const QuestionSearchModal = ({ open, handleCancel, handleOk }) => {
             key: 'level',
             render: (level) => <span>
                 {getLabel(QUESTION_LEVEL, level)}
-            </span>
+            </span>,
+            sorter: (a, b) => compareEnum(QUESTION_LEVEL,a.level,b.level)
         },
         {
             title: 'Nội dung kiến thức',
@@ -64,7 +68,9 @@ const QuestionSearchModal = ({ open, handleCancel, handleOk }) => {
             key: 'topic',
             render: (topic) => <span>
                 {topic.name}
-            </span>
+            </span>,
+            filters: createFilterForNestedProp(questions,"topic","name"),
+            onFilter: (value, record) => record.topic.name.indexOf(value) === 0,
         }
     ]
 
