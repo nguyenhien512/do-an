@@ -1,6 +1,6 @@
 import { callGetExamMatrix, callGetTopics } from "./TeacherExamApi";
 import { useState, useEffect } from 'react';
-import { Modal, Table, Typography, Button, Select, Row, Col, Input, InputNumber, Form, Popconfirm } from 'antd';
+import { Modal, Table, Typography, Button, Space, Row, Col, InputNumber, Form, Popconfirm } from 'antd';
 import { useSearchParams, useNavigate } from "react-router-dom";
 import TopciSelectFormItem from "../../Components/Topic/TopicSelectFormItem";
 
@@ -16,7 +16,7 @@ const EditableCell = ({
     children,
     ...restProps
 }) => {
-    const inputNode = inputType === 'select' ? <TopciSelectFormItem name={dataIndex}/> : <InputNumber min={0}/>;
+    const inputNode = inputType === 'select' ? <TopciSelectFormItem fieldName={dataIndex} /> : <InputNumber min={0} />;
     return (
         <td {...restProps}>
             {editing ? (
@@ -58,14 +58,18 @@ const CreateMatrixModal = ({ open, handleOk, handleCancel }) => {
     const [topics, setTopics] = useState();
 
     useEffect(() => {
-      async function fetchData() {
-          try {
-              const data = await callGetTopics(token);
-              setTopics([...data]);
-          } catch (ignored) { }
-      }
-      fetchData();
-  },[])
+        async function fetchData() {
+            try {
+                const data = await callGetTopics(token);
+                setTopics([...data]);
+            } catch (ignored) { }
+        }
+        fetchData();
+    }, [])
+
+    const remove = (key) => {
+        setData(data.filter((item) => item.key !== key));
+    }
 
     const edit = (record) => {
         console.log("record", record);
@@ -86,11 +90,11 @@ const CreateMatrixModal = ({ open, handleOk, handleCancel }) => {
     const save = async (key) => {
         try {
             const row = await form.validateFields();
-            console.log("row = ",row);
+            console.log("row = ", row);
             const newRow = {
                 ...row,
                 name: topics.find(t => t.id === row.id)?.name,
-                sum: row.LEVEL_1 + row.LEVEL_2 + row.LEVEL_3 + row.LEVEL_4               
+                sum: row.LEVEL_1 + row.LEVEL_2 + row.LEVEL_3 + row.LEVEL_4
             }
             console.log("newrow", newRow);
             const newData = [...data];
@@ -100,7 +104,7 @@ const CreateMatrixModal = ({ open, handleOk, handleCancel }) => {
                 console.log("item", item);
                 newData.splice(index, 1, {
                     ...item,
-                    id: row.name,
+                    id: row.id,
                     name: newRow.name,
                     level: {
                         LEVEL_1: newRow.LEVEL_1,
@@ -236,32 +240,42 @@ const CreateMatrixModal = ({ open, handleOk, handleCancel }) => {
             dataIndex: 'operation',
             render: (_, record) => {
                 const editable = isEditing(record);
-                return editable ? (
-                    <span>
-                        <Typography.Link
-                            onClick={() => save(record.key)}
+                return <>
+                    {editable ? (
+                        <span>
+                            <Typography.Link
+                                onClick={() => save(record.key)}
+                                style={{
+                                    marginRight: 8,
+                                }}
+                            >
+                                Lưu
+                            </Typography.Link>
+                            <Popconfirm title="Bạn muốn hủy?" onConfirm={cancel}>
+                                <a>Hủy</a>
+                            </Popconfirm>
+                        </span>
+                    ) : (<>
+                        <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}
                             style={{
                                 marginRight: 8,
-                            }}
-                        >
-                            Save
+                            }} >
+                            Nhập nội dung
                         </Typography.Link>
-                        <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
-                            <a>Cancel</a>
+                        <Popconfirm title="Bạn muốn xóa?" onConfirm={() => remove(record.key)}>
+                            <a>Xóa</a>
                         </Popconfirm>
-                    </span>
-                ) : (
-                    <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
-                        Edit
-                    </Typography.Link>
-                );
+                    </>
+                    )}
+
+                </>
             },
         }
     ]
 
     const mergedColumns = columns.map((col) => {
         if (!col.editable) {
-          return col;
+            return col;
         }
         if (col.children) {
             return {
@@ -269,26 +283,26 @@ const CreateMatrixModal = ({ open, handleOk, handleCancel }) => {
                 children: col.children.map(childCol => ({
                     ...childCol,
                     onCell: (record) => ({
-                      record,
-                      inputType: childCol.dataIndex === 'name' ? 'select' : 'number',
-                      dataIndex: childCol.key,
-                      title: childCol.title,
-                      editing: isEditing(record)
+                        record,
+                        inputType: childCol.dataIndex === 'name' ? 'select' : 'number',
+                        dataIndex: childCol.key,
+                        title: childCol.title,
+                        editing: isEditing(record)
                     }),
                 }))
             }
         }
         return {
-          ...col,
-          onCell: (record) => ({
-            record,
-            inputType: col.dataIndex === 'name' ? 'select' : 'number',
-            dataIndex: col.dataIndex === 'name' ? 'id' : col.dataIndex,
-            title: col.title,
-            editing: isEditing(record)
-          }),
+            ...col,
+            onCell: (record) => ({
+                record,
+                inputType: col.dataIndex === 'name' ? 'select' : 'number',
+                dataIndex: col.dataIndex === 'name' ? 'id' : col.dataIndex,
+                title: col.title,
+                editing: isEditing(record)
+            }),
         };
-      });
+    });
 
     const emptyRow = {
         key: data.length,
@@ -331,6 +345,7 @@ const CreateMatrixModal = ({ open, handleOk, handleCancel }) => {
     }
 
     const onOk = () => {
+        console.log("final data", data);
         handleOk(convertDataToMatrix(data));
     }
 
@@ -338,14 +353,14 @@ const CreateMatrixModal = ({ open, handleOk, handleCancel }) => {
     return (
 
         <Modal title="Tạo ma trận đề" open={open} onOk={onOk} onCancel={handleCancel} width='80%' >
-            <Row>
+            <Row style={{ width: '100%' }}>
                 <Col span={2}>
                     <Button onClick={addRow}>Thêm dòng</Button>
                 </Col>
-                <Col offset={1}>
+                <Col offset={1} span={20}>
                     <Form form={form} component={false}>
                         <Table
-                            style={{width: '100%'}}
+                            style={{ width: '100%' }}
                             components={{
                                 body: {
                                     cell: EditableCell,

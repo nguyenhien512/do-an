@@ -77,7 +77,13 @@ const QuestionSearchModal = ({ open, handleCancel, handleOk }) => {
             </span>,
             filters: createFilterForNestedProp(questions,"topic","name"),
             onFilter: (value, record) => record.topic?.name.indexOf(value) === 0,
-        }
+        },
+        {
+            title: 'Số lượt sử dụng',
+            dataIndex: 'examTimes',
+            key: 'examTimes',
+            sorter: (a, b) => a.examTimes - b.examTimes,
+        },
     ]
 
     const onSearch = async (value) => {
