@@ -61,7 +61,16 @@ const deleteQuestion = (endPoint, id) => {
     )
 }
 
-
+const getQuestionById = (endPoint, id) => {
+    let token = localStorage.getItem('token');
+    return instance.get(endPoint + `/${id}`,
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
+    )
+}
 
 const httpClient = {
     postUser,
@@ -70,7 +79,8 @@ const httpClient = {
     getAllQuestion,
     createQuestion,
     updateQuestion,
-    deleteQuestion
+    deleteQuestion,
+    getQuestionById,
 
 }
 
