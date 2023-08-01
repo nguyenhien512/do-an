@@ -1,8 +1,10 @@
 import {Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis} from "recharts";
+import {convertColor} from "../../../util/convertData";
+import {useNavigate} from "react-router-dom";
 
 const QuesBar = (props) => {
     const {loading, byQuesBars} = props
-    console.log("ques bar: ", byQuesBars)
+    let navigate = useNavigate()
     const formatXAxis = (tickItem) => {
         return "Câu " + tickItem.toString();
     }
@@ -27,6 +29,10 @@ const QuesBar = (props) => {
                 <XAxis
                     dataKey="point"
                     tickFormatter={formatXAxis}
+                    onClick={(tickItem) => {
+                        let page = window.location.href
+                        window.location.href = page.replace('statistics', `testbank?qId=${tickItem.value}`)
+                    }}
                 />
                 <YAxis
                     allowDecimals="true"

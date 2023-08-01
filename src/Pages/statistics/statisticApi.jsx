@@ -58,3 +58,19 @@ export const getStatisticByStudentId = (examId) => {
             console.log(error)
         });
 }
+
+export const getAverage = (examId) => {
+    return axios
+        .get(`${CONFIG.baseUrl}/api/users/statistic/average/${examId || 1}`,
+            {
+                headers:{
+                    Authorization : `Bearer ${localStorage.getItem("token")}`
+                }
+            }
+        )
+        .then((response) => {
+            return response.data;
+        }).catch((error) => {
+            console.log(error)
+        });
+}
