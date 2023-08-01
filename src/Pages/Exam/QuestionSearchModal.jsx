@@ -73,10 +73,10 @@ const QuestionSearchModal = ({ open, handleCancel, handleOk }) => {
             dataIndex: 'topic',
             key: 'topic',
             render: (topic) => <span>
-                {topic.name}
+                {topic?.name}
             </span>,
             filters: createFilterForNestedProp(questions,"topic","name"),
-            onFilter: (value, record) => record.topic.name.indexOf(value) === 0,
+            onFilter: (value, record) => record.topic?.name.indexOf(value) === 0,
         }
     ]
 
