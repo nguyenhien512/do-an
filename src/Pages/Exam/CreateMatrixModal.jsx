@@ -2,6 +2,7 @@ import { callGetExamMatrix, callGetTopics } from "./TeacherExamApi";
 import { useState, useEffect } from 'react';
 import { Modal, Table, Typography, Button, Select, Row, Col, Input, InputNumber, Form, Popconfirm } from 'antd';
 import { useSearchParams, useNavigate } from "react-router-dom";
+import TopciSelectFormItem from "../../Components/Topic/TopicSelectFormItem";
 
 const { Text } = Typography;
 
@@ -13,10 +14,9 @@ const EditableCell = ({
     record,
     index,
     children,
-    options,
     ...restProps
 }) => {
-    const inputNode = inputType === 'select' ? <Select options={options} style={{width: 120}}/> : <InputNumber min={0}/>;
+    const inputNode = inputType === 'select' ? <TopciSelectFormItem name={dataIndex}/> : <InputNumber min={0}/>;
     return (
         <td {...restProps}>
             {editing ? (
@@ -57,17 +57,11 @@ const CreateMatrixModal = ({ open, handleOk, handleCancel }) => {
 
     const [topics, setTopics] = useState();
 
-    const [options, setOptions] = useState();
-
     useEffect(() => {
       async function fetchData() {
           try {
               const data = await callGetTopics(token);
               setTopics([...data]);
-              setOptions(data.map (topic => ({
-                  value: topic.id,
-                  label: topic.name
-              })));
           } catch (ignored) { }
       }
       fetchData();
@@ -76,7 +70,7 @@ const CreateMatrixModal = ({ open, handleOk, handleCancel }) => {
     const edit = (record) => {
         console.log("record", record);
         form.setFieldsValue({
-            name: '',
+            id: '',
             level: '',
             sum: '',
             percent: '',
@@ -95,7 +89,7 @@ const CreateMatrixModal = ({ open, handleOk, handleCancel }) => {
             console.log("row = ",row);
             const newRow = {
                 ...row,
-                name: topics.find(t => t.id === row.name)?.name,
+                name: topics.find(t => t.id === row.id)?.name,
                 sum: row.LEVEL_1 + row.LEVEL_2 + row.LEVEL_3 + row.LEVEL_4               
             }
             console.log("newrow", newRow);
@@ -279,8 +273,7 @@ const CreateMatrixModal = ({ open, handleOk, handleCancel }) => {
                       inputType: childCol.dataIndex === 'name' ? 'select' : 'number',
                       dataIndex: childCol.key,
                       title: childCol.title,
-                      editing: isEditing(record),
-                      options: options
+                      editing: isEditing(record)
                     }),
                 }))
             }
@@ -290,10 +283,9 @@ const CreateMatrixModal = ({ open, handleOk, handleCancel }) => {
           onCell: (record) => ({
             record,
             inputType: col.dataIndex === 'name' ? 'select' : 'number',
-            dataIndex: col.dataIndex,
+            dataIndex: col.dataIndex === 'name' ? 'id' : col.dataIndex,
             title: col.title,
-            editing: isEditing(record),
-            options: options
+            editing: isEditing(record)
           }),
         };
       });
@@ -347,10 +339,10 @@ const CreateMatrixModal = ({ open, handleOk, handleCancel }) => {
 
         <Modal title="Tạo ma trận đề" open={open} onOk={onOk} onCancel={handleCancel} width='80%' >
             <Row>
-                <Col span={4}>
+                <Col span={2}>
                     <Button onClick={addRow}>Thêm dòng</Button>
                 </Col>
-                <Col span={18} offset={1}>
+                <Col offset={1}>
                     <Form form={form} component={false}>
                         <Table
                             style={{width: '100%'}}

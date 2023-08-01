@@ -52,7 +52,7 @@ const ExamMatrixModal = ({ open, handleClose }) => {
             let sum = Object.values(level).reduce((a, b) => a + b, 0);
             let percent = Math.round(sum / total * 100);
             return ({
-                name: topic.name,
+                name: topic?.name,
                 level: level,
                 sum: sum,
                 percent: percent
