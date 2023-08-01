@@ -69,3 +69,10 @@ const findIndexByValue = (arr, value) => {
 export const compareEnum = (enumArr, value1, value2) => {
   return findIndexByValue(enumArr,value1) - findIndexByValue(enumArr,value2)
 }
+
+export const createFilterFromEnum = (enumArr) => {
+  return enumArr.map(e => ({
+    value: e.value,
+    text: e.label
+  }))
+}

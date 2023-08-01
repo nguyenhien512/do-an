@@ -6,6 +6,7 @@ import { formatDateTime } from '../../util/dateTimeUtil';
 import { SettingOutlined, FileDoneOutlined, PlusOutlined } from "@ant-design/icons";
 import CreateExamModal from './CreateExamModal';
 import { createFilterForProp } from '../../util/arrayUtil';
+import { EXAM_STATUS, createFilterFromEnum } from '../../util/enum';
 
 function TeacherExamPage() {
 
@@ -104,16 +105,7 @@ function TeacherExamPage() {
                     <Tag key={status} color={colorInfo}>Đã xuất bản</Tag>
                     : <Tag key={status} >Chưa xuất bản</Tag>
             ),
-            filters: [
-                {
-                    text: 'Đã xuất bản',
-                    value: 'PUBLISHED',
-                },
-                {
-                    text: 'Chưa xuất bản',
-                    value: 'UNPUBLISHED',
-                }
-            ],
+            filters: createFilterFromEnum(EXAM_STATUS),
             onFilter: (value, record) => record.status.indexOf(value) === 0,
         },
         {
