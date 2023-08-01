@@ -76,6 +76,14 @@ function ExamSettingForm({ disabled, handleCancel, handleSubmit, initForm }) {
                                 required: true,
                                 message: 'Hãy chọn lớp học bạn muốn giao đề thi',
                             },
+                            (form) => ({
+                                validator(_, value) {
+                                  if (!value) {
+                                    return Promise.reject(new Error('Yêu cầu chọn lớp học!'));
+                                  }
+                                  return Promise.resolve();
+                                },
+                              }),
                         ]}
                     >
                         <Select options={options} placeholder="Chọn lớp bạn đã tạo" style={{ width: '100%' }} />
@@ -92,6 +100,14 @@ function ExamSettingForm({ disabled, handleCancel, handleSubmit, initForm }) {
                                 required: true,
                                 message: 'Yêu cầu nhập thời gian làm bài!',
                             },
+                            (form) => ({
+                                validator(_, value) {
+                                  if (!value) {
+                                    return Promise.reject(new Error('Yêu cầu nhập thời gian làm bài!'));
+                                  }
+                                  return Promise.resolve();
+                                },
+                              }),
                         ]}                    >
                         <InputNumber style={{ width: '100%' }}/>
                     </Form.Item>
@@ -105,6 +121,14 @@ function ExamSettingForm({ disabled, handleCancel, handleSubmit, initForm }) {
                                 required: true,
                                 message: 'Yêu cầu nhập số lần thi tối đa!',
                             },
+                            (form) => ({
+                                validator(_, value) {
+                                  if (!value) {
+                                    return Promise.reject(new Error('Yêu cầu nhập số lần thi tối đa!'));
+                                  }
+                                  return Promise.resolve();
+                                },
+                              }),
                         ]}
                     >
                         <InputNumber style={{ width: '100%' }}/>
@@ -149,7 +173,7 @@ function ExamSettingForm({ disabled, handleCancel, handleSubmit, initForm }) {
                         rules={[
                             {
                                 required: true,
-                                message: 'Yêu cầu nhập môn',
+                                message: 'Yêu cầu nhập môn học!',
                             },
                         ]}
                     >
