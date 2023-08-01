@@ -30,9 +30,8 @@ const QuesBar = (props) => {
                     dataKey="point"
                     tickFormatter={formatXAxis}
                     onClick={(tickItem) => {
-                        // let path = window.location.href
-                        // navigate(`${path + tickItem.value}`, { replace: true})
-                        window.location.href = `http://localhost:3000/teacher/testbank?qId=${tickItem.value}`
+                        let page = window.location.href
+                        window.location.href = page.replace('statistics', `testbank?qId=${tickItem.value}`)
                     }}
                 />
                 <YAxis
