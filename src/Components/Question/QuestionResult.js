@@ -9,7 +9,7 @@ const QuestionResult = ({ isDisplay, question, index, selectedAnswer, showQuesti
 
     return (
         <Card title={<span>Câu {index + 1}
-        {showQuestionId && <span> (câu hỏi <a href='../../teacher/testbank'>{question.id}</a>) </span>}
+        {showQuestionId && <span> (câu hỏi <a href={`/teacher/testbank?qId=${question.id}`}>{question.id}</a>) </span>}
         </span>}>
             <p>{question.content}</p>
             {question.answers.map(item => <p key={item.key}>

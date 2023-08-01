@@ -12,7 +12,7 @@ const QuestionInBank = ({ question, handleDelete }) => {
     }
 
     return (
-        <Card title={<span>Câu hỏi <a href='/teacher/testbank'>{question.id}</a></span>} extra={<>
+        <Card title={<span>Câu hỏi <a href={`/teacher/testbank?qId=${question.id}`}>{question.id}</a></span>} extra={<>
             <Tag color={colorWarning}>{getLabel(GRADE, question.grade)}</Tag>
             <Tag color={colorInfo}>{getLabel(SUBJECT,question.subject)}</Tag>
             <Tag>{getLabel(QUESTION_LEVEL, question.level)}</Tag>

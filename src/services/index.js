@@ -32,3 +32,7 @@ export const deleteQuestion=(id)=>{
     return httpClient.deleteQuestion(`${END_POINT.deleteQuestion}`,id)
 }
 
+export const getQuestionById=(id)=>{
+    console.log("service get question : ",id)
+    return httpClient.getQuestionById(`${END_POINT.getAllQuestion}`,id)
+}

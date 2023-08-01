@@ -7,10 +7,17 @@ import { InputNumber } from 'antd';
 import { Button, Input, Select, Form } from 'antd';
 // import { Field, Form, Formik, FormikProps } from 'formik';
 import { toast, ToastContainer } from 'react-toastify';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import QuestionDetailModal from './QuestionDetailModal';
 
 const { Option } = Select;
 
 function TestBankPage() {
+
+    const [queryParameters] = useSearchParams();
+    const navigate = useNavigate();
+    const qId = queryParameters.get("qId");
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [questions, setQuestions] = useState([])
     const [questionModal, setQuestionModal] = useState({
@@ -602,6 +609,8 @@ function TestBankPage() {
 
 
             </Modal>
+
+            <QuestionDetailModal qId={qId} open={true}/>
 
         </>
     )

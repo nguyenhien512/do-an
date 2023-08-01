@@ -62,6 +62,13 @@ export const QUESTION_LEVEL = [
   {value: "LEVEL_4", label: "Vận dụng cao"},
 ]
 
+export const ANSWER_KEY = [
+  {value: "A", label: "A"},
+  {value: "B", label: "B"},
+  {value: "C", label: "C"},
+  {value: "D", label: "D"},
+]
+
 const findIndexByValue = (arr, value) => {
   return arr.findIndex(item => item.value === value);
 }
