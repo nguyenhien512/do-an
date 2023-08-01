@@ -18,7 +18,7 @@ const QuestionInBank = ({ question, handleDelete }) => {
             <Tag>{getLabel(QUESTION_LEVEL, question.level)}</Tag>
             <span className="me-1" title="Nội dung kiến thức">
                 <TagOutlined/>
-                <span className="ms-1">{question.topic.name}</span>
+                <span className="ms-1">{question.topic?.name}</span>
             </span>
             <Popconfirm
                 title="Xóa câu hỏi"
