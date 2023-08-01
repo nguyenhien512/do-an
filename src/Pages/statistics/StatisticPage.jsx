@@ -10,7 +10,7 @@ import {
 import ScoreBar from "./utils/ScoreBar";
 import QuesBar from "./utils/QuesBar";
 import StudentBoard from "./utils/StudentBoard";
-import { Row } from 'antd';
+import { Row, Progress, Col, Space } from 'antd';
 
 const StatisticPage = () => {
     const [loading, setLoading] = useState()
@@ -18,7 +18,7 @@ const StatisticPage = () => {
     const [byScoreBars, setByScoreBars] = useState()
     const [byQuesBars, setByQuesBars] = useState()
     const [studentData, setStudentData] = useState()
-    const [averageScore, setAverageScore] = useState()
+    const [averageScore, setAverageScore] = useState(0)
     const fetchData = (examId) => {
         setLoading(true)
         getStatisticByExamId(examId)
@@ -68,21 +68,28 @@ const StatisticPage = () => {
                 fetchData={fetchData}
             />
         </Row>
-            <div>Điểm trung bình của kỳ thi đã chọn là: {averageScore !== '' ? averageScore : 0}</div>
         <Row className="mt-3">
             <h4>Phổ điểm</h4>
         </Row>
-        <Row className='mt-3'>
-            {byScoreBars &&
-                <ScoreBar
-                    loading={loading}
-                    byScoreBars={byScoreBars}
-                />}
+        <Row className='mt-3' justify='space-around'>
+            <Col>
+                {byScoreBars &&
+                    <ScoreBar
+                        loading={loading}
+                        byScoreBars={byScoreBars}
+                    />}
+            </Col>
+            <Col>
+                <Space direction='vertical' align="center">
+                    <Progress type="circle" percent={averageScore * 10} format={(percent) => averageScore.toFixed(2)} />
+                    <p>Điểm trung bình</p>
+                </Space>
+            </Col>
         </Row>
         <Row className="mt-3">
             <h4>Thống kê tỉ lệ đúng sai</h4>
         </Row>
-        <Row className="mt-3">
+        <Row className="mt-3" justify='space-around'>
             {byQuesBars &&
                 <QuesBar
                     loading={loading}

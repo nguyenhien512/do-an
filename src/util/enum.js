@@ -17,8 +17,8 @@ export const ADMIN_SIDEBAR = [
   { content: "Thống kê", route: "/teacher/statistics"}
 ];
 
-export const getLabel = (enumObj, value) => {
-  let found = enumObj.filter(e => e.value === value)[0];
+export const getLabel = (enumArr, value) => {
+  let found = enumArr.filter(e => e.value === value)[0];
   return found? found.label : "";
 }
 
@@ -61,3 +61,18 @@ export const QUESTION_LEVEL = [
   {value: "LEVEL_3", label: "Vận dụng"},
   {value: "LEVEL_4", label: "Vận dụng cao"},
 ]
+
+const findIndexByValue = (arr, value) => {
+  return arr.findIndex(item => item.value === value);
+}
+
+export const compareEnum = (enumArr, value1, value2) => {
+  return findIndexByValue(enumArr,value1) - findIndexByValue(enumArr,value2)
+}
+
+export const createFilterFromEnum = (enumArr) => {
+  return enumArr.map(e => ({
+    value: e.value,
+    text: e.label
+  }))
+}

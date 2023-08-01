@@ -5,6 +5,8 @@ import { useNavigate, createSearchParams } from 'react-router-dom';
 import { formatDateTime } from '../../util/dateTimeUtil';
 import { SettingOutlined, FileDoneOutlined, PlusOutlined } from "@ant-design/icons";
 import CreateExamModal from './CreateExamModal';
+import { createFilterForProp } from '../../util/arrayUtil';
+import { EXAM_STATUS, createFilterFromEnum } from '../../util/enum';
 
 function TeacherExamPage() {
 
@@ -19,8 +21,8 @@ function TeacherExamPage() {
     const [allowMatrix, setAllowMatrix] = useState(false);
 
     const {
-        token: { colorWarning, colorInfo, colorBgBase, colorErrorActive},
-      } = theme.useToken();
+        token: { colorWarning, colorInfo, colorBgBase, colorErrorActive },
+    } = theme.useToken();
 
 
     useEffect(() => {
@@ -77,7 +79,8 @@ function TeacherExamPage() {
             key: 'openTime',
             render: (openTime) => (
                 <span>{formatDateTime(openTime)}</span>
-            )
+            ),
+            sorter: (a,b) => Date.parse(a.openTime) - Date.parse(b.openTime),
         },
         {
             title: 'Thời gian đóng',
@@ -85,12 +88,15 @@ function TeacherExamPage() {
             key: 'closeTime',
             render: (closeTime) => (
                 <span>{formatDateTime(closeTime)}</span>
-            )
+            ),
+            sorter: (a,b) => Date.parse(a.closeTime) - Date.parse(b.closeTime),
         },
         {
             title: 'Giao cho lớp',
             dataIndex: 'studentClassName',
-            key: 'studentClassName'
+            key: 'studentClassName',
+            filters: createFilterForProp(exams, "studentClassName"),
+            onFilter: (value, record) => record.studentClassName.indexOf(value) === 0
         },
         {
             title: 'Trạng thái',
@@ -100,7 +106,9 @@ function TeacherExamPage() {
                 status == 'PUBLISHED' ?
                     <Tag key={status} color={colorInfo}>Đã xuất bản</Tag>
                     : <Tag key={status} >Chưa xuất bản</Tag>
-            )
+            ),
+            filters: createFilterFromEnum(EXAM_STATUS),
+            onFilter: (value, record) => record.status.indexOf(value) === 0,
         },
         {
             title: '',
@@ -120,13 +128,13 @@ function TeacherExamPage() {
 
     return <>
         <Row className="d-flex-inline justify-content-end">
-            <Col span={4}>
-                <Button icon={<PlusOutlined />} type='primary' id='alternative-btn' style={{backgroundColor: colorWarning, color: colorBgBase}} onClick={() => {
+            <Col>
+                <Button icon={<PlusOutlined />} type='primary' id='alternative-btn' style={{ backgroundColor: colorWarning, color: colorBgBase }} onClick={() => {
                     setAllowMatrix(true);
                     setOpenPop(true)
-                    }}>Tạo đề từ ma trận đề</Button>
+                }}>Tạo đề từ ma trận đề</Button>
             </Col>
-            <Col>
+            <Col offset={1}>
                 <Button icon={<PlusOutlined />} type='primary' onClick={() => setOpenPop(true)}>Tạo đề thủ công</Button>
             </Col>
         </Row>
