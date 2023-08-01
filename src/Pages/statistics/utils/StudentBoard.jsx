@@ -35,6 +35,9 @@ const StudentBoard = (props) => {
         {
             title: "Điểm",
             dataIndex: "score",
+            render: (score) => {
+                return <span>{score.toFixed(2)}</span>
+            },
             sorter: (a,b) => a.score - b.score
         }
     ]

@@ -83,7 +83,7 @@ function ClassDetailPage() {
             key: 'username'
         },
         {
-            title: 'Đề thi đã làm',
+            title: 'Số đề thi đã làm',
             dataIndex: 'totalSubmitExam',
             key: 'totalSubmitExam',
             sorter: (a,b) => a.totalSubmitExam - b.totalSubmitExam

@@ -77,12 +77,17 @@ function TeacherTestPage() {
             key: 'submitTime',
             render: (submitTime) => (
                 <span>{formatDateTime(submitTime)}</span>
-            )
+            ),
+            sorter: (a,b) => Date.parse(a.submitTime) - Date.parse(b.submitTime)
         },
         {
             title: 'Điểm',
             dataIndex: 'score',
-            key: 'score'
+            key: 'score',
+            render: (score) => {
+                return <span>{score.toFixed(2)}</span>
+            },
+            sorter: (a,b) => a.score - b.score
         },
         {
             title: '',

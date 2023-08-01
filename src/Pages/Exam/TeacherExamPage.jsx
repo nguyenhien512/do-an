@@ -79,7 +79,8 @@ function TeacherExamPage() {
             key: 'openTime',
             render: (openTime) => (
                 <span>{formatDateTime(openTime)}</span>
-            )
+            ),
+            sorter: (a,b) => Date.parse(a.openTime) - Date.parse(b.openTime),
         },
         {
             title: 'Thời gian đóng',
@@ -87,7 +88,8 @@ function TeacherExamPage() {
             key: 'closeTime',
             render: (closeTime) => (
                 <span>{formatDateTime(closeTime)}</span>
-            )
+            ),
+            sorter: (a,b) => Date.parse(a.closeTime) - Date.parse(b.closeTime),
         },
         {
             title: 'Giao cho lớp',
