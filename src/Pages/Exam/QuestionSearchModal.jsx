@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Modal, Table, Input } from 'antd';
-import { callSearchQuestions } from './TeacherExamApi';
+import { callSearchQuestions } from '../testbank/QuestionApi';
 import { SUBJECT, GRADE, QUESTION_LEVEL, getLabel, compareEnum, createFilterFromEnum } from '../../util/enum';
 import { createFilterForNestedProp } from '../../util/arrayUtil';
 const { Search } = Input;

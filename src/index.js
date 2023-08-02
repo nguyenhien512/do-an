@@ -29,6 +29,8 @@ import ClassDetailPage from './Pages/manage-class/ClassDetailPage';
 import TeacherDashboardPage from './Pages/dashboard/TeacherDashboardPage';
 import TestBankPage from './Pages/testbank/TestBankPage';
 import  ThemeProvider from './context/ThemeProvider';
+import ManageUserPage from './Pages/manage-user/ManageUserPage';
+import AdminTestBankPage from './Pages/testbank/AdminTestBankPage';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -40,7 +42,7 @@ root.render(
         <Route exact path='/' element={<LoginPage />}>
 
         </Route>
-        <Route path='user'>
+        <Route path='student'>
           <Route element={<RequireAuth allowedRoles={[ROLE.STUDENT]} />}>
             <Route index element={<LayoutMain content={<StudentDashboardPage />} title="Màn hình chính"></LayoutMain>}>
             </Route>
@@ -80,7 +82,19 @@ root.render(
 
             <Route path='statistics' element={<LayoutMain content={<StatisticPage />} title="Thống kê"></LayoutMain>} />
           </Route>
+        </Route>
 
+        <Route path='admin'>
+          <Route element={<RequireAuth allowedRoles={[ROLE.ADMIN]} />}>
+            <Route index element={<LayoutMain content={<StudentDashboardPage />} title="Màn hình chính"></LayoutMain>}>
+            </Route>
+            <Route path="manage-user" >
+              <Route exact index element={<LayoutMain content={<ManageUserPage />} title="Quản lý người dùng"></LayoutMain>} />
+            </Route>
+            <Route path='testbank' >
+            <Route exact index element={<LayoutMain content={<AdminTestBankPage />} title="Quản lý câu hỏi"></LayoutMain>} />
+            </Route>
+          </Route>
         </Route>
 
       </Routes>

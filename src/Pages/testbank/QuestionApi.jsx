@@ -1,9 +1,10 @@
 import axios from "axios"
 import {CONFIG} from "../../httpClient/config"
 
-export const callGetTopics = async (token) => {
+
+export const callGetAllQuestions = async (token) => {
     try {
-        const response = await axios.get(`${CONFIG.baseUrl}/api/topics`,{
+        const response = await axios.get(`${CONFIG.baseUrl}/api/questions`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -16,11 +17,9 @@ export const callGetTopics = async (token) => {
     }
 }
 
-export const callCreateTopic = async (name, token) => {
+export const callSearchQuestions = async (searchKey, token) => {
     try {
-        const response = await axios.post(`${CONFIG.baseUrl}/api/topics`,{
-            name: name
-        },{
+        const response = await axios.get(`${CONFIG.baseUrl}/api/questions/getBySearch?searchKey=${searchKey}`,{
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -33,9 +32,9 @@ export const callCreateTopic = async (name, token) => {
     }
 }
 
-export const callUpdateTopic = async (topic, token) => {
+export const callApproveQuestion = async (qIds, token) => {
     try {
-        const response = await axios.put(`${CONFIG.baseUrl}/api/topics`,topic,{
+        const response = await axios.post(`${CONFIG.baseUrl}/api/questions/approve`,qIds, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -48,9 +47,25 @@ export const callUpdateTopic = async (topic, token) => {
     }
 }
 
-export const callDeleteTopic = async (name, token) => {
+export const callArchiveQuestion = async (qIds, token) => {
     try {
-        const response = await axios.post(`${CONFIG.baseUrl}/api/topics`,{
+        const response = await axios.post(`${CONFIG.baseUrl}/api/questions/archive`,qIds, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }
+        )
+        return response.status
+    } catch (error) {
+        return console.log(error)
+    }
+}
+
+export const callDeleteQuestion = async (qIds, token) => {
+    try {
+        const response = await axios.delete(`${CONFIG.baseUrl}/api/questions/delete`, {
+            data: qIds,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`

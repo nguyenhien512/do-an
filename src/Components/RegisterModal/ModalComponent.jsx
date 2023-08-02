@@ -7,7 +7,7 @@ function ModalComponent({isOpen,handlePopupOk,handlePopupCancel,handleRegisterSu
     return (
         <>
           <Modal
-            title="Title"
+            title="Thêm người dùng"
             open={isOpen}
             onOk={handlePopupOk}
             // confirmLoading={confirmLoading}

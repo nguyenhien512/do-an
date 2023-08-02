@@ -1,8 +1,9 @@
-import { callGetExamMatrix, callGetTopics } from "./TeacherExamApi";
+import { callGetExamMatrix } from "./TeacherExamApi";
 import { useState, useEffect } from 'react';
 import { Modal, Table, Typography, Button, Space, Row, Col, InputNumber, Form, Popconfirm } from 'antd';
 import { useSearchParams, useNavigate } from "react-router-dom";
 import TopciSelectFormItem from "../../Components/Topic/TopicSelectFormItem";
+import {callGetTopics} from '../../Components/Topic/TopicApi'
 
 const { Text } = Typography;
 

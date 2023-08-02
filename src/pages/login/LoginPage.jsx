@@ -36,7 +36,7 @@ function LoginPage() {
       setToken(response.data.jwttoken)
       localStorage.setItem('token', response.data.jwttoken)
 
-      let location = response.data.authority == 'STUDENT' ? "/user" : "/teacher"
+      let location = response.data.authority == 'ADMIN' ? "/admin" : (response.data.authority == 'STUDENT' ? "/student" : "/teacher")
       navigate(location)
 
     } catch (error) {
@@ -64,59 +64,10 @@ function LoginPage() {
       }
     }
   };
-  const handlePopupCancel = () => {
-    setIsModalOpen(false);
-  };
-  const handleRegisterSubmit = async (value) => {
-    try {
-      const response = await registerUser(value);
-      toast.success("Register successfully !", {
-        position: toast.POSITION.TOP_CENTER
-      });
-      // call api login
-      let authenticateUser = {
-        username: response.data.username,
-        password: response.data.password
-      }
-      let authenResponse = await authenticate(authenticateUser)
-      setToken(authenResponse.data.jwttoken)
-      localStorage.setItem('token', authenResponse.data.jwttoken)
-      let location = response.data.authority == 'STUDENT' ? "/user" : "/teacher"
-      navigate(location)
-
-    } catch (error) {
-      if (error?.response?.data?.status === 401) {
-        toast.error(`${error?.response?.data?.message}`, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      }
-      else {
-        toast.error(`Internal server error !!`, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      }
-    }
-  };
-
-
-
 
 
   return (
     <section className="login-page">
-      <ModalComponent isOpen={isModalOpen} handlePopupCancel={handlePopupCancel} handleRegisterSubmit={handleRegisterSubmit} />
       <h1>Đăng nhập</h1>
       <Form onFinish={onFinish} className="login-form pt-3">
         <Form.Item name="username">
@@ -150,7 +101,6 @@ function LoginPage() {
           </div>
         </Form.Item>
       </Form>
-      <a href="#" onClick={() => setIsModalOpen(true)}>Bạn chưa có tài khoản ? tạo một tài khoản mới</a>
       <ToastContainer />
 
     </section>

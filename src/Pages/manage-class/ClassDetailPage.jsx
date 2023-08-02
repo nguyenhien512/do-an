@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { callAddStudent, callGetStudents, callRemoveStudent, callGetExamCounts } from './ClassApi';
 import StudentSearchModal from './StudentSearchModal';
+import { USER_ACTIVE, createFilterFromEnum, getLabel } from '../../util/enum';
 
 function ClassDetailPage() {
 
@@ -81,6 +82,14 @@ function ClassDetailPage() {
             title: 'Tên đăng nhập',
             dataIndex: 'username',
             key: 'username'
+        },
+        {
+            title: 'Trạng thái',
+            dataIndex: 'active',
+            key: 'active',
+            render: (active) => (<span>{getLabel(USER_ACTIVE, active)}</span>),
+            filters: createFilterFromEnum(USER_ACTIVE),
+            onFilter: (value, record) => record.active === value,
         },
         {
             title: 'Số đề thi đã làm',

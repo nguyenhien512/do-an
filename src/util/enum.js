@@ -1,20 +1,27 @@
 export const ROLE = {
   TEACHER: "TEACHER",
   STUDENT: "STUDENT",
+  ADMIN: "ADMIN",
 };
 
-export const USER_SIDEBAR = [
-  { content: "Màn hình chính", route: "/user" },
-  { content: "Thi online", route: "/user/exam" },
-  { content: "Kết quả thi", route: "/user/review" }
+export const STUDENT_SIDEBAR = [
+  { content: "Màn hình chính", route: "/student" },
+  { content: "Thi online", route: "/student/exam" },
+  { content: "Kết quả thi", route: "/student/review" }
 ];
 
-export const ADMIN_SIDEBAR = [
+export const TEACHER_SIDEBAR = [
   { content: "Màn hình chính", route: "/teacher" },
   {content : "Ngân hàng câu hỏi",route : "/teacher/testbank" },
   { content: "Quản lý đề thi", route: "/teacher/exam"},
   {content : "Quản lý lớp học", route : "/teacher/class"},
   { content: "Thống kê", route: "/teacher/statistics"}
+];
+
+export const ADMIN_SIDEBAR = [
+  { content: "Màn hình chính", route: "/admin" },
+  {content : "Quản lý người dùng",route : "/admin/manage-user" },
+  { content: "Quản lý câu hỏi", route: "/admin/testbank"},
 ];
 
 export const getLabel = (enumArr, value) => {
@@ -67,6 +74,17 @@ export const ANSWER_KEY = [
   {value: "B", label: "B"},
   {value: "C", label: "C"},
   {value: "D", label: "D"},
+]
+
+export const USER_ACTIVE = [
+  {value: true, label: "Hoạt động"},
+  {value: false, label: "Không hoạt động"},
+]
+
+export const QUESTION_STATUS = [
+  {value: 'PENDING', label: "Chưa duyệt"},
+  {value: 'APPROVED', label: "Đã duyệt"},
+  {value: 'ARCHIVED', label: "Lưu trữ"},
 ]
 
 const findIndexByValue = (arr, value) => {

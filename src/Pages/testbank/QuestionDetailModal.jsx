@@ -6,13 +6,11 @@ import TopicSelectFormItem from '../../Components/Topic/TopicSelectFormItem';
 
 const { TextArea } = Input;
 
-const QuestionDetailModal = ({ qId }) => {
+const QuestionDetailModal = ({ qId, open, handleOk, handleCancel }) => {
 
     const [form] = Form.useForm();
 
     const [question, setQuestion] = useState();
-
-    const [open, setOpen] = useState(qId !== null);
 
     useEffect(() => {
         async function fetchData() {
@@ -25,8 +23,10 @@ const QuestionDetailModal = ({ qId }) => {
 
             } catch (ignored) { }
         }
-        fetchData();
-    }, [])
+        if (qId) {
+            fetchData();
+        }
+    }, [qId])
 
     useEffect(() => {
         form.setFieldsValue(question);
@@ -37,7 +37,7 @@ const QuestionDetailModal = ({ qId }) => {
     }
 
     return (
-        <Modal title={`Câu hỏi ${qId}`} open={open} onOk={() => setOpen(false)} onCancel={() => setOpen(false)}>
+        <Modal title={`Câu hỏi ${qId}`} open={open} onOk={handleOk} onCancel={handleCancel}>
             <Form
                 form={form}
                 name="dynamic_form_complex"

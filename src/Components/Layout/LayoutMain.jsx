@@ -10,8 +10,8 @@ import {
 import { Layout, Menu, Button, theme } from 'antd';
 import { NavLink } from 'react-router-dom';
 import useAuth from "../../hooks/useAuth";
-import { ROLE } from '../../util/enum'
-import { USER_SIDEBAR, ADMIN_SIDEBAR } from '../../util/enum'
+import { ADMIN_SIDEBAR, ROLE } from '../../util/enum'
+import { STUDENT_SIDEBAR, TEACHER_SIDEBAR } from '../../util/enum'
 import './LayoutMain.css';
 import { useNavigate } from "react-router-dom";
 import hien from '../../Hien-01.svg'
@@ -25,7 +25,7 @@ function LayoutMain({ title, content }) {
   console.log("check user ", user)
   const navigate = useNavigate();
 
-  let renderContent = (role == ROLE.TEACHER) ? ADMIN_SIDEBAR : USER_SIDEBAR
+  let renderContent = (role == ROLE.ADMIN) ? ADMIN_SIDEBAR : (role == ROLE.TEACHER ? TEACHER_SIDEBAR : STUDENT_SIDEBAR)
   console.log("render content ", renderContent)
 
   const [collapsed, setCollapsed] = useState(false);

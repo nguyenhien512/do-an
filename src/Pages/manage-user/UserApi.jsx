@@ -1,9 +1,9 @@
 import axios from "axios"
 import {CONFIG} from "../../httpClient/config"
 
-export const callGetTopics = async (token) => {
+export const callGetAllUsers = async (token) => {
     try {
-        const response = await axios.get(`${CONFIG.baseUrl}/api/topics`,{
+        const response = await axios.get(`${CONFIG.baseUrl}/api/users`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -16,11 +16,10 @@ export const callGetTopics = async (token) => {
     }
 }
 
-export const callCreateTopic = async (name, token) => {
+export const callSearchUsers = async (queryString, authorities, token) => {
+    const authQuery = authorities.join();
     try {
-        const response = await axios.post(`${CONFIG.baseUrl}/api/topics`,{
-            name: name
-        },{
+        const response = await axios.get(`${CONFIG.baseUrl}/api/users/getBySearch?queryString=${queryString}&authorities=${authQuery}`,{
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -33,9 +32,9 @@ export const callCreateTopic = async (name, token) => {
     }
 }
 
-export const callUpdateTopic = async (topic, token) => {
+export const callInactiveUser = async (listUsername, token) => {
     try {
-        const response = await axios.put(`${CONFIG.baseUrl}/api/topics`,topic,{
+        const response = await axios.post(`${CONFIG.baseUrl}/api/users/inactive`,listUsername, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -48,9 +47,9 @@ export const callUpdateTopic = async (topic, token) => {
     }
 }
 
-export const callDeleteTopic = async (name, token) => {
+export const callActiveUser = async (listUsername, token) => {
     try {
-        const response = await axios.post(`${CONFIG.baseUrl}/api/topics`,{
+        const response = await axios.post(`${CONFIG.baseUrl}/api/users/active`,listUsername, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`

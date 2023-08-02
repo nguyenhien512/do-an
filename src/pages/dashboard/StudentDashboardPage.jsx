@@ -6,8 +6,8 @@ function StudentDashboardPage() {
     return (<>
 
         <Space size={[24, 24]} align="center">
-            <IconCard count={5} icon={ReadOutlined} text="Thi online" route="/user/exam"/>
-            <IconCard count={5} icon={FileDoneOutlined} text="Kết quả thi" route="/user/review"/>
+            <IconCard count={5} icon={ReadOutlined} text="Thi online" route="/student/exam"/>
+            <IconCard count={5} icon={FileDoneOutlined} text="Kết quả thi" route="/student/review"/>
         </Space>
     </>
     )

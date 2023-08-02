@@ -152,39 +152,9 @@ export const callAddQuestions = async (examId, questions, token) => {
     }
 }
 
-export const callSearchQuestions = async (searchKey, token) => {
-    try {
-        const response = await axios.get(`${CONFIG.baseUrl}/api/questions/getBySearch?searchKey=${searchKey}`,{
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        }
-        )
-        return response.data
-    } catch (error) {
-        return console.log(error)
-    }
-}
-
 export const callGetExamMatrix = async (examId, token) => {
     try {
         const response = await axios.get(`${CONFIG.baseUrl}/api/exams/${examId}/matrix`,{
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        }
-        )
-        return response.data
-    } catch (error) {
-        return console.log(error)
-    }
-}
-
-export const callGetTopics = async (token) => {
-    try {
-        const response = await axios.get(`${CONFIG.baseUrl}/api/topics`,{
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`

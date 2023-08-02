@@ -3,6 +3,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import useAuth from "../../hooks/useAuth";
 
 function RequireAuth({allowedRoles}){
+    console.log("allowedRoles",allowedRoles);
      
     const {user} = useAuth()
     const location = useLocation();
@@ -17,6 +18,7 @@ function RequireAuth({allowedRoles}){
         
        
     }
+
     else if((user&&!allowedRoles.includes(user.authority))){
         console.log("user not authorized")
 
