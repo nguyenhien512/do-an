@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ANSWER_KEY, GRADE, SUBJECT } from "../../util/enum";
+import { ANSWER_KEY, GRADE, SUBJECT, QUESTION_LEVEL } from "../../util/enum";
 import { getQuestionById } from '../../services';
 import { Form, Select, Modal, Input, Space } from 'antd';
 import TopicSelectFormItem from '../../Components/Topic/TopicSelectFormItem';
@@ -30,8 +30,11 @@ const QuestionDetailModal = ({ qId }) => {
 
     useEffect(() => {
         form.setFieldsValue(question);
-        form.setFieldValue("topic", question?.topic.id);
     }, [question])
+
+    const onFinish = () => {
+        console.log(form.getFieldValue())
+    }
 
     return (
         <Modal title={`Câu hỏi ${qId}`} open={open} onOk={() => setOpen(false)} onCancel={() => setOpen(false)}>
@@ -59,13 +62,13 @@ const QuestionDetailModal = ({ qId }) => {
                                         <Space align="center">
                                             <span>Đáp án</span>
                                             <Form.Item
-                                                {...field}
+                                                
                                                 name={[field.name, 'key']}>
                                                 <Select options={ANSWER_KEY}
                                                     style={{ position: 'relative', top: '10px' }} />
                                             </Form.Item>
                                             <Form.Item
-                                                {...field}
+                                                
                                                 name={[field.name, 'content']}>
                                                 <Input style={{ position: 'relative', top: '10px' }} />
                                             </Form.Item>
@@ -105,10 +108,16 @@ const QuestionDetailModal = ({ qId }) => {
                     <Select options={SUBJECT} />
                 </Form.Item>
                 <Form.Item
+                    name="level"
+                    label="Mức độ nhận biết"
+                >
+                    <Select options={QUESTION_LEVEL} />
+                </Form.Item>
+                <Form.Item
                     name="topic"
                     label="Nội dung kiến thức"
                 >
-                    <TopicSelectFormItem fieldName="topic" />
+                    <TopicSelectFormItem fieldName={["topic","id"]} />
                 </Form.Item>
             </Form>
         </Modal>
