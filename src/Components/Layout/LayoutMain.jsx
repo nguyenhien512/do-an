@@ -18,15 +18,12 @@ import hien from '../../Hien-01.svg'
 
 const { Header, Sider, Content } = Layout;
 function LayoutMain({ title, content }) {
-  // console.log("content ",content)
   const { user } = useAuth();
   //user.role[0].authority
   let role = user.authority;
-  console.log("check user ", user)
   const navigate = useNavigate();
 
   let renderContent = (role == ROLE.TEACHER) ? ADMIN_SIDEBAR : USER_SIDEBAR
-  console.log("render content ", renderContent)
 
   const [collapsed, setCollapsed] = useState(false);
   const {

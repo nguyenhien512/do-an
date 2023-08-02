@@ -9,6 +9,9 @@ import { Button, Input, Select, Form } from 'antd';
 import { toast, ToastContainer } from 'react-toastify';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import QuestionDetailModal from './QuestionDetailModal';
+import { SettingOutlined, DeleteOutlined, FileDoneOutlined, PlusOutlined } from "@ant-design/icons";
+import { getLabel, GRADE, QUESTION_LEVEL, SUBJECT } from '../../util/enum';
+import TopciSelectFormItem from '../../Components/Topic/TopicSelectFormItem';
 
 const { Option } = Select;
 
@@ -23,7 +26,8 @@ function TestBankPage() {
     const [questionModal, setQuestionModal] = useState({
         title: "",
         subject: '',
-        questionType: '',
+        level : null,
+        topic : null,
         id: null,
         grade: '',
         correctAnswers: '',
@@ -56,8 +60,9 @@ function TestBankPage() {
             content: data.content,
             correctAnswers: data.correctAnswers,
             grade: data.grade,
-            questionType: data.questionType,
-            subject: data.subject
+            subject: data.subject,
+            level : data.level,
+            topic : data.topic
         }
         return result
     }
@@ -84,6 +89,8 @@ function TestBankPage() {
     const onFinish = async (values) => {
         console.log("form values submit ", values);
         console.log("questionmodal  ", questionModal);
+        // return;
+
 
         if (questionModal.title == 'Create Question') {
             let resp = await createQuestion(convertFormDataToDTO(values))
@@ -202,12 +209,7 @@ function TestBankPage() {
                     position: toast.POSITION.TOP_CENTER
                 });
             }
-
-
-
-
         }
-
     };
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
@@ -227,17 +229,21 @@ function TestBankPage() {
         }
 
         function convertToQuestionWithKey(data) {
-            console.log("checkpoint 10 ", data)
+            // console.log("response questions data ", data)
             return data.map((item, index) => {
+                // console.log("checking item ",item.topic.name)
+                let topicName = item.topic.name
                 return {
                     index: index + 1,
-                    key: data.id,
+                    key: item.id,
                     subject: item.subject,
-                    questionType: item.questionType,
                     id: item.id,
                     grade: item.grade,
                     correctAnswers: item.correctAnswers,
                     content: item.content,
+                    level: item.level,
+                    topicName: item?.topic?.name,
+                    topicId: item?.topic?.id,
                     answerA: {
                         id: item.answers[0].id,
                         key: item.answers[0].key,
@@ -263,16 +269,18 @@ function TestBankPage() {
         }
         //   let questi
         getQuestions().then(response => {
-            // console.log("checkpoint ",response)
+            console.log("checkpoint ",response)
             let questions = convertToQuestionWithKey(response)
             setQuestions(questions)
         })
 
     }, [])
 
+    console.log("questions ", questions)
+
     const showModal = () => {
         let newQuestionModal = structuredClone(questionModal)
-        newQuestionModal.title = "Create Question"
+        newQuestionModal.title = "Tạo câu hỏi"
         setQuestionModal(newQuestionModal)
         setIsModalOpen(true);
 
@@ -341,7 +349,7 @@ function TestBankPage() {
             dataIndex: 'index',
         },
         {
-            title: 'content',
+            title: 'Nội dung câu hỏi',
             dataIndex: 'content',
             key: 'content',
             render: (text) => <a>{text}</a>,
@@ -355,54 +363,50 @@ function TestBankPage() {
             onFilter: (value, record) => { return record.content.includes(value) }
         },
         {
-            title: 'grade',
+            title: 'Khối',
             dataIndex: 'grade',
             key: 'grage',
-            sorter: (a, b) => a.grade.split("_")[1]-b.grade.split("_")[1],
+            render: (text, record, index) => {
+                return getLabel(GRADE, text)
+            },
+            sorter: (a, b) => a.grade.split("_")[1] - b.grade.split("_")[1],
 
         },
         {
-            title: 'subject',
+            title: 'Môn học',
             dataIndex: 'subject',
             key: 'address',
+            render: (text, record, index) => {
+                return getLabel(SUBJECT, text)
+            },
             sorter: (a, b) => a.subject.localeCompare(b.subject),
 
         },
         {
-            title: 'questionType',
-            dataIndex: 'questionType',
+            title: 'Mức độ nhận biết',
+            dataIndex: 'level',
             key: 'questionType',
+            render: (text, record, index) => {
+                return getLabel(QUESTION_LEVEL, text)
+            },
             sorter: (a, b) => a.questionType.localeCompare(b.questionType),
-
         },
         {
-            title: 'Action',
-            key: 'Action',
-            dataIndex: 'Action',
-            render: (_, { tags }) => (
-                <>
-                    {tags.map((tag) => {
-                        let color = tag.length > 5 ? 'geekblue' : 'green';
-                        if (tag === 'loser') {
-                            color = 'volcano';
-                        }
-                        return (
-                            <Tag color={color} key={tag}>
-                                {tag.toUpperCase()}
-                            </Tag>
-                        );
-                    })}
-                </>
-            ),
+            title: 'Nội dung kiến thức',
+            dataIndex:"topicName",
+            key: 'questionType',
+            sorter: (a, b) => a.questionType.localeCompare(b.questionType),
+        },
+        {
 
-            title: 'Action',
+            title: '',
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
-                    <Button type="primary" onClick={() => { handleClickUpdate(record) }}>Update</Button>
+                    <Button type="primary" icon={<SettingOutlined />} onClick={() => { handleClickUpdate(record) }}></Button>
 
-                    <Button type="primary" danger onClick={() => { handleDeleteQuestion(record.id) }}>
-                        Delete
+                    <Button type="primary" icon={<DeleteOutlined />} danger onClick={() => { handleDeleteQuestion(record.id) }}>
+
                     </Button>
                 </Space>
             ),
@@ -411,9 +415,9 @@ function TestBankPage() {
 
     const cards = [
         {
-            title: <><span style={{ marginRight: '50px' }}>Question bank</span><Button onClick={() => { showModal() }} >CreateQuestion</Button></>,
+            title: <><Button onClick={() => { showModal() }} >Tạo câu hỏi</Button></>,
             element: <div style={{ width: "100%" }}>
-                <Table columns={columns} dataSource={questions} />
+                <Table  columns={columns} dataSource={questions} />
             </div>
         }
     ];
@@ -427,26 +431,8 @@ function TestBankPage() {
 
     return (
         <>
-            <List
-                grid={{
-                    gutter: 16,
-                    xs: 1,
-                    sm: 2,
-                    md: 4,
-                    lg: 4,
-                    xl: 6,
-                    xxl: 3,
-                }}
-                dataSource={cards}
-                renderItem={(item) => (
-                    <List.Item>
-                        <Card style={{ width: '800px' }} title={item.title}>
-                            {item.element}
-
-                        </Card>
-                    </List.Item>
-                )}
-            />
+            <Button icon={<PlusOutlined />} onClick={() => { showModal() }}>Tạo câu hỏi </Button>
+            <Table columns={columns} dataSource={questions} />
             <Modal
                 title={questionModal.title}
                 open={isModalOpen}
@@ -468,27 +454,26 @@ function TestBankPage() {
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
-                // destroyOnClose={true}
                 >
                     <Form.Item
 
-                        initialValues={questionModal.title == 'Create Question' ? '' : questionModal.content}
-                        label="Question content"
+                        initialValues={questionModal.title == 'Tạo câu hỏi' ? '' : questionModal.content}
+                        label="Nội dung câu hỏi"
                         name="content"
-                        rules={[{ required: questionModal.title == 'Create Question' }]}
+                        rules={[{ required: questionModal.title == 'Tạo câu hỏi' }]}
 
                     >
-                        <Input.TextArea onChange={(event) => { handleFormFieldChange('content', event.target.value) }} defaultValue={questionModal.content == 'Create Question' ? '' : questionModal.content} value={questionModal.title} />
+                        <Input.TextArea onChange={(event) => { handleFormFieldChange('content', event.target.value) }} defaultValue={questionModal.content == 'Tạo câu hỏi' ? '' : questionModal.content} value={questionModal.title} />
                     </Form.Item>
 
-                    <Form.Item initialValues={questionModal.title == 'Create Question' ? '' : questionModal.grade} name="grade" label="Grade"
-                        rules={[{ required: questionModal.title == 'Create Question' }]}
+                    <Form.Item initialValues={questionModal.title == 'Tạo câu hỏi' ? '' : questionModal.grade} name="grade" label="Grade"
+                        rules={[{ required: questionModal.title == 'Tạo câu hỏi' }]}
                     >
                         <Select
-                            placeholder="Grade "
+                            placeholder="Khối"
                             //   onChange={onGenderChange}
                             allowClear
-                            defaultValue={questionModal.title == 'Create Question' ? '' : questionModal.grade}
+                            defaultValue={questionModal.title == 'Tạo câu hỏi' ? '' : questionModal.grade}
                             onChange={(value) => { handleFormFieldChange('grade', value) }}
                         >
                             <Option value="GRADE_1">GRADE_1</Option>
@@ -508,14 +493,14 @@ function TestBankPage() {
                     </Form.Item>
 
                     <Form.Item
-                        initialValues={questionModal.title == 'Create Question' ? '' : questionModal.subject} name="subject" label="Subject"
-                        rules={[{ required: questionModal.title == 'Create Question' }]}
+                        initialValues={questionModal.title == 'Tạo câu hỏi' ? '' : questionModal.subject} name="subject" label="Môn học"
+                        rules={[{ required: questionModal.title == 'Tạo câu hỏi' }]}
                     >
                         <Select
                             placeholder="Select subject"
                             //   onChange={onGenderChange}
                             allowClear
-                            defaultValue={questionModal.title == 'Create Question' ? '' : questionModal.subject}
+                            defaultValue={questionModal.title == 'Tạo câu hỏi' ? '' : questionModal.subject}
                             onChange={(value) => { handleFormFieldChange('subject', value) }}
 
                         >
@@ -527,71 +512,81 @@ function TestBankPage() {
 
                         </Select>
                     </Form.Item>
-                    <Form.Item initialValues={questionModal.title == 'Create Question' ? '' : questionModal.questionType} name="questionType" label="Question type"
-                        rules={[{ required: questionModal.title == 'Create Question' }]}
+                    <Form.Item
+                        initialValues={questionModal.title == 'Tạo câu hỏi' ? '' : questionModal.level} name="level" label="Mức độ nhận biết"
+                        rules={[{ required: questionModal.title == 'Tạo câu hỏi' }]}
                     >
                         <Select
-                            defaultValue={questionModal.title == 'Create Question' ? '' : questionModal.questionType}
-                            placeholder="Multiple or single choice question ?"
-                            //   onChange={onGenderChange}
+                            placeholder="Mức độ nhận biết"
                             allowClear
-                            onChange={(value) => { handleFormFieldChange('questionType', value) }}
+                            defaultValue={questionModal.title == 'Tạo câu hỏi' ? '' : questionModal.level}
+                            onChange={(value) => { handleFormFieldChange('level', value) }}
 
                         >
-                            <Option value="MULTIPLE_CHOICE">MULTIPLE_CHOICE</Option>
-                            <Option value="SINGLE_CHOICE">SINGLE_CHOICE</Option>
+                            {
+                                QUESTION_LEVEL.map(item => {
+                                    return <Option value={item.value}>{item.label}</Option>
+                                })
+                            }
+
                         </Select>
                     </Form.Item>
+
+                    <Form.Item name="topic" initialValues={questionModal.title == 'Tạo câu hỏi' ? '' : questionModal.topicName} label="topic"
+                        rules={[{ required: questionModal.title == 'Tạo câu hỏi' }]}
+                    >
+                        <TopciSelectFormItem fieldName={["topic", "id"]}></TopciSelectFormItem>
+                    </Form.Item>
                     <Form.Item
-                        initialValues={questionModal.title == 'Create Question' ? '' : questionModal.answerAContent}
-                        label="Answer A"
+                        initialValues={questionModal.title == 'Tạo câu hỏi' ? '' : questionModal.answerAContent}
+                        label="Đáp án A"
                         name="answerA"
-                        rules={[{ required: questionModal.title == 'Create Question' }]}
+                        rules={[{ required: questionModal.title == 'Tạo câu hỏi' }]}
                         onChange={(event) => { handleFormFieldChange('answerAContent', event.target.value) }}
 
                     >
                         <Input.TextArea
-                            defaultValue={questionModal.title == 'Create Question' ? '' : questionModal.answerAContent}
+                            defaultValue={questionModal.title == 'Tạo câu hỏi' ? '' : questionModal.answerAContent}
 
                         />
                     </Form.Item>
                     <Form.Item
-                        label="Answer B"
+                        label="Đáp án B"
                         name="answerB"
-                        rules={[{ required: questionModal.title == 'Create Question' }]}
+                        rules={[{ required: questionModal.title == 'Tạo câu hỏi' }]}
                     >
                         <Input.TextArea
-                            defaultValue={questionModal.title == 'Create Question' ? '' : questionModal.answerBContent}
+                            defaultValue={questionModal.title == 'Tạo câu hỏi' ? '' : questionModal.answerBContent}
                             onChange={(event) => { handleFormFieldChange('answerBContent', event.target.value) }}
 
                         />
                     </Form.Item>
                     <Form.Item
-                        label="Answer C"
+                        label="Đáp án C"
                         name="answerC"
-                        rules={[{ required: questionModal.title == 'Create Question' }]}
+                        rules={[{ required: questionModal.title == 'Tạo câu hỏi' }]}
                     >
                         <Input.TextArea
-                            defaultValue={questionModal.title == 'Create Question' ? '' : questionModal.answerCContent}
+                            defaultValue={questionModal.title == 'Tạo câu hỏi' ? '' : questionModal.answerCContent}
                             onChange={(event) => { handleFormFieldChange('answerCContent', event.target.value) }}
                         />
                     </Form.Item>
                     <Form.Item
-                        label="Answer D"
+                        label="Đáp án D"
                         name="answerD"
-                        rules={[{ required: questionModal.title == 'Create Question' }]}
+                        rules={[{ required: questionModal.title == 'Tạo câu hỏi' }]}
                     >
                         <Input.TextArea
-                            defaultValue={questionModal.title == 'Create Question' ? '' : questionModal.answerDContent}
+                            defaultValue={questionModal.title == 'Tạo câu hỏi' ? '' : questionModal.answerDContent}
                             onChange={(event) => { handleFormFieldChange('answerDContent', event.target.value) }}
                         />
                     </Form.Item>
-                    <Form.Item name="correctAnswers" label="Correct answer"
-                        rules={[{ required: questionModal.title == 'Create Question' }]}
+                    <Form.Item name="Đáp án đúng" label="Correct answer"
+                        rules={[{ required: questionModal.title == 'Tạo câu hỏi' }]}
 
                     >
                         <Input.TextArea
-                            defaultValue={questionModal.title == 'Create Question' ? '' : questionModal.correctAnswers}
+                            defaultValue={questionModal.title == 'Tạo câu hỏi' ? '' : questionModal.correctAnswers}
                             onChange={(event) => { handleFormFieldChange('correctAnswers', event.target.value) }}
 
                         />
@@ -610,7 +605,7 @@ function TestBankPage() {
 
             </Modal>
 
-            <QuestionDetailModal qId={qId} open={true}/>
+            <QuestionDetailModal qId={qId} open={true} />
 
         </>
     )
