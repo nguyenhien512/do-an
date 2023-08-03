@@ -12,6 +12,7 @@ import QuestionDetailModal from './QuestionDetailModal';
 import { SettingOutlined, DeleteOutlined, FileDoneOutlined, PlusOutlined } from "@ant-design/icons";
 import { getLabel, GRADE, QUESTION_LEVEL, SUBJECT } from '../../util/enum';
 import TopciSelectFormItem from '../../Components/Topic/TopicSelectFormItem';
+import { callGetTopics } from '../Exam/TeacherExamApi';
 
 const { Option } = Select;
 
@@ -27,7 +28,8 @@ function TestBankPage() {
         title: "",
         subject: '',
         level : null,
-        topic : null,
+        topicName : null,
+        topicId : null,
         id: null,
         grade: '',
         correctAnswers: '',
@@ -46,14 +48,24 @@ function TestBankPage() {
         answerCContent: null,
     })
 
+    const [topic,setTopic] = useState([]);
+
     const convertFormDataToDTO = (
         data
     ) => {
+        console.log("data ",data)
+        let topicName = topic.filter(x=>x.id==data.topic.id)[0].name;
+        console.log("checkpoint 1 ",topicName)
         let answers = []
         answers.push({ key: 'A', content: data.answerA })
         answers.push({ key: 'B', content: data.answerB })
         answers.push({ key: 'C', content: data.answerC })
         answers.push({ key: 'D', content: data.answerD })
+        
+        let updateTopic = {
+            id : data.topic.id,
+            name : topicName
+        }
 
         let result = {
             answers: answers,
@@ -62,7 +74,7 @@ function TestBankPage() {
             grade: data.grade,
             subject: data.subject,
             level : data.level,
-            topic : data.topic
+            topic : updateTopic
         }
         return result
     }
@@ -80,8 +92,12 @@ function TestBankPage() {
             content: data.content,
             correctAnswers: data.correctAnswers,
             grade: data.grade,
-            questionType: data.questionType,
-            subject: data.subject
+            subject: data.subject,
+            level : data.level,
+            topic : {
+                id : data.topicId,
+                name : data.topicName
+            }
         }
         return result
     }
@@ -92,17 +108,20 @@ function TestBankPage() {
         // return;
 
 
-        if (questionModal.title == 'Create Question') {
+        if (questionModal.title == 'Tạo câu hỏi') {
             let resp = await createQuestion(convertFormDataToDTO(values))
             console.log("resp ", resp)
             let createdQuestionData = resp.data
             if (resp.status == 201) {
+                console.log("created data ",createdQuestionData)
                 let newQuestions = structuredClone(questions);
                 let newQuestion = {
                     index: newQuestions.length + 1,
                     key: createdQuestionData.id,
                     subject: createdQuestionData.subject,
-                    questionType: createdQuestionData.questionType,
+                    topicId : createdQuestionData.topic.id,
+                    topicName : createdQuestionData.topic.name,
+                    level : createdQuestionData.level,
                     id: createdQuestionData.id,
                     grade: createdQuestionData.grade,
                     correctAnswers: createdQuestionData.correctAnswers,
@@ -131,13 +150,38 @@ function TestBankPage() {
                 newQuestions.push(newQuestion);
                 setQuestions(newQuestions);
                 setIsModalOpen(false);
+                setQuestionModal({
+                    title: "",
+                    subject: '',
+                    level : null,
+                    topicName : null,
+                    topicId : null,
+                    id: null,
+                    grade: '',
+                    correctAnswers: '',
+                    content: '',
+                    answerAId: null,
+                    answerAKey: null,
+                    answerAContent: null,
+                    answerBId: null,
+                    answerBKey: null,
+                    answerBContent: null,
+                    answerDId: null,
+                    answerDKey: null,
+                    answerDContent: null,
+                    answerCId: null,
+                    answerCKey: null,
+                    answerCContent: null,
+                })
+                
             }
             return;
         } else {
 
-            // console.log("update values ", questionModal);
             try {
 
+                console.log("send data ",convertDataToDTOUpdate(questionModal));
+                // return;
 
                 let updateResp = await updateQuestion(convertDataToDTOUpdate(questionModal));
                 let updateData = updateResp.data;
@@ -147,7 +191,10 @@ function TestBankPage() {
                     newQuestions = newQuestions.map((item => {
                         if (item.id == updateData.id) {
                             item.subject = updateData.subject
-                            item.questionType = updateData.questionType
+                            // item.questionType = updateData.questionType
+                            item.topicId = updateData.topic.id
+                            item.topicName = updateData.topic.name
+                            item.level = updateData.level
                             item.grade = updateData.grade
                             item.correctAnswers = updateData.correctAnswers
                             item.content = updateData.content
@@ -180,7 +227,9 @@ function TestBankPage() {
                     setQuestionModal({
                         title: "",
                         subject: '',
-                        questionType: '',
+                        level : null,
+                        topicName : null,
+                        topicId : null,
                         id: null,
                         grade: '',
                         correctAnswers: '',
@@ -228,6 +277,12 @@ function TestBankPage() {
             return questionsResp.data
         }
 
+        async function getTopic() {
+            let data =  callGetTopics(localStorage.getItem('token'));
+            // console.log("question resp ",questionsResp);
+            return  data
+        }
+
         function convertToQuestionWithKey(data) {
             // console.log("response questions data ", data)
             return data.map((item, index) => {
@@ -267,16 +322,17 @@ function TestBankPage() {
                 }
             })
         }
+        getTopic().then( resp => setTopic(resp));
         //   let questi
         getQuestions().then(response => {
-            console.log("checkpoint ",response)
             let questions = convertToQuestionWithKey(response)
             setQuestions(questions)
         })
 
     }, [])
 
-    console.log("questions ", questions)
+    console.log("topics ",topic)
+
 
     const showModal = () => {
         let newQuestionModal = structuredClone(questionModal)
@@ -292,17 +348,44 @@ function TestBankPage() {
 
     const handleCancel = () => {
         setIsModalOpen(false);
-    };
+        setQuestionModal({
+            title: "",
+            subject: '',
+            level : null,
+            topicName : null,
+            topicId : null,
+            id: null,
+            grade: '',
+            correctAnswers: '',
+            content: '',
+            answerAId: null,
+            answerAKey: null,
+            answerAContent: null,
+            answerBId: null,
+            answerBKey: null,
+            answerBContent: null,
+            answerDId: null,
+            answerDKey: null,
+            answerDContent: null,
+            answerCId: null,
+            answerCKey: null,
+            answerCContent: null,
+        })
+    }
+    
 
     const handleClickUpdate = (record) => {
         console.log("update record ", record)
         let newQuestionModal = structuredClone(questionModal)
-        newQuestionModal.title = "Update question"
+        newQuestionModal.title = "Chỉnh sửa câu hỏi"
         newQuestionModal.id = record.id
         newQuestionModal.content = record.content
         newQuestionModal.grade = record.grade
         newQuestionModal.subject = record.subject
-        newQuestionModal.questionType = record.questionType
+        newQuestionModal.level = record.level
+        newQuestionModal.topicName = record.topicName
+        newQuestionModal.topicId = record.topicId
+
         newQuestionModal.answerAId = record.answerA.id
         newQuestionModal.answerAKey = record.answerA.key
         newQuestionModal.answerAContent = record.answerA.content
@@ -466,7 +549,7 @@ function TestBankPage() {
                         <Input.TextArea onChange={(event) => { handleFormFieldChange('content', event.target.value) }} defaultValue={questionModal.content == 'Tạo câu hỏi' ? '' : questionModal.content} value={questionModal.title} />
                     </Form.Item>
 
-                    <Form.Item initialValues={questionModal.title == 'Tạo câu hỏi' ? '' : questionModal.grade} name="grade" label="Grade"
+                    <Form.Item initialValues={questionModal.title == 'Tạo câu hỏi' ? '' : questionModal.grade} name="grade" label="Khối"
                         rules={[{ required: questionModal.title == 'Tạo câu hỏi' }]}
                     >
                         <Select
@@ -532,7 +615,7 @@ function TestBankPage() {
                         </Select>
                     </Form.Item>
 
-                    <Form.Item name="topic" initialValues={questionModal.title == 'Tạo câu hỏi' ? '' : questionModal.topicName} label="topic"
+                    <Form.Item name="topic" initialValues={questionModal.title == 'Tạo câu hỏi' ? '' : questionModal.topicName} label="Nội dung kiến thức"
                         rules={[{ required: questionModal.title == 'Tạo câu hỏi' }]}
                     >
                         <TopciSelectFormItem fieldName={["topic", "id"]}></TopciSelectFormItem>
@@ -541,7 +624,7 @@ function TestBankPage() {
                         initialValues={questionModal.title == 'Tạo câu hỏi' ? '' : questionModal.answerAContent}
                         label="Đáp án A"
                         name="answerA"
-                        rules={[{ required: questionModal.title == 'Tạo câu hỏi' }]}
+                        rules={[{ required: questionModal.title == 'Tạo câu hỏi' }]}                        
                         onChange={(event) => { handleFormFieldChange('answerAContent', event.target.value) }}
 
                     >
@@ -581,7 +664,7 @@ function TestBankPage() {
                             onChange={(event) => { handleFormFieldChange('answerDContent', event.target.value) }}
                         />
                     </Form.Item>
-                    <Form.Item name="Đáp án đúng" label="Correct answer"
+                    <Form.Item name="correctAnswers" label="Đáp án đúng"
                         rules={[{ required: questionModal.title == 'Tạo câu hỏi' }]}
 
                     >
