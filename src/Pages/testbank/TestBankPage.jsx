@@ -468,17 +468,17 @@ function TestBankPage() {
         {
             title: 'Mức độ nhận biết',
             dataIndex: 'level',
-            key: 'questionType',
+            key: 'level',
             render: (text, record, index) => {
                 return getLabel(QUESTION_LEVEL, text)
             },
-            sorter: (a, b) => a.questionType.localeCompare(b.questionType),
+            sorter: (a, b) => a.level.localeCompare(b.level),
         },
         {
             title: 'Nội dung kiến thức',
             dataIndex:"topicName",
             key: 'questionType',
-            sorter: (a, b) => a.questionType.localeCompare(b.questionType),
+            sorter: (a, b) => a.topicName.localeCompare(b.topicName),
         },
         {
 
@@ -506,7 +506,6 @@ function TestBankPage() {
     ];
     // console.log("qm ", questionModal)
     const handleFormFieldChange = (attribute, value) => {
-        console.log("checkpoint 2 ", attribute, value)
         let newQuestionModal = structuredClone(questionModal);
         newQuestionModal[`${attribute}`] = value
         setQuestionModal(newQuestionModal);
