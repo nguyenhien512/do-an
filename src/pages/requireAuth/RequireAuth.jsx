@@ -8,11 +8,9 @@ function RequireAuth({allowedRoles}){
     const {user} = useAuth()
     const location = useLocation();
 
-    console.log("require auth usser ",user )
    
     
     if((!user)){
-        console.log("user not logged in")
 
        return <Navigate to={"/"}  replace/>
         
@@ -20,7 +18,6 @@ function RequireAuth({allowedRoles}){
     }
 
     else if((user&&!allowedRoles.includes(user.authority))){
-        console.log("user not authorized")
 
         return <Navigate to={"/unauthorized"} state={{from : location}} replace/>
 

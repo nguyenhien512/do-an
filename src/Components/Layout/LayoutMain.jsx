@@ -18,11 +18,9 @@ import hien from '../../Hien-01.svg'
 
 const { Header, Sider, Content } = Layout;
 function LayoutMain({ title, content }) {
-  // console.log("content ",content)
   const { user } = useAuth();
   //user.role[0].authority
   let role = user.authority;
-  console.log("check user ", user)
   const navigate = useNavigate();
 
   let renderContent = (role == ROLE.ADMIN) ? ADMIN_SIDEBAR : (role == ROLE.TEACHER ? TEACHER_SIDEBAR : STUDENT_SIDEBAR)

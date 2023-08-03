@@ -9,13 +9,11 @@ export const AuthProvider=({children})=>{
 
     let user = null;
     let localStorageToken = localStorage.getItem("token");
-    console.log("localstorage token ",localStorageToken)
 
     if(localStorageToken){
         user = jwt(localStorageToken);
     }
 
-    console.log("user after decode ",user)
 
 
 
