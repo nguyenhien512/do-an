@@ -115,7 +115,7 @@ const QuestionDetailModal = ({ qId, open, handleOk, handleCancel }) => {
                 </Form.Item>
                 <Form.Item
                     name="topic"
-                    label="Nội dung kiến thức"
+                    label="Chủ đề kiến thức"
                 >
                     <TopicSelectFormItem fieldName={["topic","id"]} />
                 </Form.Item>

@@ -31,6 +31,7 @@ import TestBankPage from './Pages/testbank/TestBankPage';
 import  ThemeProvider from './context/ThemeProvider';
 import ManageUserPage from './Pages/manage-user/ManageUserPage';
 import AdminTestBankPage from './Pages/testbank/AdminTestBankPage';
+import AdminDashboardPage from './Pages/dashboard/AdminDashboardPage';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -86,7 +87,7 @@ root.render(
 
         <Route path='admin'>
           <Route element={<RequireAuth allowedRoles={[ROLE.ADMIN]} />}>
-            <Route index element={<LayoutMain content={<StudentDashboardPage />} title="Màn hình chính"></LayoutMain>}>
+            <Route index element={<LayoutMain content={<AdminDashboardPage />} title="Màn hình chính"></LayoutMain>}>
             </Route>
             <Route path="manage-user" >
               <Route exact index element={<LayoutMain content={<ManageUserPage />} title="Quản lý người dùng"></LayoutMain>} />

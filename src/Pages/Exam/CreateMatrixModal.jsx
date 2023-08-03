@@ -182,7 +182,7 @@ const CreateMatrixModal = ({ open, handleOk, handleCancel }) => {
             )
         },
         {
-            title: 'Nội dung kiến thức',
+            title: 'Chủ đề kiến thức',
             dataIndex: 'name',
             key: 'name',
             rowScope: 'row',

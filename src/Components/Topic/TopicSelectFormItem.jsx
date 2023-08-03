@@ -40,21 +40,21 @@ const TopciSelectFormItem = ({fieldName}) => {
         <Form.Item 
         name={fieldName}
         noStyle
-        rules={[{ required: true, message: 'Yêu cầu nhập Nội dung kiến thức' }]}>
+        rules={[{ required: true, message: 'Yêu cầu nhập Chủ đề kiến thức' }]}>
             <Select 
             options={topics.map (topic => ({
                 value: topic.id,
                 label: topic.name
             }))} 
             style={{width: 300}}
-            placeholder="Chọn nội dung kiến thức"
+            placeholder="Chọn Chủ đề kiến thức"
             dropdownRender={(menu) => (
                 <>
                   {menu}
                   <Divider style={{ margin: '8px 0' }} />
                   <Space style={{ padding: '0 8px 4px' }}>
                     <Input
-                      placeholder="Thêm Nội dung kiến thức"
+                      placeholder="Thêm Chủ đề kiến thức"
                       ref={inputRef}
                       value={name}
                       onChange={onNameChange}

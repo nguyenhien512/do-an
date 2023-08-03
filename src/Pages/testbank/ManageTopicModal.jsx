@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Modal, Table, Typography, Button, Space, Row, Col, Input, Form, Popconfirm } from 'antd';
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { callGetTopics, callUpdateTopic } from '../../Components/Topic/TopicApi'
+import { callGetTopics, callUpdateTopic, callCreateTopic } from '../../Components/Topic/TopicApi'
 import { PlusOutlined } from '@ant-design/icons';
 
 
@@ -168,21 +168,36 @@ const ManageTopicModal = ({ open, handleOk, handleCancel }) => {
     const onOk = () => {
     }
 
+    const [name, setName] = useState();
+
+    const onNameChange = (event) => {
+        setName(event.target.value);
+    }
+
+    const addItem = async (event) => {
+        event.preventDefault();
+        const newTopic = await callCreateTopic(name, token);
+        setData([...data, { key: data.length, ...newTopic }]);
+    }
+
 
     return (
 
-        <Modal title="Quản lý Nội dung kiến thức" open={open} onCancel={handleCancel} width='80%' >
-            <Row style={{ width: '100%' }}>
-
-                <Input
-                    placeholder="Thêm Nội dung kiến thức"
-                    onChange={null}
-                />
-                <Button type="text" icon={<PlusOutlined />} onClick={null}>
-                    Add item
+        <Modal title="Quản lý Chủ đề kiến thức" open={open} onCancel={handleCancel} onOk={handleOk} width='80%' >
+            <Row style={{ width: '100%' }} justify='center'>
+                <Col span={10}>
+                    <Input
+                        placeholder="Thêm Chủ đề kiến thức"
+                        value={name}
+                        onChange={onNameChange}
+                    />
+                </Col>
+                <Col offset={1}></Col>
+                <Button type="text" icon={<PlusOutlined />} onClick={addItem}>
+                    Tạo mới
                 </Button>
             </Row>
-            <Row>
+            <Row className='mt-3'>
                 <Form form={form} component={false}>
                     <Table
                         style={{ width: '100%' }}

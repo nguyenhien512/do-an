@@ -114,7 +114,7 @@ const ExamMatrixModal = ({ open, handleClose }) => {
             )
         },
         {
-            title: 'Nội dung kiến thức',
+            title: 'Chủ đề kiến thức',
             dataIndex: 'name',
             rowScope: 'row',
         },

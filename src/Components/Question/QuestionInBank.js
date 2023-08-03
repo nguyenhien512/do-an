@@ -16,7 +16,7 @@ const QuestionInBank = ({ question, handleDelete }) => {
             <Tag color={colorWarning}>{getLabel(GRADE, question.grade)}</Tag>
             <Tag color={colorInfo}>{getLabel(SUBJECT,question.subject)}</Tag>
             <Tag>{getLabel(QUESTION_LEVEL, question.level)}</Tag>
-            <span className="me-1" title="Nội dung kiến thức">
+            <span className="me-1" title="Chủ đề kiến thức">
                 <TagOutlined/>
                 <span className="ms-1">{question.topic?.name}</span>
             </span>

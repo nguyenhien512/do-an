@@ -69,7 +69,7 @@ const QuestionSearchModal = ({ open, handleCancel, handleOk }) => {
             onFilter: (value, record) => record.level.indexOf(value) === 0
         },
         {
-            title: 'Nội dung kiến thức',
+            title: 'Chủ đề kiến thức',
             dataIndex: 'topic',
             key: 'topic',
             render: (topic) => <span>

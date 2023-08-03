@@ -63,6 +63,7 @@ const AdminTestBankPage = () => {
             title: 'Nội dung',
             dataIndex: 'content',
             key: 'content',
+            ellipsis: true,
         },
         {
             title: 'Lớp',
@@ -98,7 +99,7 @@ const AdminTestBankPage = () => {
             onFilter: (value, record) => record.level.indexOf(value) === 0
         },
         {
-            title: 'Nội dung kiến thức',
+            title: 'Chủ đề kiến thức',
             dataIndex: 'topic',
             key: 'topic',
             render: (topic) => <span>
@@ -183,7 +184,7 @@ const AdminTestBankPage = () => {
                 {hasSelected ? <span>Đã chọn {selectedRowKeys.length} người dùng</span> : null}
             </Col>
             <Col offset={2}>
-                <Button id='alternative-btn' style={{ backgroundColor: colorWarning, color: colorBgBase }} onClick={() => setOpenTopicPopup(true)}>Quản lý Nội dung kiến thức</Button>
+                <Button id='alternative-btn' style={{ backgroundColor: colorWarning, color: colorBgBase }} onClick={() => setOpenTopicPopup(true)}>Quản lý Chủ đề kiến thức</Button>
             </Col>
             <Col offset={2}>
                 <Space>
