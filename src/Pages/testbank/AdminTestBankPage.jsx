@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Modal, Table, Input, Row, Col, Space, Button, theme, Typography } from 'antd';
+import { Modal, Table, Input, Row, Col, Space, Button, theme, Typography, message } from 'antd';
 import { SUBJECT, GRADE, QUESTION_LEVEL, getLabel, compareEnum, createFilterFromEnum, QUESTION_STATUS } from '../../util/enum';
-import { createFilterForNestedProp } from '../../util/arrayUtil';
+import { createFilterForProp, createFilterForNestedProp } from '../../util/arrayUtil';
 import { callApproveQuestion, callGetAllQuestions, callArchiveQuestion, callDeleteQuestion } from './QuestionApi';
 import { useNavigate, createSearchParams, useSearchParams } from 'react-router-dom';
 import QuestionDetailModal from './QuestionDetailModal';
@@ -43,7 +43,9 @@ const AdminTestBankPage = () => {
             try {
                 const data = await callGetAllQuestions(token);
                 setQuestions([...data]);
-            } catch (ignored) { }
+            } catch (ignored) { 
+                message.error(ignored.message)
+            }
         }
         fetchData();
     }, [])
@@ -116,12 +118,9 @@ const AdminTestBankPage = () => {
         },
         {
             title: 'Tạo bởi',
-            dataIndex: 'createBy',
-            key: 'createBy',
-            render: (createBy) => <span>
-                {createBy.username}
-            </span>,
-            filters: createFilterForNestedProp(questions, "createBy", "username"),
+            dataIndex: 'createByUsername',
+            key: 'createByUsername',
+            filters: createFilterForProp(questions, "createByUsername"),
             onFilter: (value, record) => record.createBy?.username.indexOf(value) === 0,
         },
         {
@@ -137,13 +136,13 @@ const AdminTestBankPage = () => {
     ]
 
     const onSearch = async (value) => {
-        const data = await callSearchQuestions(value, token);
-        setQuestions(data);
-    }
-
-    const onOk = () => {
-        setSelectedRowKeys([]);
-        // handleOk(selectedQuestions);
+        try {
+            const data = await callSearchQuestions(value, ['APPROVED', 'PENDING', 'ARCHIVED'], token);
+            setQuestions(data);
+        }
+        catch (ignored) {
+            message.error(ignored.message)
+        }
     }
 
     const viewQuestion = (id) => {
@@ -157,23 +156,32 @@ const AdminTestBankPage = () => {
     const hasSelected = selectedRowKeys.length > 0;
 
     const approve = async () => {
-        const status = await callApproveQuestion(selectedQuestions, token);
-        if (status === 200) {
+        try {
+            const status = await callApproveQuestion(selectedQuestions, token);
             setQuestions(questions.map(e => selectedQuestions.includes(e.id) ? { ...e, status: 'APPROVED' } : e))
+            message.info('Phê duyệt câu hỏi thành công')
+        } catch (ignored) {
+            message.error(ignored.message)
         }
     }
 
     const archive = async () => {
-        const status = await callArchiveQuestion(selectedQuestions, token);
-        if (status === 200) {
+        try {
+            const status = await callArchiveQuestion(selectedQuestions, token);
             setQuestions(questions.map(e => selectedQuestions.includes(e.id) ? { ...e, status: 'ARCHIVED' } : e))
+            message.info('Đã đưa câu hỏi vào lưu trữ.')
+        } catch(ignored) {
+            message.error(ignored.message)
         }
     }
 
     const deleteQuestion = async () => {
-        const status = await callDeleteQuestion(selectedQuestions, token);
-        if (status === 200) {
-            setQuestions(questions.filter(e => !selectedQuestions.includes(e.id)))
+        try {
+            const status = await callDeleteQuestion(selectedQuestions, token);
+            setQuestions(questions.filter(e => !selectedQuestions.includes(e.id)));
+            message.info('Xóa câu hỏi thành công');
+        } catch (ignored) {
+            message.error(ignored.message)
         }
     }
 
@@ -181,7 +189,7 @@ const AdminTestBankPage = () => {
         <Row justify="space-between">
             <Col span={8}>
                 <Search placeholder="Tìm câu hỏi theo nội dung" onSearch={onSearch} allowClear />
-                {hasSelected ? <span>Đã chọn {selectedRowKeys.length} người dùng</span> : null}
+                {hasSelected ? <span>Đã chọn {selectedRowKeys.length} câu hỏi</span> : null}
             </Col>
             <Col offset={2}>
                 <Button id='alternative-btn' style={{ backgroundColor: colorWarning, color: colorBgBase }} onClick={() => setOpenTopicPopup(true)}>Quản lý Chủ đề kiến thức</Button>
@@ -203,7 +211,7 @@ const AdminTestBankPage = () => {
                     onClick: (event) => { viewQuestion(record.id) }, // click row
                 };
             }} />
-        <QuestionDetailModal qId={qId} open={openDetailPopUp} handleOk={() => setOpenDetailPopup(false)} handleCancel={() => setOpenDetailPopup(false)} />
+        <QuestionDetailModal qId={qId} open={openDetailPopUp} handleOk={() => setOpenDetailPopup(false)} handleCancel={() => setOpenDetailPopup(false)} disabledEdit={true}/>
 
         <ManageTopicModal open={openTopicPopup} handleOk={() => setOpenTopicPopup(false)} handleCancel={() => setOpenTopicPopup(false)} />
     </>

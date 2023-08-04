@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Modal, Table, Typography, Button, Space, Row, Col, Input, Form, Popconfirm } from 'antd';
+import { Modal, Table, Typography, Button, Space, Row, Col, Input, Form, Popconfirm, message } from 'antd';
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { callGetTopics, callUpdateTopic, callCreateTopic } from '../../Components/Topic/TopicApi'
 import { PlusOutlined } from '@ant-design/icons';
@@ -60,7 +60,9 @@ const ManageTopicModal = ({ open, handleOk, handleCancel }) => {
             try {
                 const data = await callGetTopics(token);
                 setData(addKey(data));
-            } catch (ignored) { }
+            } catch (ignored) {
+                message.error(ignored.message)
+             }
         }
         if (open) {
             fetchData();
@@ -87,9 +89,12 @@ const ManageTopicModal = ({ open, handleOk, handleCancel }) => {
         const originalRow = data.find((item) => key === item.key);
         const updatedTopic = { ...originalRow, ...row };
         console.log("updatedTopic", updatedTopic);
-        const status = await callUpdateTopic(updatedTopic, token);
-        if (status === 200) {
+        try {
+            const status = await callUpdateTopic(updatedTopic, token);
             setData(data.map(e => e.key === key ? { ...e, ...updatedTopic } : e));
+            message.info('Sửa chủ đề kiến thức thành công')
+        } catch (ignored) {
+            message.error(ignored.message)
         }
         console.log("data", data);
         setEditingKey('');
@@ -165,9 +170,6 @@ const ManageTopicModal = ({ open, handleOk, handleCancel }) => {
     });
 
 
-    const onOk = () => {
-    }
-
     const [name, setName] = useState();
 
     const onNameChange = (event) => {
@@ -176,14 +178,19 @@ const ManageTopicModal = ({ open, handleOk, handleCancel }) => {
 
     const addItem = async (event) => {
         event.preventDefault();
-        const newTopic = await callCreateTopic(name, token);
-        setData([...data, { key: data.length, ...newTopic }]);
+        try {
+            const newTopic = await callCreateTopic(name, token);
+            setData([...data, { key: data.length, ...newTopic }]);
+            message.info('Tạo chủ đề kiến thức thành công')
+        } catch (ignored) {
+            message.error(ignored.message)
+        }
     }
 
 
     return (
 
-        <Modal title="Quản lý Chủ đề kiến thức" open={open} onCancel={handleCancel} onOk={handleOk} width='80%' >
+        <Modal title="Cài đặt Chủ đề kiến thức" open={open} onCancel={handleCancel} onOk={handleOk} width='80%' >
             <Row style={{ width: '100%' }} justify='center'>
                 <Col span={10}>
                     <Input

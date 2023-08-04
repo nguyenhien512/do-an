@@ -1,6 +1,6 @@
 import { callGetExamMatrix } from "./TeacherExamApi";
 import { useState, useEffect } from 'react';
-import { Modal, Table, Typography, Button, Space, Row, Col, InputNumber, Form, Popconfirm } from 'antd';
+import { Modal, Table, Typography, Button, Space, Row, Col, InputNumber, Form, Popconfirm, message } from 'antd';
 import { useSearchParams, useNavigate } from "react-router-dom";
 import TopciSelectFormItem from "../../Components/Topic/TopicSelectFormItem";
 import {callGetTopics} from '../../Components/Topic/TopicApi'
@@ -63,7 +63,9 @@ const CreateMatrixModal = ({ open, handleOk, handleCancel }) => {
             try {
                 const data = await callGetTopics(token);
                 setTopics([...data]);
-            } catch (ignored) { }
+            } catch (ignored) {
+                message.error(ignored.message)
+            }
         }
         fetchData();
     }, [])
@@ -74,13 +76,9 @@ const CreateMatrixModal = ({ open, handleOk, handleCancel }) => {
 
     const edit = (record) => {
         console.log("record", record);
-        form.setFieldsValue({
-            id: '',
-            level: '',
-            sum: '',
-            percent: '',
-            ...record,
-        });
+        form.setFieldsValue(
+            record
+        );
         setEditingKey(record.key);
     };
 
@@ -122,8 +120,8 @@ const CreateMatrixModal = ({ open, handleOk, handleCancel }) => {
                 setData(newData);
                 setEditingKey('');
             }
-        } catch (errInfo) {
-            console.log('Validate Failed:', errInfo);
+        } catch (ignored) {
+            message.error(ignored.message)
         }
     };
 
@@ -261,7 +259,7 @@ const CreateMatrixModal = ({ open, handleOk, handleCancel }) => {
                             style={{
                                 marginRight: 8,
                             }} >
-                            Nhập nội dung
+                            Sửa
                         </Typography.Link>
                         <Popconfirm title="Bạn muốn xóa?" onConfirm={() => remove(record.key)}>
                             <a>Xóa</a>

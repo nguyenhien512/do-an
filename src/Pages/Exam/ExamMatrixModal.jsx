@@ -1,6 +1,6 @@
 import { callGetExamMatrix } from "./TeacherExamApi";
 import { useState, useEffect } from 'react';
-import { Modal, Table, Typography } from 'antd';
+import { Modal, Table, Typography, message } from 'antd';
 import { useSearchParams, useNavigate } from "react-router-dom";
 
 const { Text } = Typography;
@@ -20,7 +20,9 @@ const ExamMatrixModal = ({ open, handleClose }) => {
             try {
                 const matrix = await callGetExamMatrix(examId, token)
                 setDataSource(convertMatrixToData(matrix));
-            } catch (ignored) { }
+            } catch (ignored) {
+                message.error(ignored.message)
+            }
         }
         if (open) {
             fetchData();

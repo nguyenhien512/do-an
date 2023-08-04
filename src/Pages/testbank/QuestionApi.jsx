@@ -13,13 +13,18 @@ export const callGetAllQuestions = async (token) => {
         )
         return response.data
     } catch (error) {
-        return console.log(error)
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
-export const callSearchQuestions = async (searchKey, token) => {
+export const callSearchQuestions = async (searchKey, status, token) => {
+    let statusJoin = status.join(",")
     try {
-        const response = await axios.get(`${CONFIG.baseUrl}/api/questions/getBySearch?searchKey=${searchKey}`,{
+        const response = await axios.get(`${CONFIG.baseUrl}/api/questions/getBySearch?searchKey=${searchKey}&status=${statusJoin}`,{
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -28,7 +33,11 @@ export const callSearchQuestions = async (searchKey, token) => {
         )
         return response.data
     } catch (error) {
-        return console.log(error)
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -43,7 +52,11 @@ export const callApproveQuestion = async (qIds, token) => {
         )
         return response.status
     } catch (error) {
-        return console.log(error)
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -58,7 +71,11 @@ export const callArchiveQuestion = async (qIds, token) => {
         )
         return response.status
     } catch (error) {
-        return console.log(error)
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -74,6 +91,48 @@ export const callDeleteQuestion = async (qIds, token) => {
         )
         return response.status
     } catch (error) {
-        return console.log(error)
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
+    }
+}
+
+export const callCreateQuestion = async (question, token) => {
+    try {
+        const response = await axios.post(`${CONFIG.baseUrl}/api/questions/create`, question, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }
+        )
+        return response.data
+    } catch (error) {
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
+    }
+}
+
+export const callUpdateQuestion = async (question, token) => {
+    try {
+        const response = await axios.put(`${CONFIG.baseUrl}/api/questions/update`, question, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }
+        )
+        return response.data
+    } catch (error) {
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }

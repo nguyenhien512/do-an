@@ -1,5 +1,6 @@
 import axios from "axios"
 import {CONFIG} from "../../httpClient/config"
+import {message} from "antd"
 
 export const callGetExamsOfTeacher = async (token) => {
     try {
@@ -12,7 +13,12 @@ export const callGetExamsOfTeacher = async (token) => {
         )
         return response.data
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -26,7 +32,12 @@ export const callGetTests = async (examId, token) => {
         })
         return response.data
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -40,7 +51,12 @@ export const callGetTestResult = async (testId, token) => {
         })
         return response.data
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -54,7 +70,12 @@ export const callGetExam = async (examId, token) => {
         })
         return response.data
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -74,7 +95,12 @@ export const callCreateExam = async (exam, token) => {
         )
         return response.data
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -88,7 +114,12 @@ export const callDeleteExam = async (examId, token) => {
         })
         return response.status
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -102,7 +133,12 @@ export const callUpdateExamConfig = async (updatedExam, token) => {
         })
         return response.data
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -116,7 +152,12 @@ export const callPublishExam = async (examId, token) => {
         })
         return response.data
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -133,7 +174,12 @@ export const callRemoveQuestion = async (examId, questions, token) => {
         )
         return response.status
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -148,7 +194,12 @@ export const callAddQuestions = async (examId, questions, token) => {
         )
         return response.data
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -163,7 +214,12 @@ export const callGetExamMatrix = async (examId, token) => {
         )
         return response.data
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -178,6 +234,11 @@ export const callSetQuestionsByMatrix = async (examId, data, token) => {
         )
         return response.data
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Select, DatePicker, Form, Input, InputNumber, Modal, Row, Col, Button } from 'antd';
+import { Select, DatePicker, Form, Input, InputNumber, Modal, Row, Col, Button, message } from 'antd';
 import { useRef } from 'react';
 import { useState, useEffect } from 'react';
 import { callGetClasses } from '../manage-class/ClassApi';
@@ -21,8 +21,12 @@ function ExamSettingForm({ disabled, handleCancel, handleSubmit, initForm }) {
 
     useEffect(() => {
         async function fetchData() {
-            const data = await callGetClasses(token);
-            setClasses([...data]);
+            try {
+                const data = await callGetClasses(token);
+                setClasses([...data]);
+            } catch (ignored) {
+                message.error(ignored.message)
+            }
         }
         fetchData();
     }, [])

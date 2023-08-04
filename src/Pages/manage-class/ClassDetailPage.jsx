@@ -24,7 +24,9 @@ function ClassDetailPage() {
             try {
                 const data = await callGetStudents(classId, token);
                 setStudents([...data]);
-            } catch (ignored) { }
+            } catch (ignored) {
+                message.error(ignored.error)
+             }
         }
         fetchData();
     }, [])
@@ -34,15 +36,21 @@ function ClassDetailPage() {
             try {
                 const data = await callGetExamCounts(classId, token);
                 setExamCounts([...data]);
-            } catch (ignored) { }
+            } catch (ignored) {
+                message.error(ignored.error)
+            }
         }
         fetchExamCount();
     }, [students])
 
     const removeStudent = async (username) => {
-        const data = await callRemoveStudent(classId, username, token);
-        message.info("Xóa học sinh thành công");
-        setStudents([...data]);
+        try {
+            const data = await callRemoveStudent(classId, username, token);
+            setStudents([...data]);
+            message.info("Xóa học sinh thành công");
+        } catch (ignored) {
+            message.error(ignored.message)
+        }        
     }
 
     const merge = (source, target) => {

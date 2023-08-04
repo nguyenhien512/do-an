@@ -31,11 +31,9 @@ const TopciSelectFormItem = ({fieldName}) => {
         event.preventDefault();
         const newTopic = await callCreateTopic(name, token);
         setTopics([...topics,newTopic]);
-        setTimeout(() => {
-            inputRef.current?.focus();
-          }, 0);
+        setName('');
     }
-
+    
     return (
         <Form.Item 
         name={fieldName}
@@ -60,7 +58,7 @@ const TopciSelectFormItem = ({fieldName}) => {
                       onChange={onNameChange}
                     />
                     <Button type="text" icon={<PlusOutlined />} onClick={addItem}>
-                      Add item
+                      Tạo mới
                     </Button>
                   </Space>
                 </>

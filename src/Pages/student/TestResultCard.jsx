@@ -20,7 +20,7 @@ const TestResultCard = ({ btnDisplay, nameDisplay, width, result }) => {
     const viewTestResult = () => {
         const params = { testId: result.id };
         navigate({
-            pathname: '/user/review/test-result',
+            pathname: '/student/review/test-result',
             search: `?${createSearchParams(params)}`,
         });
 

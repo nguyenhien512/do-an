@@ -13,7 +13,12 @@ export const callGetClasses = async (token) => {
         )
         return response.data
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -33,7 +38,12 @@ export const callCreateClass = async (classObj, token) => {
         )
         return response.data
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -53,7 +63,12 @@ export const callEditClass = async (classId, classObj, token) => {
         )
         return response.data
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -68,7 +83,12 @@ export const callDeleteClass = async (classId, token) => {
         )
         return response.status
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -83,7 +103,12 @@ export const callGetStudents = async (classId, token) => {
         )
         return response.data?.students
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -98,7 +123,12 @@ export const callAddStudent = async (classId, student, token) => {
         )
         return response.data?.students
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -113,7 +143,12 @@ export const callRemoveStudent = async (classId, student, token) => {
         )
         return response.data?.students
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -128,7 +163,12 @@ export const callSearchStudents = async (queryString, token) => {
         )
         return response.data
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -143,7 +183,12 @@ export const callGetExamCounts = async (classId, token) => {
         )
         return response.data
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 

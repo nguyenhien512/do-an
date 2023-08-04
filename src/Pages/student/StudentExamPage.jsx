@@ -1,5 +1,5 @@
 import { callGetExam } from './ExamApi';
-import { Row, Space } from 'antd';
+import { Row, Space, message } from 'antd';
 import { useState, useEffect } from 'react';
 import { useNavigate, createSearchParams } from 'react-router-dom'
 import ExamCard from './ExamCard';
@@ -17,7 +17,9 @@ function StudentExamPage() {
             try {
                 const data = await callGetExam(token);
                 setExams([...data]);
-            } catch (ignored) { }
+            } catch (ignored) {
+                message.error(ignored.message)
+             }
         }
         fetchData();
     }, [])
@@ -27,7 +29,7 @@ function StudentExamPage() {
         const params = { examId: exam.id, maxDuration: exam.maxDuration };
 
         navigate({
-            pathname: '/user/exam/create-exam',
+            pathname: '/student/exam/create-exam',
             search: `?${createSearchParams(params)}`,
         });
 

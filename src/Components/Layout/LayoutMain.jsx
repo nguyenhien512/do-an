@@ -7,7 +7,7 @@ import {
   VideoCameraOutlined,
   LogoutOutlined
 } from '@ant-design/icons';
-import { Layout, Menu, Button, theme } from 'antd';
+import { Layout, Menu, Button, theme, Typography, message } from 'antd';
 import { NavLink } from 'react-router-dom';
 import useAuth from "../../hooks/useAuth";
 import { ADMIN_SIDEBAR, ROLE } from '../../util/enum'
@@ -15,6 +15,8 @@ import { STUDENT_SIDEBAR, TEACHER_SIDEBAR } from '../../util/enum'
 import './LayoutMain.css';
 import { useNavigate } from "react-router-dom";
 import hien from '../../Hien-01.svg'
+import UpdateUserModal from '../RegisterModal/UpdateUserModal';
+import {callUpdateUser} from '../../Pages/manage-user/UserApi'
 
 const { Header, Sider, Content } = Layout;
 function LayoutMain({ title, content }) {
@@ -30,6 +32,21 @@ function LayoutMain({ title, content }) {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+  const token = localStorage.getItem("token");
+
+  const [openUpdateUserPopup, setOpenUpdateUserPopup] = useState(false);
+
+  const updateUser = async (formData) => {
+    console.log(formData)
+    try {
+      const status = await callUpdateUser(formData, token);
+      setOpenUpdateUserPopup(false);
+      message.info('Đổi thông tin đăng nhập thành công')
+    } catch (ignored) {
+      message.error(ignored.message)
+    }
+  }
 
   return (
     <Layout style={{
@@ -75,30 +92,34 @@ function LayoutMain({ title, content }) {
               <Button onClick={() => navigate(-1)}>Quay lại</Button>
             </div>
             <span style={{ fontSize: '1.5em' }}>{title}</span>
-
-            <Button
-              type="text"
-              icon={<div className='iconDiv'><LogoutOutlined />
-              </div>
-              }
-              onClick={() => {
-                localStorage.removeItem("token");
-                navigate('/')
-              }}
-              style={{
-                fontSize: '16px',
-                textAlign: 'center',
-                verticalAlign: 'center',
-                width: 100,
-                height: 64,
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                textAlign: 'center'
-              }}
-            >
-              Logout
-            </Button>
+            <div className='d-inline-flex align-items-center'>
+              <Typography.Link onClick={() => setOpenUpdateUserPopup(true)}>
+                Đổi thông tin đăng nhập
+              </Typography.Link>
+              <Button className='ms-3'
+                type="text"
+                icon={<div className='iconDiv'><LogoutOutlined />
+                </div>
+                }
+                onClick={() => {
+                  localStorage.removeItem("token");
+                  navigate('/')
+                }}
+                style={{
+                  fontSize: '16px',
+                  textAlign: 'center',
+                  verticalAlign: 'center',
+                  width: 100,
+                  height: 64,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  textAlign: 'center'
+                }}
+              >
+                Đăng xuất
+              </Button>
+            </div>
           </div>
         </Header>
         <Content
@@ -112,6 +133,7 @@ function LayoutMain({ title, content }) {
           {content}
         </Content>
       </Layout>
+      <UpdateUserModal open={openUpdateUserPopup} handleCancel={() => setOpenUpdateUserPopup(false)} handleOk={updateUser}/>
     </Layout>
   );
 }

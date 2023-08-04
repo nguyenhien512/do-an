@@ -1,7 +1,7 @@
 import { callGetResult } from "./ExamApi";
 import { useSearchParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { Card, Space, Typography } from 'antd';
+import { Card, Space, Typography, message } from 'antd';
 import { formatDateTime } from '../../util/dateTimeUtil';
 import TestResultCard from "./TestResultCard";
 
@@ -19,7 +19,9 @@ function StudentTestResultPage() {
             try {
                 const response = await callGetResult(testId, token);
                 setResult(response);
-            } catch (ignored) { }
+            } catch (ignored) {
+                message.error(ignored.message)
+             }
         }
         fetchData();
     }, [])

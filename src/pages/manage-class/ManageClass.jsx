@@ -22,7 +22,9 @@ function ManageClassPage() {
             try {
                 const data = await callGetClasses(token);
                 setClasses([...data]);
-            } catch (ignored) { }
+            } catch (ignored) {
+                message.error(ignored.message);
+             }
         }
         fetchData();
     }, [])
@@ -53,10 +55,12 @@ function ManageClassPage() {
     }
 
     async function removeClass(id) {
-        const apiStatus = await callDeleteClass(id, token);
-        if (apiStatus == 200) {
-            message.info("Xóa lớp học thành công");
+        try {
+            const apiStatus = await callDeleteClass(id, token);
             setClasses([...classes].filter(e => e.id != id));
+            message.info("Xóa lớp học thành công");
+        } catch (ignored) {
+            message.error(ignored.message)
         }
     }
 
@@ -81,18 +85,22 @@ function ManageClassPage() {
     const handleFinish = async (values) => {
         let data;
         console.log("currentClassId",currentClassId);
-        if (!currentClassId) {
-            console.log("Callling create class")
-            data = await callCreateClass(values, token);
-            setClasses([...classes, data]);
-            message.info("Tạo lớp học thành công");
-        } else {
-            data = await callEditClass(currentClassId, values, token);
-            let index = classes.findIndex(e => e.id == currentClassId);
-            setClasses(classes.toSpliced(index, 1, data));
-            setCurrentClassId(null);
-            setInitForm(null);
-            message.info("Sửa lớp học thành công");
+        try {
+            if (!currentClassId) {
+                console.log("Callling create class")
+                data = await callCreateClass(values, token);
+                setClasses([...classes, data]);
+                message.info("Tạo lớp học thành công");
+            } else {
+                data = await callEditClass(currentClassId, values, token);
+                let index = classes.findIndex(e => e.id == currentClassId);
+                setClasses(classes.toSpliced(index, 1, data));
+                setCurrentClassId(null);
+                setInitForm(null);
+                message.info("Sửa lớp học thành công");
+            }
+        } catch (ignored) {
+            message.error(ignored.message)
         }
         setOpen(false);
     }

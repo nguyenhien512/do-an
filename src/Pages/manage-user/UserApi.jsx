@@ -12,7 +12,12 @@ export const callGetAllUsers = async (token) => {
         )
         return response.data
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -28,7 +33,12 @@ export const callSearchUsers = async (queryString, authorities, token) => {
         )
         return response.data
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -43,7 +53,12 @@ export const callInactiveUser = async (listUsername, token) => {
         )
         return response.status
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -58,6 +73,31 @@ export const callActiveUser = async (listUsername, token) => {
         )
         return response.status
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
+    }
+}
+
+export const callUpdateUser = async (data, token) => {
+    try {
+        const response = await axios.put(`${CONFIG.baseUrl}/api/users`,data, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }
+        )
+        return response.status
+    } catch (error) {
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }

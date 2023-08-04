@@ -12,7 +12,7 @@ import QuestionDetailModal from './QuestionDetailModal';
 import { SettingOutlined, DeleteOutlined, FileDoneOutlined, PlusOutlined } from "@ant-design/icons";
 import { getLabel, GRADE, QUESTION_LEVEL, SUBJECT } from '../../util/enum';
 import TopciSelectFormItem from '../../Components/Topic/TopicSelectFormItem';
-import { callGetTopics } from '../Exam/TeacherExamApi';
+import { callGetTopics } from '../../Components/Topic/TopicApi';
 
 const { Option } = Select;
 
@@ -687,7 +687,7 @@ function TestBankPage() {
 
             </Modal>
 
-            <QuestionDetailModal qId={qId} open={true} />
+            {/* <QuestionDetailModal qId={qId} open={true} /> */}
 
         </>
     )

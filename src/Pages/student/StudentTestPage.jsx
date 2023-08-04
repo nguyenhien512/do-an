@@ -1,7 +1,7 @@
 import Question from '../../Components/Question/Question';
 import { useState, useEffect } from 'react';
 import { callCreateTest, callPostAnswers } from './ExamApi';
-import { Space, Button, Row, Col, Statistic, Affix } from 'antd';
+import { Space, Button, Row, Col, Statistic, Affix, message } from 'antd';
 import { useNavigate, useSearchParams, createSearchParams } from 'react-router-dom'
 import { SpaceCompactItemContext } from 'antd/es/space/Compact';
 
@@ -42,11 +42,17 @@ function StudentTestPage() {
 
     useEffect(() => {
         async function handleFinishExam() {
-            await callPostAnswers(testId, answers, token);
+            try {
+                await callPostAnswers(testId, answers, token);
+                message.info('Nộp bài thi thành công')
+            } catch (ignored) {
+                message.error(ignored.error)
+            }
+            
             const params = { testId: testId };
 
             navigate({
-                pathname: '/user/exam/result',
+                pathname: '/student/exam/result',
                 search: `?${createSearchParams(params)}`,
             });
         }
@@ -65,7 +71,10 @@ function StudentTestPage() {
                 setTestId(test.id);
                 setExamName(test.examName);
                 setQuestionPanel(Array(questions.length).fill("default"));
-            } catch (ignored) { }
+                message.info('Tải đề thi thành công')
+            } catch (ignored) {
+                message.error(ignored.message)
+             }
         }
         fetchData();
     }, [])

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Modal, Table, Input } from 'antd';
+import { Modal, Table, Input, message } from 'antd';
 import { callSearchQuestions } from '../testbank/QuestionApi';
 import { SUBJECT, GRADE, QUESTION_LEVEL, getLabel, compareEnum, createFilterFromEnum } from '../../util/enum';
 import { createFilterForNestedProp } from '../../util/arrayUtil';
@@ -87,8 +87,12 @@ const QuestionSearchModal = ({ open, handleCancel, handleOk }) => {
     ]
 
     const onSearch = async (value) => {
-        const data = await callSearchQuestions(value, token);
-        setQuestions(data);
+        try {
+            const data = await callSearchQuestions(value,['APPROVED'], token);
+            setQuestions(data);
+        } catch (ignored) {
+            message.error(ignored.message)
+        }        
     }
 
     const onOk = () => {
@@ -102,7 +106,7 @@ const QuestionSearchModal = ({ open, handleCancel, handleOk }) => {
 
     return (
         <Modal title="Thêm câu hỏi" open={open} onOk={onOk} onCancel={handleCancel} width='80%' >
-            <Search placeholder="Tìm câu hỏi theo nội dung" onSearch={onSearch} allowClear />
+            <Search placeholder="Tìm câu hỏi theo nội dung. Kết quả chỉ bao gồm câu hỏi đã duyệt." onSearch={onSearch} allowClear />
             {hasSelected ? <span>Đã chọn {selectedRowKeys.length} câu hỏi</span> : null}
             <Table className="mt-3" dataSource={addKey(questions)} columns={columns} rowSelection={rowSelection} />
         </Modal>

@@ -1,7 +1,7 @@
 import { callGetTests } from './TeacherExamApi';
 import { useSearchParams, createSearchParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { Card, Space, Button, Row, Col, Statistic, Typography, Table } from 'antd';
+import { Card, Space, Button, Row, Col, Statistic, Typography, Table, message } from 'antd';
 import { formatDateTime } from '../../util/dateTimeUtil';
 
 const { Text } = Typography;
@@ -18,6 +18,18 @@ function TeacherTestPage() {
     console.log("Test page has exam", exam);
 
     const [tests, setTests] = useState();
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const response = await callGetTests(examId, token);
+                setTests(response);
+            } catch (ignored) {
+                message.error(ignored.message)
+            }
+        }
+        fetchData();
+    }, [])
 
     useEffect(() => {
         async function fetchData() {
@@ -108,7 +120,7 @@ function TeacherTestPage() {
                 <Statistic title="Tổng số bài đã nộp" value={tests?.length}  />
             </Col>
             <Col>
-                <Statistic title="Số lượt thi" value={exam?.examTimes}  />
+                <Statistic title="Số lượt thi" value={tests ? tests[0].examExamTimes : 0}  />
             </Col>
             <Col>
                 <Statistic title="Giao cho lớp" value={exam?.studentClassName} />

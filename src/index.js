@@ -32,6 +32,7 @@ import  ThemeProvider from './context/ThemeProvider';
 import ManageUserPage from './Pages/manage-user/ManageUserPage';
 import AdminTestBankPage from './Pages/testbank/AdminTestBankPage';
 import AdminDashboardPage from './Pages/dashboard/AdminDashboardPage';
+import TeacherTestBankPage from './Pages/testbank/TeacherTestBankPage';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -73,7 +74,7 @@ root.render(
             </Route>
 
             <Route path='testbank' >
-              <Route exact index element={<LayoutMain content={<TestBankPage />} title="Ngân hàng câu hỏi"></LayoutMain>} />
+              <Route exact index element={<LayoutMain content={<TeacherTestBankPage />} title="Ngân hàng câu hỏi"></LayoutMain>} />
             </Route>
 
             <Route path='class'>

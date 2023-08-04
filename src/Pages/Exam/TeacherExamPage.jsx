@@ -1,5 +1,5 @@
 import { callCreateExam, callGetExamsOfTeacher } from './TeacherExamApi';
-import { Table, Tag, Button, Space, Row, Col, theme } from 'antd';
+import { Table, Tag, Button, Space, Row, Col, theme, message } from 'antd';
 import { useState, useEffect } from 'react';
 import { useNavigate, createSearchParams } from 'react-router-dom';
 import { formatDateTime } from '../../util/dateTimeUtil';
@@ -30,7 +30,9 @@ function TeacherExamPage() {
             try {
                 const data = await callGetExamsOfTeacher(token);
                 setExams([...data]);
-            } catch (ignored) { }
+            } catch (ignored) {
+                message.error(ignored.message);
+             }
         }
         fetchData();
     }, [])
@@ -56,9 +58,12 @@ function TeacherExamPage() {
     }
 
     const createExam = async (exam) => {
-        const data = await callCreateExam(exam, token);
-        if (data) {
+        try {
+            const data = await callCreateExam(exam, token);
             viewExamSettings(data.id);
+            message.info('Đã tạo một đề thi. Hãy bổ sung cài đặt và nội dung cho đề thi.')
+        } catch (ignored) {
+            message.error(ignored.message);
         }
     }
 
@@ -139,7 +144,7 @@ function TeacherExamPage() {
             </Col>
         </Row>
         <Row className="mt-3 d-flex justify-content-center">
-            <Table dataSource={addKey(exams)} columns={columns} style={{ width: '100%' }} />
+            <Table dataSource={addKey(exams)} columns={columns} style={{ width: '100%'}}  />
         </Row>
         <CreateExamModal open={openPopup} handleFinish={createExam} handleCancel={() => setOpenPop(false)} />
     </>

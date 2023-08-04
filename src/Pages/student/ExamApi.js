@@ -11,7 +11,12 @@ export const callCreateTest = async (examId, token) => {
         })
         return response.data
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -30,7 +35,12 @@ export const callPostAnswers = async (testId, answers, token) => {
         )
         return response.status
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -45,7 +55,12 @@ export const callGetResult = async (testId, token) => {
         )
         return response.data
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -60,7 +75,12 @@ export const callGetExam = async (token) => {
         )
         return response.data
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -75,7 +95,12 @@ export const callDeleteExam = async (classId, token) => {
         )
         return response.status
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -89,7 +114,12 @@ export const callGetQuestions = async (examId, token) => {
         })
         return response.data
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }
 
@@ -104,6 +134,11 @@ export const callSubmitTests = async (token) => {
         )
         return response.data
     } catch (error) {
-        return console.log(error)
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
     }
 }

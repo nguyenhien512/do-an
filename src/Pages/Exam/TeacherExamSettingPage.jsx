@@ -1,7 +1,7 @@
 import { callGetExam, callDeleteExam, callUpdateExamConfig, callPublishExam, callRemoveQuestion, callAddQuestion, callAddQuestions, callSetQuestionsByMatrix } from './TeacherExamApi';
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { Tooltip, Space, Button, Row, Col, Alert, message, Tag, Input, Form } from 'antd';
+import { Tooltip, Space, Button, Row, Col, Alert, message, Tag, Input, Form, theme } from 'antd';
 import { parseDayjs, parseDate, dayjsToString } from '../../util/dateTimeUtil';
 import QuestionInBank from '../../Components/Question/QuestionInBank';
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
@@ -17,6 +17,10 @@ function TeacherExamSettingPage() {
     const examId = queryParameters.get("examId");
     const allowMatrix = queryParameters.get("allowMatrix") === "true";
     const token = localStorage.getItem("token");
+
+    const {
+        token: { colorWarning, colorInfo, colorBgBase, colorErrorActive },
+    } = theme.useToken();
 
     const [exam, setExam] = useState();
     const [questions, setQuestions] = useState();
@@ -36,7 +40,9 @@ function TeacherExamSettingPage() {
                 const response = await callGetExam(examId, token);
                 setExam(response);
                 setQuestions(response.questionDtoList);
-            } catch (ignored) { }
+            } catch (ignored) {
+                message.error(ignored.message)
+             }
         }
         fetchData();
     }, [])
@@ -78,10 +84,14 @@ function TeacherExamSettingPage() {
             closeTime: dayjsToString(values.closeTime),
             id: exam.id
         }
-        const data = await callUpdateExamConfig(updatedExam, token);
-        setExam(data);
-        message.info("Sửa cài đặt đề thi thành công");
-        setEditForm(false);
+        try {
+            const data = await callUpdateExamConfig(updatedExam, token);
+            setExam(data);
+            message.info("Sửa cài đặt đề thi thành công");
+            setEditForm(false);
+        } catch (ignored) {
+            message.error(ignored.message);
+        }        
     }
 
     const handleCancelForm = () => {
@@ -89,25 +99,32 @@ function TeacherExamSettingPage() {
     }
 
     const deleteExam = async () => {
-        const apiStatus = await callDeleteExam(exam.id, token);
-        if (apiStatus == 200) {
+        try {
+            const apiStatus = await callDeleteExam(exam.id, token);
             message.info("Xóa đề thi thành công");
             navigate('/teacher/exam/');
+        } catch (ignored) {
+            message.error(ignored.message)
         }
     }
 
     const publishExam = async () => {
-        const data = await callPublishExam(exam.id, token);
-        if (data) {
+        try {
+            const data = await callPublishExam(exam.id, token);
             setExam(data);
             message.info("Xuất bản đề thi thành công");
+        } catch (ignored) {
+            message.error(ignored.message)
         }
     }
 
     const deleteQuestion = async (questionId) => {
-        const status = await callRemoveQuestion(examId, [questionId], token);
-        if (status == 200) {
+        try {
+            const status = await callRemoveQuestion(examId, [questionId], token);
             setQuestions(questions.filter(item => item.id !== questionId));
+            message.info('Xóa câu hỏi khỏi đề thành công')
+        } catch (ignored) {
+            message.error(ignored.message)
         }
     }
 
@@ -116,18 +133,25 @@ function TeacherExamSettingPage() {
     }
 
     const addQuestions = async (questionIds) => {
-        const data = await callAddQuestions(examId, questionIds, token);
-        console.log("Add Question", data);
-        if (data) {
+        try {
+            const data = await callAddQuestions(examId, questionIds, token);
             setQuestions(data.questionDtoList);
+            message.info('Thêm câu hỏi vào đề thành công')
+        } catch (ignored) {
+            message.error(ignored.message)
         }
         setOpenPopup(false);
     }
 
     const setQuestionsByMatrix = async (data) => {
+        try {
+            const updatedExam = await callSetQuestionsByMatrix(examId, data, token);
+            setQuestions(updatedExam?.questionDtoList);
+            message.info('Tạo đề theo ma trận thành công')
+        } catch (ignored) {
+            message.error(ignored.message);
+        }
         setOpenCreateMatrix(false);
-        const updatedExam = await callSetQuestionsByMatrix(examId, data, token);
-        setQuestions(updatedExam.questionDtoList);
     }
 
     const [openCreateMatrix,setOpenCreateMatrix] = useState(allowMatrix);
@@ -186,6 +210,11 @@ function TeacherExamSettingPage() {
             <Col>
             <Tooltip title="Thay đổi nội dung với đề thi đã xuất bản có thể ảnh hưởng đến học sinh" color='white' overlayInnerStyle={{ color: 'black' }} >
                     <Button icon={<PlusOutlined />} title="Thêm câu hỏi" onClick={() => setOpenPopup(true)} type="primary">Thêm câu hỏi</Button>
+            </Tooltip>
+            </Col>
+            <Col>
+            <Tooltip title="Thay đổi nội dung với đề thi đã xuất bản có thể ảnh hưởng đến học sinh" color='white' overlayInnerStyle={{ color: 'black' }} >
+                    <Button title="Tạo đề từ ma trận" onClick={() => setOpenCreateMatrix(true)} type='primary' id='alternative-btn' style={{ backgroundColor: colorWarning, color: colorBgBase }}>Tạo đề từ ma trận</Button>
             </Tooltip>
             </Col>
         </Row>

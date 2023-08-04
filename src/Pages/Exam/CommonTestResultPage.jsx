@@ -1,7 +1,7 @@
 import QuestionResult from '../../Components/Question/QuestionResult';
 import { useState, useEffect } from 'react';
 import { callGetTestResult } from './TeacherExamApi';
-import { Space, Row, Col, Button, Statistic, ConfigProvider } from 'antd';
+import { Space, Row, Col, Button, Statistic, ConfigProvider, message } from 'antd';
 import { useNavigate, useSearchParams, createSearchParams } from 'react-router-dom'
 import { calculateDurationByHMS } from '../../util/dateTimeUtil';
 import { formatDateTime } from '../../util/dateTimeUtil';
@@ -18,9 +18,10 @@ function CommonTestResultPage({showQuestionId}) {
         async function fetchData() {
             try {
                 const testResult = await callGetTestResult(testId, token);
-                console.log("testDetail", testResult)
                 setTestResult(testResult);
-            } catch (ignored) { }
+            } catch (ignored) {
+                message.error(ignored.message);
+             }
         }
         fetchData();
     }, [])
@@ -30,7 +31,7 @@ function CommonTestResultPage({showQuestionId}) {
 
     return <>
         <Row justify='space-between'>
-            <h3>Bài làm của {testResult?.student.firstName} {testResult?.student.lastName}</h3>
+            <h3>Bài làm của {testResult?.student.lastName} {testResult?.student.firstName} </h3>
         </Row>
         <Row className='mt-3' justify='space-evenly'>
             <Col>

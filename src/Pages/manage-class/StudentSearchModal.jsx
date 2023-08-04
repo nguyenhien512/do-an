@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Modal, Table, Input } from 'antd';
+import { Modal, Table, Input, message } from 'antd';
 import { callSearchStudents } from './ClassApi';
 
 const { Search } = Input;
@@ -39,8 +39,12 @@ const StudentSearchModal = ({ open, onCancel, onOk}) => {
     ]
 
     const onSearch = async (value) => {
-        const data = await callSearchStudents(value,token);
-        setStudents(data);
+        try {
+            const data = await callSearchStudents(value,token);
+            setStudents(data);
+        } catch (ignored) {
+            message.error(ignored.message)
+        }
     }
 
     const addKey = (data) => data.map((item, index) => ({...item, key: index}));

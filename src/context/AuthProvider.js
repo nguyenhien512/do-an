@@ -12,10 +12,8 @@ export const AuthProvider=({children})=>{
 
     if(localStorageToken){
         user = jwt(localStorageToken);
+        console.log("current user",user);
     }
-
-
-
 
 
     let value ={user,setToken}

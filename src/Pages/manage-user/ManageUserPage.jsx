@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Modal, Table, Input, Button, Row, Col, Space, theme } from 'antd';
+import { Modal, Table, Input, Button, Row, Col, Space, theme, message } from 'antd';
 import { callGetAllUsers, callInactiveUser, callSearchUsers, callActiveUser } from './UserApi';
 import { USER_ACTIVE, createFilterFromEnum, getLabel } from '../../util/enum';
 import ModalComponent from '../../Components/RegisterModal/ModalComponent';
@@ -75,14 +75,20 @@ const ManageUserPage = () => {
             try {
                 const data = await callGetAllUsers(token);
                 setUsers([...data]);
-            } catch (ignored) { }
+            } catch (ignored) {
+                message.error(ignored.message)
+             }
         }
         fetchData();
     }, [])
 
     const onSearch = async (value) => {
-        const data = await callSearchUsers(value, ['STUDENT', 'TEACHER', 'ADMIN'], token);
-        setUsers([...data]);
+        try {
+            const data = await callSearchUsers(value, ['STUDENT', 'TEACHER', 'ADMIN'], token);
+            setUsers([...data]);
+        } catch (ignored) {
+            message.error(ignored)
+        }
     }
 
     const addKey = (data) => data?.map((item, index) => ({ ...item, key: index }));
@@ -93,22 +99,30 @@ const ManageUserPage = () => {
             const response = await registerUser(value);
             const newUser = response.data;
             setUsers([...users, newUser]);
-
-        } catch (ignored) { }
+            message.info('Tạo người dùng thành công')
+        } catch (ignored) {
+            message.error('Username đã tồn tại')
+         }
         setAddUserModal(false);
     }
 
     const inactiveUser = async () => {
-        const status = await callInactiveUser(selectedUsers, token);
-        if (status === 200) {
+        try {
+            const status = await callInactiveUser(selectedUsers, token);
             setUsers(users.map(e => selectedUsers.includes(e.username) ? { ...e, active: false } : e))
+            message.info('Đổi trạng thái hoạt động thành công')
+        } catch (ignored) {
+            message.error(ignored.message)
         }
     }
 
     const activeUser = async () => {
-        const status = await callActiveUser(selectedUsers, token);
-        if (status === 200) {
+        try {
+            const status = await callActiveUser(selectedUsers, token);
             setUsers(users.map(e => selectedUsers.includes(e.username) ? { ...e, active: true } : e))
+            message.info('Đổi trạng thái hoạt động thành công')
+        } catch (ignored) {
+            message.error(ignored);
         }
     }
 
