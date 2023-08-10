@@ -7,7 +7,6 @@ const CustomTick = ({x, y, stroke, payload, dataProp }) => {
 
         let color;
         let level = dataProp.find(e => e.point === payload.value)?.level;
-        console.log(level)
         switch (level) {
             case 'LEVEL_1': 
                 color = '#00ccff'
@@ -24,7 +23,6 @@ const CustomTick = ({x, y, stroke, payload, dataProp }) => {
             default: 
                 color = '#ffffff';
         }
-        console.log(color);
 
     return <g transform={`translate(${x},${y})`} style={{cursor: "pointer"}}>
         <text x={0} y={0} dy={16} textAnchor="middle" fill={color} fontWeight='bold'>
@@ -37,7 +35,6 @@ const QuesBar = (props) => {
     const { loading, byQuesBars } = props
     let navigate = useNavigate()
     const formatXAxis = (tickItem) => {
-        console.log("Tick item", tickItem)
         return "Câu " + tickItem.toString();
     }
 
@@ -46,7 +43,7 @@ const QuesBar = (props) => {
         <div  className="d-flex">
             <BarChart
                 loading={loading}
-                width={1000}
+                width={800}
                 height={300}
                 data={byQuesBars}
                 margin={{

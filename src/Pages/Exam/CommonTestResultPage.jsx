@@ -35,7 +35,7 @@ function CommonTestResultPage({showQuestionId}) {
         </Row>
         <Row className='mt-3' justify='space-evenly'>
             <Col>
-                <Statistic title="Điểm" value={testResult?.score}  />
+                <Statistic title="Điểm" value={testResult?.score.toFixed(2)}  />
             </Col>
             <Col>
                 <Statistic title="Thời điểm nộp bài" value={formatDateTime(testResult?.submitTime)}  />

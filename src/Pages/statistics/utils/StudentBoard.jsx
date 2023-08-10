@@ -1,6 +1,10 @@
-import {Table} from "antd";
+import {Table, Typography} from "antd";
+import { createSearchParams, useNavigate } from "react-router-dom";
+import { formatDateTime } from '../../../util/dateTimeUtil'
 
 const StudentBoard = (props) => {
+
+    const navigate = useNavigate();
     const {loading, data} = props
     const sortName = (a,b) => {
         if (a < b) {
@@ -12,40 +16,80 @@ const StudentBoard = (props) => {
         return 0;
     }
 
-    const column = [
+    function viewTest(id) {
+        const params = { testId: id };
+        navigate({
+            pathname: '/teacher/exam/test-result',
+            search: `?${createSearchParams(params)}`,
+        });
+
+    }
+
+    const columns = [
         {
-            title: "STT",
-            render: (text,record,index) => index + 1,
+            title: 'STT',
+            dataIndex: 'id',
+            key: 'id',
+            render: (text, record, index) => (
+                <span>{index + 1}</span>
+            )
         },
         {
-            title: "Họ",
-            dataIndex: "lastName",
-            sorter: (a, b) => sortName(a.firstName, b.firstName)
+            title: 'Họ',
+            dataIndex: 'student',
+            key: 'firstName',
+            render: (student) => (
+                <span>{student.firstName}</span>
+            )
         },
         {
-            title: "Tên",
-            dataIndex: "firstName",
-            sorter: (a, b) => sortName(a.lastName, b.lastName),
+            title: 'Tên',
+            dataIndex: 'student',
+            key: 'lastName',
+            render: (student) => (
+                <span>{student.lastName}</span>
+            )
         },
         {
-            title: "Username",
-            dataIndex: "username",
-            sorter: (a, b) => sortName(a.username, b.username),
+            title: 'Username',
+            dataIndex: 'student',
+            key: 'username',
+            render: (student) => (
+                <span>{student.username}</span>
+            )
         },
         {
-            title: "Điểm",
-            dataIndex: "score",
+            title: 'Thời điểm nộp bài',
+            dataIndex: 'submitTime',
+            key: 'submitTime',
+            render: (submitTime) => (
+                <span>{formatDateTime(submitTime)}</span>
+            ),
+            sorter: (a,b) => Date.parse(a.submitTime) - Date.parse(b.submitTime)
+        },
+        {
+            title: 'Điểm',
+            dataIndex: 'score',
+            key: 'score',
             render: (score) => {
                 return <span>{score.toFixed(2)}</span>
             },
             sorter: (a,b) => a.score - b.score
+        },
+        {
+            title: '',
+            dataIndex: 'id',
+            key: 'action',
+            render: (id) => (
+                <Typography.Link onClick={() => viewTest(id)}>Xem chi tiết</Typography.Link>
+            )
         }
     ]
 
     return (
             <Table
                 loading={loading}
-                columns={column}
+                columns={columns}
                 dataSource={data}
                 pagination={{
                     showQuickJumper: true,

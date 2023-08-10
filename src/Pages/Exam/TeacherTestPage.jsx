@@ -13,9 +13,9 @@ function TeacherTestPage() {
     const token = localStorage.getItem("token");
 
     const exams = JSON.parse(localStorage.getItem("exams"));
-    const exam = exams.filter(e => e.id == examId)[0];
+    //const exam = exams.filter(e => e.id == examId)[0];
 
-    console.log("Test page has exam", exam);
+    //console.log("Test page has exam", exam);
 
     const [tests, setTests] = useState();
 
@@ -113,7 +113,7 @@ function TeacherTestPage() {
 
     return <>
         <Row justify='space-between'>
-            <h3>{exam?.name}</h3>
+            {/* <h3>{exam?.name}</h3> */}
         </Row>
         <Row className='mt-3' justify='space-evenly'>
             <Col>
@@ -123,7 +123,7 @@ function TeacherTestPage() {
                 <Statistic title="Số lượt thi" value={tests ? tests[0].examExamTimes : 0}  />
             </Col>
             <Col>
-                <Statistic title="Giao cho lớp" value={exam?.studentClassName} />
+                {/* <Statistic title="Giao cho lớp" value={exam?.studentClassName} /> */}
             </Col>
         </Row>
         <Row className='mt-3' wrap={false}>

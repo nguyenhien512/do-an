@@ -45,7 +45,7 @@ export const getStatisticByQuesId = (examId) => {
 
 export const getStatisticByStudentId = (examId) => {
     return axios
-        .get(`${CONFIG.baseUrl}/api/users/statistic/byStudent/${examId || 1}`,
+        .get(`${CONFIG.baseUrl}/api/tests?examId=${examId || 1}`,
             {
                 headers:{
                     Authorization : `Bearer ${localStorage.getItem("token")}`
@@ -62,6 +62,22 @@ export const getStatisticByStudentId = (examId) => {
 export const getAverage = (examId) => {
     return axios
         .get(`${CONFIG.baseUrl}/api/users/statistic/average/${examId || 1}`,
+            {
+                headers:{
+                    Authorization : `Bearer ${localStorage.getItem("token")}`
+                }
+            }
+        )
+        .then((response) => {
+            return response.data;
+        }).catch((error) => {
+            console.log(error)
+        });
+}
+
+export const getExam = (examId) => {
+    return axios
+        .get(`${CONFIG.baseUrl}/api/exams/${examId || 1}`,
             {
                 headers:{
                     Authorization : `Bearer ${localStorage.getItem("token")}`

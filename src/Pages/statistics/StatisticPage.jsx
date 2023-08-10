@@ -5,12 +5,15 @@ import {
     getExams,
     getStatisticByExamId,
     getStatisticByQuesId,
-    getStatisticByStudentId
+    getStatisticByStudentId,
+    getExam
 } from "./statisticApi";
 import ScoreBar from "./utils/ScoreBar";
 import QuesBar from "./utils/QuesBar";
 import StudentBoard from "./utils/StudentBoard";
-import { Row, Progress, Col, Space } from 'antd';
+import { Row, Col } from 'antd';
+import { FileDoneOutlined, TeamOutlined} from "@ant-design/icons";
+import StatisticCard from "./utils/StatisticCard";
 
 const StatisticPage = () => {
     const [loading, setLoading] = useState()
@@ -19,6 +22,7 @@ const StatisticPage = () => {
     const [byQuesBars, setByQuesBars] = useState()
     const [studentData, setStudentData] = useState()
     const [averageScore, setAverageScore] = useState(0)
+    const [examData, setExamData] = useState()
     const fetchData = (examId) => {
         setLoading(true)
         getStatisticByExamId(examId)
@@ -40,6 +44,11 @@ const StatisticPage = () => {
         getAverage(examId)
             .then((res) => {
                 setAverageScore(res)
+                setLoading(false)
+            })
+        getExam(examId)
+            .then((res) => {
+                setExamData(res)
                 setLoading(false)
             })
     }
@@ -69,6 +78,17 @@ const StatisticPage = () => {
             />
         </Row>
         <Row className="mt-3">
+            <Col>
+                <StatisticCard title="Số lượt thi" value={examData?.examTimes} icon={FileDoneOutlined} />
+            </Col>
+            <Col offset={1}>
+                <StatisticCard title="Số bài đã nộp" value={studentData?.length} icon={TeamOutlined} />
+            </Col>
+            <Col offset={1}>
+                <StatisticCard title="Điểm trung bình" value={averageScore? averageScore.toFixed(2) : 0} icon={TeamOutlined} />
+            </Col>
+        </Row>
+        <Row className="mt-3">
             <h4>Phổ điểm</h4>
         </Row>
         <Row className='mt-3' justify='space-around'>
@@ -78,12 +98,6 @@ const StatisticPage = () => {
                         loading={loading}
                         byScoreBars={byScoreBars}
                     />}
-            </Col>
-            <Col>
-                <Space direction='vertical' align="center">
-                    <Progress type="circle" percent={averageScore * 10} format={(percent) => averageScore.toFixed(2)} />
-                    <p>Điểm trung bình</p>
-                </Space>
             </Col>
         </Row>
         <Row className="mt-3">

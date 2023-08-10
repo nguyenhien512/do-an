@@ -122,7 +122,7 @@ function TeacherExamPage() {
             render: (id) => (<>
                 <Space size={[16, 4]} wrap>
                     <Button title="Cài đặt" icon={<SettingOutlined />} onClick={() => viewExamSettings(id)}></Button>
-                    <Button title="Xem bài làm đã nộp" icon={<FileDoneOutlined />} onClick={() => viewTests(id)}></Button>
+                    {/* <Button title="Xem bài làm đã nộp" icon={<FileDoneOutlined />} onClick={() => viewTests(id)}></Button> */}
                 </Space>
             </>
             )
