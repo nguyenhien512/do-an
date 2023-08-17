@@ -91,7 +91,27 @@ export const callUpdateUser = async (data, token) => {
             }
         }
         )
-        return response.status
+        return response.data
+    } catch (error) {
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
+    }
+}
+
+export const callGetCurrentUser = async (token) => {
+    try {
+        const response = await axios.get(`${CONFIG.baseUrl}/api/users/getCurrentUser`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }
+        )
+        return response.data
     } catch (error) {
         console.log(error);
         if (error.response && error.response.data) {

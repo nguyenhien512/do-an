@@ -92,6 +92,11 @@ function ClassDetailPage() {
             key: 'username'
         },
         {
+            title: 'Ngày sinh',
+            dataIndex: 'dob',
+            key: 'dob'
+        },
+        {
             title: 'Trạng thái',
             dataIndex: 'active',
             key: 'active',

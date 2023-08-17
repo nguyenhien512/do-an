@@ -60,6 +60,25 @@ export const callApproveQuestion = async (qIds, token) => {
     }
 }
 
+export const callRejectQuestion = async (qIds, token) => {
+    try {
+        const response = await axios.post(`${CONFIG.baseUrl}/api/questions/reject`,qIds, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }
+        )
+        return response.status
+    } catch (error) {
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
+    }
+}
+
 export const callArchiveQuestion = async (qIds, token) => {
     try {
         const response = await axios.post(`${CONFIG.baseUrl}/api/questions/archive`,qIds, {

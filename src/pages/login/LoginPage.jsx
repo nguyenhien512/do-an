@@ -35,6 +35,8 @@ function LoginPage() {
       const response = await authenticate(user);
       setToken(response.data.jwttoken)
       localStorage.setItem('token', response.data.jwttoken)
+      localStorage.setItem('firstName', response.data.firstName)
+      localStorage.setItem('lastName', response.data.lastName)
 
       let location = response.data.authority == 'ADMIN' ? "/admin" : (response.data.authority == 'STUDENT' ? "/student" : "/teacher")
       navigate(location)

@@ -13,3 +13,11 @@ export const createFilterForNestedProp = (data, prop, childProp) => {
         value: e
     }))
 }
+
+export const createFilterForYearProp = (data, prop) => {
+    let uniqueValues = data.map(e => e[prop].match(/\d{4}/)[0]).filter((item, index, arr) => arr.indexOf(item) === index);
+    return uniqueValues.map(e => ({
+        text: e,
+        value: e
+    }))
+}

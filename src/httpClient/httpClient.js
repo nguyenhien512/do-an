@@ -12,7 +12,12 @@ const login = (endPoint, data) => {
 }
 
 const registerUser = (endPoint, data) => {
-    return instance.post(endPoint, data)
+    let token = localStorage.getItem('token');
+    return instance.post(endPoint, data, {
+                    headers: {
+                'Authorization': `Bearer ${token}`
+            }
+    })
 
 }
 

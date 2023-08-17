@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Modal, Table, Input, message } from 'antd';
 import { callSearchStudents } from './ClassApi';
+import { createFilterForYearProp } from '../../util/arrayUtil'
 
 const { Search } = Input;
 
@@ -35,7 +36,14 @@ const StudentSearchModal = ({ open, onCancel, onOk}) => {
             title: 'Tên đăng nhập',
             dataIndex: 'username',
             key: 'username'
-        }
+        },
+        {
+            title: 'Ngày sinh',
+            dataIndex: 'dob',
+            key: 'dob',
+            filters: createFilterForYearProp(students,'dob'),
+            onFilter: (value, record) => record.dob.match(value) !== null
+        },
     ]
 
     const onSearch = async (value) => {

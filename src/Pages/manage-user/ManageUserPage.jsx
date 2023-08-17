@@ -5,6 +5,7 @@ import { USER_ACTIVE, createFilterFromEnum, getLabel } from '../../util/enum';
 import ModalComponent from '../../Components/RegisterModal/ModalComponent';
 import { registerUser } from "../../services";
 import { PlusOutlined } from '@ant-design/icons';
+import { dayjsToDateString } from '../../util/dateTimeUtil';
 const { Search } = Input;
 
 // reset form fields when modal is form, closed
@@ -61,6 +62,11 @@ const ManageUserPage = () => {
             sorter: (a, b) => a.username.localeCompare(b.username),
         },
         {
+            title: 'Ngày sinh',
+            dataIndex: 'dob',
+            key: 'dob'
+        },
+        {
             title: 'Trạng thái',
             dataIndex: 'active',
             key: 'active',
@@ -96,7 +102,8 @@ const ManageUserPage = () => {
 
     const handleRegisterSubmit = async (value) => {
         try {
-            const response = await registerUser(value);
+            let data = {...value, dob: dayjsToDateString(value.dob)}
+            const response = await registerUser(data, token);
             const newUser = response.data;
             setUsers([...users, newUser]);
             message.info('Tạo người dùng thành công')

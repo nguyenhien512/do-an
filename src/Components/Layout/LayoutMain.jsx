@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -16,7 +16,7 @@ import './LayoutMain.css';
 import { useNavigate } from "react-router-dom";
 import hien from '../../Hien-01.svg'
 import UpdateUserModal from '../RegisterModal/UpdateUserModal';
-import {callUpdateUser} from '../../Pages/manage-user/UserApi'
+import {callGetCurrentUser, callUpdateUser} from '../../Pages/manage-user/UserApi'
 
 const { Header, Sider, Content } = Layout;
 function LayoutMain({ title, content }) {
@@ -37,10 +37,25 @@ function LayoutMain({ title, content }) {
 
   const [openUpdateUserPopup, setOpenUpdateUserPopup] = useState(false);
 
+  const [profile, setProfile] = useState();
+
+  useEffect(() => {
+    async function fetchData() {
+        try {
+            const data = await callGetCurrentUser(token);
+            setProfile(data);
+        } catch (ignored) {
+            message.error(ignored.message)
+         }
+    }
+    fetchData();
+  }, [])
+
   const updateUser = async (formData) => {
     console.log(formData)
     try {
-      const status = await callUpdateUser(formData, token);
+      const updatedUser = await callUpdateUser(formData, token);
+      setProfile(updatedUser);
       setOpenUpdateUserPopup(false);
       message.info('Đổi thông tin đăng nhập thành công')
     } catch (ignored) {
@@ -133,7 +148,7 @@ function LayoutMain({ title, content }) {
           {content}
         </Content>
       </Layout>
-      <UpdateUserModal open={openUpdateUserPopup} handleCancel={() => setOpenUpdateUserPopup(false)} handleOk={updateUser}/>
+      <UpdateUserModal open={openUpdateUserPopup} handleCancel={() => setOpenUpdateUserPopup(false)} handleOk={updateUser} initData={profile}/>
     </Layout>
   );
 }

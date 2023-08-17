@@ -77,7 +77,14 @@ const CreateMatrixModal = ({ open, handleOk, handleCancel }) => {
     const edit = (record) => {
         console.log("record", record);
         form.setFieldsValue(
-            record
+            {
+                id: record.id,
+                key: record.key,
+                LEVEL_1: record.level.LEVEL_1,
+                LEVEL_2: record.level.LEVEL_2,
+                LEVEL_3: record.level.LEVEL_3,
+                LEVEL_4: record.level.LEVEL_4
+            }
         );
         setEditingKey(record.key);
     };

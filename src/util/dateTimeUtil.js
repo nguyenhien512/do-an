@@ -46,3 +46,8 @@ export const dayjsToString = (day) => {
     if (day == null) return null
     return day.format('YYYY-MM-DDTHH:mm:ss');
 }
+
+export const dayjsToDateString = (day) => {
+    if (day == null) return null
+    return day.format('YYYY-MM-DD');
+}

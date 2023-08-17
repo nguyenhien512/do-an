@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Modal, Table, Input, Row, Col, Space, Button, theme, Typography, message } from 'antd';
 import { SUBJECT, GRADE, QUESTION_LEVEL, getLabel, compareEnum, createFilterFromEnum, QUESTION_STATUS } from '../../util/enum';
 import { createFilterForProp, createFilterForNestedProp } from '../../util/arrayUtil';
-import { callApproveQuestion, callGetAllQuestions, callArchiveQuestion, callDeleteQuestion } from './QuestionApi';
+import { callApproveQuestion, callGetAllQuestions, callArchiveQuestion, callDeleteQuestion, callRejectQuestion } from './QuestionApi';
 import { useNavigate, createSearchParams, useSearchParams } from 'react-router-dom';
 import QuestionDetailModal from './QuestionDetailModal';
 import { callSearchQuestions } from './QuestionApi';
@@ -37,6 +37,7 @@ const AdminTestBankPage = () => {
 
     const [openDetailPopUp, setOpenDetailPopup] = useState(false);
     const [openTopicPopup, setOpenTopicPopup] = useState(false);
+    const [openApprovePopup, setOpenApprovePopup] = useState(false);
 
     useEffect(() => {
         async function fetchData() {
@@ -158,8 +159,20 @@ const AdminTestBankPage = () => {
     const approve = async () => {
         try {
             const status = await callApproveQuestion(selectedQuestions, token);
+            setOpenApprovePopup(false);
             setQuestions(questions.map(e => selectedQuestions.includes(e.id) ? { ...e, status: 'APPROVED' } : e))
             message.info('Phê duyệt câu hỏi thành công')
+        } catch (ignored) {
+            message.error(ignored.message)
+        }
+    }
+
+    const reject = async () => {
+        try {
+            const status = await callRejectQuestion(selectedQuestions, token);
+            setOpenApprovePopup(false);
+            setQuestions(questions.map(e => selectedQuestions.includes(e.id) ? { ...e, status: 'REJECTED' } : e))
+            message.info('Từ chối câu hỏi thành công')
         } catch (ignored) {
             message.error(ignored.message)
         }
@@ -196,7 +209,7 @@ const AdminTestBankPage = () => {
             </Col>
             <Col offset={2}>
                 <Space>
-                    <Button type="primary" onClick={() => approve()}>Phê duyệt</Button>
+                    <Button type="primary" onClick={() => setOpenApprovePopup(true)}>Phê duyệt</Button>
                     <Button type="primary" danger onClick={() => deleteQuestion()}  >Xóa</Button>
                     <Button onClick={() => archive()}>Lưu trữ</Button>
                 </Space>
@@ -214,6 +227,9 @@ const AdminTestBankPage = () => {
         <QuestionDetailModal qId={qId} open={openDetailPopUp} handleOk={() => setOpenDetailPopup(false)} handleCancel={() => setOpenDetailPopup(false)} disabledEdit={true}/>
 
         <ManageTopicModal open={openTopicPopup} handleOk={() => setOpenTopicPopup(false)} handleCancel={() => setOpenTopicPopup(false)} />
+        <Modal title="Phê duyệt câu hỏi" open={openApprovePopup} onOk={() => approve()} cancelButtonProps={{onClick: () => reject()}} okText="Phê duyệt" cancelText="Từ chối" onCancel={() => setOpenApprovePopup(false)}>
+            <p>Bạn có muốn phê duyệt các câu hỏi đã chọn?</p>
+        </Modal>
     </>
     );
 }

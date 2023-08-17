@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Checkbox, Form, Input, Select, Row } from 'antd';
+import { Button, Checkbox, Form, Input, Select, Row, DatePicker } from 'antd';
 const { Option } = Select;
 
 // const onFinish = (values) => {
@@ -51,6 +51,13 @@ function RegisterForm({ handleRegisterSubmit }) {
         rules={[{ required: true, message: 'Yêu cầu nhập họ!' }]}
       >
         <Input.TextArea />
+      </Form.Item>
+      <Form.Item
+        label="Ngày sinh"
+        name="dob"
+        rules={[{ required: true, message: 'Yêu cầu nhập ngày sinh' }]}
+      >
+        <DatePicker />
       </Form.Item>
       <Form.Item name="authority" label="Loại tài khoản" rules={[{ required: true, message: "Yêu cầu chọn loại tài khoản" }]}>
         <Select

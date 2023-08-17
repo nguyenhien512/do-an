@@ -84,6 +84,7 @@ export const USER_ACTIVE = [
 
 export const QUESTION_STATUS = [
   {value: 'PENDING', label: "Chưa duyệt"},
+  {value: 'REJECTED', label: "Từ chối"},
   {value: 'APPROVED', label: "Đã duyệt"},
   {value: 'ARCHIVED', label: "Lưu trữ"},
 ]

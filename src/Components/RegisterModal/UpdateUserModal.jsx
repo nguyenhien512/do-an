@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { Button, Modal, Form, Input, Row } from 'antd';
 import RegisterForm from './register-form/RegisterForm';
 
-function UpdateUserModal({ open, handleCancel, handleOk }) {
+function UpdateUserModal({ open, handleCancel, handleOk, initData }) {
 
     const [form] = Form.useForm();
+
+    form.setFieldsValue(initData);
 
     const onOk = () => {
         handleOk(form.getFieldsValue(true));

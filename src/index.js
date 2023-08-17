@@ -78,8 +78,8 @@ root.render(
             </Route>
 
             <Route path='class'>
-              <Route exact index element={<LayoutMain content={<ManageClassPage />} title="Quản lý lớp"></LayoutMain>} />
-              <Route path='class-detail' element={<LayoutMain content={<ClassDetailPage />} title="Quản lý lớp"></LayoutMain>} />
+              <Route exact index element={<LayoutMain content={<ManageClassPage />} title="Quản lý lớp học"></LayoutMain>} />
+              <Route path='class-detail' element={<LayoutMain content={<ClassDetailPage />} title="Quản lý lớp học"></LayoutMain>} />
             </Route>
 
             <Route path='statistics' element={<LayoutMain content={<StatisticPage />} title="Thống kê"></LayoutMain>} />
