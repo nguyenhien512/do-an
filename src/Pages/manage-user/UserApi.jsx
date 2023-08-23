@@ -121,3 +121,23 @@ export const callGetCurrentUser = async (token) => {
         }
     }
 }
+
+export const callBulkCreateUser = async (users, token) => {
+    try {
+        const response = await axios.post(`${CONFIG.baseUrl}/api/users/bulkCreate`, users, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }
+        )
+        return response.data
+    } catch (error) {
+        console.log(error);
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
+    }
+}

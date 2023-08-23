@@ -128,9 +128,8 @@ function ClassDetailPage() {
     };
 
 
-    const onOk = async (selectedStudent) => {
-        console.log(selectedStudent);
-        const data = await callAddStudent(classId, selectedStudent.username, token);
+    const onOk = async (selectedStudents) => {
+        const data = await callAddStudent(classId, selectedStudents, token);
         message.info("Thêm học sinh thành công!");
         setStudents([...data]);
         hideModal();

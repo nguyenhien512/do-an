@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Modal, Table, Input, Row, Col, Space, Button, theme, Typography, message } from 'antd';
-import { SUBJECT, GRADE, QUESTION_LEVEL, getLabel, compareEnum, createFilterFromEnum, QUESTION_STATUS } from '../../util/enum';
-import { createFilterForProp, createFilterForNestedProp } from '../../util/arrayUtil';
-import { callApproveQuestion, callGetAllQuestions, callArchiveQuestion, callDeleteQuestion, callCreateQuestion, callUpdateQuestion, callSearchQuestions } from './QuestionApi';
-import { useNavigate, createSearchParams, useSearchParams } from 'react-router-dom';
+import { Table, Input, Row, Col, Space, Button, theme, Typography, message, Upload } from 'antd';
+import { SUBJECT, GRADE, QUESTION_LEVEL, getLabel, compareEnum, createFilterFromEnum, QUESTION_STATUS, getValue, getLabels } from '../../util/enum';
+import { createFilterForProp, createFilterForNestedProp, flattenObject } from '../../util/arrayUtil';
+import { callGetAllQuestions, callCreateQuestion, callUpdateQuestion, callSearchQuestions, callBulkCreateQuestion } from './QuestionApi';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import QuestionDetailModal from './QuestionDetailModal';
-import ManageTopicModal from './ManageTopicModal'
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import * as XLSX from 'xlsx';
 
 const { Search } = Input;
 
@@ -38,7 +38,7 @@ const TeacherTestBankPage = () => {
             try {
                 const data = await callGetAllQuestions(token);
                 setQuestions([...data]);
-            } catch (ignored) { 
+            } catch (ignored) {
                 message.error(ignored.message)
             }
         }
@@ -50,7 +50,7 @@ const TeacherTestBankPage = () => {
             setOpenDetailPopup(true);
             setQId(qParam);
         }
-    },[qParam])
+    }, [qParam])
 
     const columns = [
         {
@@ -123,7 +123,7 @@ const TeacherTestBankPage = () => {
             dataIndex: 'createByUsername',
             key: 'createByUsername',
             filters: createFilterForProp(questions, "createByUsername"),
-            onFilter: (value, record) => record.createBy?.username.indexOf(value) === 0,
+            onFilter: (value, record) => record.createByUsername?.indexOf(value) === 0,
         },
         {
             title: 'Trạng thái',
@@ -163,8 +163,8 @@ const TeacherTestBankPage = () => {
     }
 
     const handleFormOk = async (formData) => {
-        console.log("action",action);
-        console.log("formDta",formData);
+        console.log("action", action);
+        console.log("formDta", formData);
         try {
             if (action === "create") {
                 const newQuestion = await callCreateQuestion(formData, token);
@@ -181,14 +181,125 @@ const TeacherTestBankPage = () => {
         setOpenDetailPopup(false);
     }
 
+    const [excelFile, setExcelFile] = useState()
+
+    const handleFile = (file) => {
+        let acceptedTypes = ['text/csv', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel']
+        if (file && file.size < 1000000 && acceptedTypes.includes(file.type)) {
+            return true
+        } else {
+            message.error('Hệ thống chỉ chấp nhận định dạng file .xlsx, .xls, .csv dung lượng dưới 1MB')
+            return false
+        }
+    }
+
+    const handleFileSubmit = (options) => {
+        const { onSuccess, onError, file, onProgress } = options;
+        console.log(file)
+        let reader = new FileReader();
+        reader.readAsArrayBuffer(file);
+        reader.onloadend = async (e) => {
+            const workbook = XLSX.read(e.target.result, { type: 'buffer' });
+            const worksheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[worksheetName];
+            const data = XLSX.utils.sheet_to_json(worksheet);
+            console.log(data);
+            try {
+                const cleanData = data.map((item, index) => validateQuestion(item,index)).filter(e => e !== null);
+                const newQuestions = await callBulkCreateQuestion(cleanData, token);
+                setQuestions([...questions, ...newQuestions]);
+                message.info('Tải câu hỏi lên thành công')
+                onSuccess("ok");
+            } catch (error) {
+                message.error(error.message);
+                onError({ error })
+            }
+        }
+    }
+
+    const excelDataToQuestion = (e) => {
+        return ({
+            content: e['Noi_dung'],
+            grade: getValue(GRADE, e['Lop']),
+            subject: getValue(SUBJECT, e['Mon']),
+            correctAnswers: e['Dap_an_dung'],
+            level: getValue(QUESTION_LEVEL, e['Muc_do_nhan_biet']),
+            topic: {
+                name: e['Chu_de_kien_thuc']
+            },
+            answers: [
+                {
+                    key: 'A',
+                    content: e['Dap_an_A']
+                },
+                {
+                    key: 'B',
+                    content: e['Dap_an_B']
+                },
+                {
+                    key: 'C',
+                    content: e['Dap_an_C']
+                },
+                {
+                    key: 'D',
+                    content: e['Dap_an_D']
+                }
+            ]
+        })
+    }
+
+    const validateQuestion = (data, index) => {
+        let question = excelDataToQuestion(data);
+        let flatten = flattenObject(question);
+        if (Object.values(flatten).some(value => !(value))) {
+            message.info(`Dữ liệu ở hàng ${index} bị xóa vì không hợp lệ`)
+            return null
+        } else {
+            return question
+        }
+    }
+
+    const excelTemplate = [{
+        'Noi_dung': "",
+        'Lop': "",
+        'Mon': "",
+        'Dap_an_dung': "",
+        'Muc_do_nhan_biet': "",
+        'Chu_de_kien_thuc': "",
+        'Dap_an_A': "",
+        'Dap_an_B': "",
+        'Dap_an_C': "",
+        'Dap_an_D': ""
+    }]
+
+    const exportTemplate = () => {
+        return new Promise((resolve, reject) => {
+            let workbook = XLSX.utils.book_new();
+            let worksheet1 = XLSX.utils.json_to_sheet(excelTemplate);
+            let worksheet2 = XLSX.utils.json_to_sheet(getLabels(GRADE));
+            let worksheet3 = XLSX.utils.json_to_sheet(getLabels(SUBJECT));
+            let worksheet4 = XLSX.utils.json_to_sheet(getLabels(QUESTION_LEVEL));
+            XLSX.utils.book_append_sheet(workbook, worksheet1, 'Cau_hoi');
+            XLSX.utils.book_append_sheet(workbook, worksheet2, 'Lop');
+            XLSX.utils.book_append_sheet(workbook, worksheet3, 'Mon');
+            XLSX.utils.book_append_sheet(workbook, worksheet4, 'Muc_do_nhan_biet');
+            XLSX.writeFile(workbook, 'Cau_hoi.xlsx');
+            resolve('ok');
+        })
+    }
+
     return (<>
         <Row justify="space-between">
-            <Col span={8}>
+            <Col span={6}>
                 <Search placeholder="Tìm câu hỏi theo nội dung" onSearch={onSearch} allowClear />
             </Col>
-            <Col offset={2}>
+            <Col offset={1}>
                 <Space>
-                    <Button icon={<PlusOutlined/>} type="primary" onClick={openCreatePopup}>Tạo câu hỏi</Button>
+                    <Typography.Link onClick={() => exportTemplate()}>Tải xuống template</Typography.Link>
+                    <Upload beforeUpload={handleFile} customRequest={handleFileSubmit} maxCount={1}>
+                        <Button icon={<UploadOutlined />} >Nhập bằng excel</Button>
+                    </Upload>
+                    <Button icon={<PlusOutlined />} type="primary" onClick={openCreatePopup}>Tạo câu hỏi</Button>
                 </Space>
             </Col>
         </Row>

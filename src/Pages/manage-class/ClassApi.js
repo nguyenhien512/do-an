@@ -112,9 +112,9 @@ export const callGetStudents = async (classId, token) => {
     }
 }
 
-export const callAddStudent = async (classId, student, token) => {
+export const callAddStudent = async (classId, students, token) => {
     try {
-        const response = await axios.put(`${CONFIG.baseUrl}/api/classes/${classId}/addStudent?student=${student}`, {},{
+        const response = await axios.put(`${CONFIG.baseUrl}/api/classes/${classId}/addStudents`, students,{
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`

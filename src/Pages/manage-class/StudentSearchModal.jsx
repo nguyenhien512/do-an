@@ -9,12 +9,15 @@ const { Search } = Input;
 
 const StudentSearchModal = ({ open, onCancel, onOk}) => {
 
-    const [selectedStudent, setSelectedStudent] = useState();
+    const [selectedStudents, setSelectedStudents] = useState([]);
+
+    const hasSelected = selectedStudents.length > 0;
 
     const rowSelection = {
-        type: 'radio',
+        type: 'checkbox',
         onChange: (selectedRowKeys, selectedRows) => {
-         setSelectedStudent(selectedRows[0]);
+         setSelectedStudents(selectedRows.map(record => record.username));
+         console.log(selectedStudents)
         }
       };
 
@@ -57,8 +60,9 @@ const StudentSearchModal = ({ open, onCancel, onOk}) => {
 
     const addKey = (data) => data.map((item, index) => ({...item, key: index}));
     return (
-        <Modal title="Thêm học sinh" open={open} onOk={() => onOk(selectedStudent)} onCancel={onCancel} width={'50%'}>
+        <Modal title="Thêm học sinh" open={open} onOk={() => onOk(selectedStudents)} onCancel={onCancel} width={'50%'}>
             <Search placeholder="Tìm học sinh theo tên hoặc username" onSearch={onSearch} allowClear />
+            {hasSelected && <span>Đã chọn {selectedStudents.length} học sinh</span> }
             <Table className="mt-3" dataSource={addKey(students)} columns={columns} rowSelection={rowSelection}/>
         </Modal>
     );

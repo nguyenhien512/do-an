@@ -155,3 +155,41 @@ export const callUpdateQuestion = async (question, token) => {
         }
     }
 }
+
+export const callBulkCreateQuestion = async (questions, token) => {
+    try {
+        const response = await axios.post(`${CONFIG.baseUrl}/api/questions/bulkCreate`, questions, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }
+        )
+        return response.data
+    } catch (error) {
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
+    }
+}
+
+export const callCountQuestionByMatrix = async (grade, subject, status, token) => {
+    try {
+        const response = await axios.get(`${CONFIG.baseUrl}/api/questions/countByMatrix?grade=${grade}&subject=${subject}&status=${status}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }
+        )
+        return response.data
+    } catch (error) {
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        } else {
+            throw new Error('Không thể tải dữ liệu');
+        }
+    }
+}

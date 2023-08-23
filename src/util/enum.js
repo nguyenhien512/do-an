@@ -46,11 +46,25 @@ export const GRADE = [
 
 
 export const SUBJECT = [
-  { value: "MATH", label: "Toán" },
-  { value: "PHY", label: "Lý" },
-  { value: "CHEM", label: "Hóa" },
-  { value: "BIO", label: "Sinh" },
-  { value: "ENG", label: "Anh"}
+  { value: "CONG_NGHE", label: "Công nghệ" },
+  { value: "DIA_LY", label: "Địa lý" },
+  { value: "DAO_DUC", label: "Đạo đức" },
+  { value: "GDKTPL", label: "Giáo dục Kinh tế và Pháp luật" },
+  { value: "GDQPAN", label: "Giáo dục Quốc phòng và An ninh" },
+  { value: "GDTC", label: "Giáo dục Thể chất"},
+  { value: "HOA_HOC", label: "Hóa học"},
+  { value: "KHTN", label: "Khoa học tự nhiên"},
+  { value: "LSDL", label: "Lịch sử và Địa lý"},
+  { value: "LICH_SU", label: "Lịch sử"},
+  { value: "NGHE_THUAT", label: "Nghệ thuật"},
+  { value: "TIENG_ANH", label: "Tiếng Anh"},
+  { value: "NGU_VAN", label: "Ngữ Văn"},
+  { value: "SINH_HOC", label: "Sinh học"},
+  { value: "TIN_HOC", label: "Tin học"},
+  { value: "TOAN", label: "Toán"},
+  { value: "TIENG_VIET", label: "Tiếng Việt"},
+  { value: "VAT_LY", label: "Vật lý"},
+  { value: "KHAC", label: "Khác"},
 ];
 
 export const QUESTION_TYPE = [
@@ -89,6 +103,13 @@ export const QUESTION_STATUS = [
   {value: 'ARCHIVED', label: "Lưu trữ"},
 ]
 
+export const USER_ROLE = [
+  {value: 'STUDENT', label: "Học sinh"},
+  {value: 'TEACHER', label: "Giáo viên"},
+  {value: 'ADMIN', label: "Quản trị viên"},
+]
+
+
 const findIndexByValue = (arr, value) => {
   return arr.findIndex(item => item.value === value);
 }
@@ -102,4 +123,13 @@ export const createFilterFromEnum = (enumArr) => {
     value: e.value,
     text: e.label
   }))
+}
+
+export const getValue = (enumArr, label) => {
+  let found = enumArr.filter(e => e.label === label)[0];
+  return found? found.value : "";
+}
+
+export const getLabels = (enumArr) => {
+  return enumArr.map(e => ({'Gia_tri_hop_le': e.label}))
 }

@@ -122,7 +122,7 @@ const AdminTestBankPage = () => {
             dataIndex: 'createByUsername',
             key: 'createByUsername',
             filters: createFilterForProp(questions, "createByUsername"),
-            onFilter: (value, record) => record.createBy?.username.indexOf(value) === 0,
+            onFilter: (value, record) => record.createByUsername.indexOf(value) === 0,
         },
         {
             title: 'Trạng thái',
@@ -161,6 +161,8 @@ const AdminTestBankPage = () => {
             const status = await callApproveQuestion(selectedQuestions, token);
             setOpenApprovePopup(false);
             setQuestions(questions.map(e => selectedQuestions.includes(e.id) ? { ...e, status: 'APPROVED' } : e))
+            setSelectedRowKeys([])
+            setSelectedQuestions([])
             message.info('Phê duyệt câu hỏi thành công')
         } catch (ignored) {
             message.error(ignored.message)
@@ -172,6 +174,8 @@ const AdminTestBankPage = () => {
             const status = await callRejectQuestion(selectedQuestions, token);
             setOpenApprovePopup(false);
             setQuestions(questions.map(e => selectedQuestions.includes(e.id) ? { ...e, status: 'REJECTED' } : e))
+            setSelectedRowKeys([])
+            setSelectedQuestions([])
             message.info('Từ chối câu hỏi thành công')
         } catch (ignored) {
             message.error(ignored.message)
@@ -182,6 +186,8 @@ const AdminTestBankPage = () => {
         try {
             const status = await callArchiveQuestion(selectedQuestions, token);
             setQuestions(questions.map(e => selectedQuestions.includes(e.id) ? { ...e, status: 'ARCHIVED' } : e))
+            setSelectedRowKeys([])
+            setSelectedQuestions([])
             message.info('Đã đưa câu hỏi vào lưu trữ.')
         } catch(ignored) {
             message.error(ignored.message)
@@ -192,6 +198,8 @@ const AdminTestBankPage = () => {
         try {
             const status = await callDeleteQuestion(selectedQuestions, token);
             setQuestions(questions.filter(e => !selectedQuestions.includes(e.id)));
+            setSelectedRowKeys([])
+            setSelectedQuestions([])
             message.info('Xóa câu hỏi thành công');
         } catch (ignored) {
             message.error(ignored.message)

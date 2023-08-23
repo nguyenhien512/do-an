@@ -10,8 +10,6 @@ const { TextArea } = Input;
 
 const QuestionDetailModal = ({ qId, open, handleOk, handleCancel, action, changeAction, disabledEdit }) => {
 
-    console.log("action",action);
-
     const [form] = Form.useForm();
 
     useResetFormOnCloseModal(form, open);
