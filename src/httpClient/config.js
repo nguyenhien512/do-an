@@ -1,5 +1,5 @@
 export const CONFIG={
-    baseUrl:"http://localhost:8080",
+    baseUrl:"https://exam-system-2d23a8238bcf.herokuapp.com",
     headers:{
         "Content-Type":"application/json",
     }
