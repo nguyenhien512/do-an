@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/static/css/main.34cca1fd.css",
+    "main.js": "/static/js/main.44f62c38.js",
+    "static/js/787.a70cf618.chunk.js": "/static/js/787.a70cf618.chunk.js",
+    "static/media/Hien-01.svg": "/static/media/Hien-01.740d8bc6801790e768ed6057c120573c.svg",
+    "index.html": "/index.html",
+    "main.34cca1fd.css.map": "/static/css/main.34cca1fd.css.map",
+    "main.44f62c38.js.map": "/static/js/main.44f62c38.js.map",
+    "787.a70cf618.chunk.js.map": "/static/js/787.a70cf618.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.34cca1fd.css",
+    "static/js/main.44f62c38.js"
+  ]
+}
