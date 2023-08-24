@@ -1,7 +1,7 @@
 import { Select } from "antd";
 
 const FilterExam = (props) => {
-    const {fetchData, exams} = props;
+    const {handleChange, exams} = props;
     const customExams = exams.map(ite => ({
         value: ite.id,
         label: ite.name
@@ -13,11 +13,11 @@ const FilterExam = (props) => {
     return (
         <div className="filter-semester">
             <Select
-                placeholder={`${customExams[0]?.label}`}
+                placeholder={`Chọn đề thi`}
                 style={{ minWidth: 400, height: '100%' }}
                 options={customExams}
                 onChange={(value) => {
-                    fetchData(value)
+                    handleChange(value)
                 }}
                 height='100%'
             />

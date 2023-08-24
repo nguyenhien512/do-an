@@ -18,6 +18,7 @@ import StatisticCard from "./utils/StatisticCard";
 const StatisticPage = () => {
     const [loading, setLoading] = useState()
     const [exams, setExams] = useState([])
+    const [currentExam, setCurrentExam] = useState()
     const [byScoreBars, setByScoreBars] = useState()
     const [byQuesBars, setByQuesBars] = useState()
     const [studentData, setStudentData] = useState()
@@ -53,19 +54,22 @@ const StatisticPage = () => {
             })
     }
 
-    const fetchExam = () => {
-        setLoading(true)
-        getExams()
-            .then((res) => {
-                setExams(res)
-                setLoading(false)
-            })
-    }
     useEffect(() => {
-        // get all year from api and set
-        fetchData()
+        async function fetchExam() {
+            setLoading(true)
+            const data = await getExams();
+            setLoading(false)
+            setExams(data)
+        }
         fetchExam()
+        // get all year from api and set
     }, []);
+
+    useEffect(() => {
+        if (currentExam) {
+            fetchData(currentExam)
+        }
+    },[currentExam])
 
     return (<>
         <Row>
@@ -74,7 +78,7 @@ const StatisticPage = () => {
         <Row className="mt-3">
             <FilterExam
                 exams={exams}
-                fetchData={fetchData}
+                handleChange={setCurrentExam}
             />
         </Row>
         <Row className="mt-3">
